@@ -94,9 +94,9 @@ def validate_registry(
         seen_channels: set[int] = set()
         for schema in schemas:
             if schema.channel_index in seen_channels:
+                duplicate_ids = [s.id for s in schemas if s.channel_index == schema.channel_index]
                 raise ValueError(
                     f"Duplicate channel index: {schema.channel_index} "
-                    f"(used by zones: {[s.id for s in schemas if s.channel_index == schema.channel_index]})"
+                    f"(used by zones: {duplicate_ids})"
                 )
             seen_channels.add(schema.channel_index)
-

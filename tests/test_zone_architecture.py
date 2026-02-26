@@ -4,7 +4,6 @@ Ensures that runtime (core) does not import zone registry internals directly.
 """
 
 import ast
-import importlib.util
 from pathlib import Path
 
 
@@ -14,8 +13,6 @@ def test_core_does_not_import_registry_internals():
     Core should only import from ezra.zones (public __init__.py).
     """
     core_dir = Path(__file__).parent.parent / "src" / "ezra" / "core"
-    zones_registry_path = Path(__file__).parent.parent / "src" / "ezra" / "zones" / "registry.py"
-    zones_validator_path = Path(__file__).parent.parent / "src" / "ezra" / "zones" / "validator.py"
 
     forbidden_imports = [
         "ezra.zones.registry",
@@ -64,4 +61,3 @@ def test_zones_public_api_available():
     assert ZoneSchema is not None
     assert ZoneRegistry is not None
     assert export_zone_schema_json is not None
-

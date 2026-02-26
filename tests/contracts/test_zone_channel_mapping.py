@@ -130,4 +130,3 @@ def test_channel_mapping_export_order():
     exported = registry.export_to_dict()
     channel_indices = [z["channel_index"] for z in exported["zones"]]
     assert channel_indices == [0, 1, 2]
-

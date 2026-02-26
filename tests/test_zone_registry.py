@@ -171,4 +171,3 @@ def test_registry_get_nonexistent():
     """Test get returns None for nonexistent zone."""
     registry = ZoneRegistry()
     assert registry.get("nonexistent") is None
-

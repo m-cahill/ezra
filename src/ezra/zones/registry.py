@@ -8,6 +8,8 @@ This module provides an immutable registry for zone schemas with:
 
 from __future__ import annotations
 
+from typing import Any
+
 from ezra.zones.schema import ZoneSchema
 from ezra.zones.validator import validate_registry
 
@@ -96,8 +98,6 @@ class ZoneRegistry:
             }
             Zones are sorted by (channel_index, id).
         """
-        from typing import Any
-
         zones = self.list_all()
         return {
             "zones": [zone.to_dict() for zone in zones],
@@ -112,4 +112,3 @@ class ZoneRegistry:
     def count(self) -> int:
         """Get number of registered zones."""
         return len(self._zones)
-

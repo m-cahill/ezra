@@ -34,4 +34,3 @@ def export_zone_schema_json(registry: ZoneRegistry, output_path: Path) -> None:
 
     # Write with LF line endings (consistent with EPB canonicalization)
     output_path.write_text(json_str + "\n", encoding="utf-8", newline="")
-

@@ -89,4 +89,3 @@ def test_zone_schema_to_dict_byte_stable():
     json2 = json.dumps(dict2, sort_keys=True)
 
     assert json1 == json2
-

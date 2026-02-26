@@ -204,4 +204,3 @@ def test_validate_registry_skip_unique_checks():
     )
     # Should not raise when checks are disabled
     validate_registry([schema1, schema2], check_unique_ids=False, check_unique_channels=False)
-

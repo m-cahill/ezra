@@ -3,8 +3,6 @@
 Tests that zone schemas can be serialized and deserialized correctly.
 """
 
-import json
-
 from ezra.zones.registry import ZoneRegistry
 from ezra.zones.schema import BBoxNorm, ZonePersistence, ZoneSchema
 
@@ -32,9 +30,7 @@ def test_zone_schema_roundtrip():
         x_max=serialized["bbox_norm"]["x_max"],
         y_max=serialized["bbox_norm"]["y_max"],
     )
-    reconstructed_persistence = ZonePersistence(
-        sticky=serialized["persistence"]["sticky"]
-    )
+    reconstructed_persistence = ZonePersistence(sticky=serialized["persistence"]["sticky"])
     reconstructed = ZoneSchema(
         id=serialized["id"],
         kind=serialized["kind"],
@@ -108,4 +104,3 @@ def test_registry_roundtrip():
     # Verify reconstructed zones match originals
     assert reconstructed_zones[0] == schema1
     assert reconstructed_zones[1] == schema2
-
