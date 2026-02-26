@@ -25,7 +25,7 @@ except ImportError:
     ImageFont = None  # type: ignore[assignment]
 
 from ezra.baseline.canonicalize import canonicalize_output, to_canonical_json
-from ezra.plugins.easyocr_plugin import EasyOCRPlugin
+from ezra.plugins.registry import get_plugin
 
 
 def generate_synthetic_fixture(
@@ -164,8 +164,8 @@ def capture_baseline(output_dir: Path) -> None:
         ("123", 150, 50),
     ]
 
-    # Initialize plugin
-    plugin = EasyOCRPlugin(device="cpu", languages=["en"])
+    # Initialize plugin via registry
+    plugin = get_plugin("easyocr", device="cpu", languages=["en"])
     plugin.load("")  # EasyOCR loads models automatically
 
     # Run inference on all fixtures
