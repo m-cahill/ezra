@@ -10,9 +10,16 @@ bounding box.
 
 from __future__ import annotations
 
+import json
+import math
+from typing import Any
+
 from ezra.types import OCRResult
 from ezra.zones.registry import ZoneRegistry
 from ezra.zones.schema import ZoneSchema
+
+# Zone schema contract requires 6 decimal places for float precision
+ZONE_FLOAT_PRECISION = 6
 
 
 def project_state_to_zones(
@@ -108,4 +115,109 @@ def project_state_to_zones(
         # If no zone matches, silently drop (no error, no special key)
 
     return result
+
+
+def _canonicalize_projection_value(obj: Any) -> Any:
+    """Recursively canonicalize a value for projection JSON serialization.
+
+    Uses 6 decimal place precision (zone contract) instead of EPB's 8dp.
+
+    Args:
+        obj: Value to canonicalize (dict, list, float, or primitive).
+
+    Returns:
+        Canonicalized value.
+
+    Raises:
+        ValueError: If object contains NaN or Infinity values.
+    """
+    if isinstance(obj, dict):
+        # Sort keys alphabetically (case-sensitive) for determinism
+        return {k: _canonicalize_projection_value(v) for k, v in sorted(obj.items())}
+    elif isinstance(obj, list):
+        # Preserve array order (arrays are ordered structures)
+        return [_canonicalize_projection_value(item) for item in obj]
+    elif isinstance(obj, float):
+        # Reject NaN and Infinity
+        if math.isnan(obj):
+            raise ValueError("NaN values are not permitted in projection output")
+        if math.isinf(obj):
+            raise ValueError("Infinity values are not permitted in projection output")
+        # Round to 6 decimal places (zone contract precision)
+        return round(obj, ZONE_FLOAT_PRECISION)
+    else:
+        # Primitive types (str, int, bool, None) pass through unchanged
+        return obj
+
+
+def _ocr_result_to_dict(detection: OCRResult) -> dict[str, Any]:
+    """Convert OCRResult to dictionary for JSON serialization.
+
+    Args:
+        detection: OCR detection result.
+
+    Returns:
+        Dictionary with keys: ["text", "confidence", "bbox", "metadata"]
+        Floats rounded to 6dp precision.
+    """
+    result: dict[str, Any] = {
+        "text": detection.text,
+        "confidence": round(detection.confidence, ZONE_FLOAT_PRECISION),
+        "bbox": [round(coord, ZONE_FLOAT_PRECISION) for coord in detection.bbox],
+    }
+    if detection.metadata is not None:
+        result["metadata"] = detection.metadata
+    return result
+
+
+def to_projection_canonical_json(
+    projection: dict[str, list[OCRResult]],
+) -> str:
+    """Convert projection result to canonical JSON string.
+
+    Uses zone schema contract precision (6 decimal places) instead of
+    EPB's 8 decimal places. This preserves the zone contract determinism
+    established in M12.
+
+    Rules:
+    - UTF-8 encoding (ensure_ascii=False)
+    - LF line endings (indent=2 produces LF)
+    - Sorted keys (alphabetical, case-sensitive)
+    - 6 decimal place float precision (zone contract)
+    - No NaN/Infinity (allow_nan=False)
+    - Indented 2-space JSON (human-readable canonical form)
+    - Zones sorted by zone_id
+    - Detections within each zone preserve original order
+
+    Args:
+        projection: Dictionary mapping zone_id to list of OCRResult objects.
+
+    Returns:
+        Canonical JSON string with sorted keys and 6dp rounded floats.
+
+    Raises:
+        ValueError: If projection contains NaN or Infinity values.
+    """
+    # Convert projection to JSON-serializable dict
+    # Sort zones by zone_id for deterministic ordering
+    serializable: dict[str, Any] = {}
+    for zone_id in sorted(projection.keys()):
+        detections = projection[zone_id]
+        serializable[zone_id] = [_ocr_result_to_dict(det) for det in detections]
+
+    # Canonicalize the object (round floats to 6dp, sort dict keys)
+    canonicalized = _canonicalize_projection_value(serializable)
+
+    # Serialize with zone contract rules:
+    # - indent=2 (human-readable)
+    # - sort_keys=True (already sorted by _canonicalize_projection_value, but explicit)
+    # - ensure_ascii=False (UTF-8)
+    # - allow_nan=False (reject NaN/Infinity)
+    return json.dumps(
+        canonicalized,
+        indent=2,
+        sort_keys=True,
+        ensure_ascii=False,
+        allow_nan=False,
+    )
 

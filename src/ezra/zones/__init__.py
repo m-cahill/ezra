@@ -11,7 +11,7 @@ Public API:
 """
 
 from ezra.zones.export import export_zone_schema_json
-from ezra.zones.projector import project_state_to_zones
+from ezra.zones.projector import project_state_to_zones, to_projection_canonical_json
 from ezra.zones.registry import ZoneRegistry
 from ezra.zones.schema import BBoxNorm, ZonePersistence, ZoneSchema
 
@@ -22,4 +22,5 @@ __all__ = [
     "ZoneRegistry",
     "export_zone_schema_json",
     "project_state_to_zones",
+    "to_projection_canonical_json",
 ]
