@@ -78,13 +78,212 @@ jobs:
           name: zone-schema
           path: zone_schema.json
           retention-days: 30
-      - name: CI Summary
+      - name: EZRA Quality Envelope Summary
         if: always()
         run: |
-          echo "## Quality Gates" >> $GITHUB_STEP_SUMMARY
+          echo "# EZRA Quality Envelope" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Coverage" >> $GITHUB_STEP_SUMMARY
-          coverage report >> $GITHUB_STEP_SUMMARY
+          echo "## Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          COVERAGE_OUTPUT=$(coverage report --format=markdown 2>/dev/null || coverage report)
+          echo "$COVERAGE_OUTPUT" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          TOTAL_LINES=$(coverage report | grep "TOTAL" | awk '{print $NF}' | tr -d '%')
+          TOTAL_BRANCHES=$(coverage report | grep "TOTAL" | awk '{print $(NF-1)}' | tr -d '%' || echo "N/A")
+          echo "**Summary:** Lines: ${TOTAL_LINES}%, Branches: ${TOTAL_BRANCHES}%" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Complexity" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See [Complexity Check](#) job summary for details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Security" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See [Security Check](#) job summary for details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Determinism" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See [Determinism Check](#) job summary for details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Quality evidence artifacts are available in the workflow run:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`coverage.xml\` (Coverage XML report)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`radon.json\` (Complexity analysis)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`bandit.json\` (Security scan)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`pip_audit.json\` (Dependency vulnerabilities)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`gitleaks.json\` (Secret detection)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`sbom.cdx.json\` (Software Bill of Materials)" >> $GITHUB_STEP_SUMMARY
+
+  security:
+    name: Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run bandit security scan
+        run: |
+          bandit -r src/ -f json -o bandit.json || true
+          bandit -r src/ --severity-level high
+        continue-on-error: false
+      - name: Run pip-audit
+        run: |
+          pip-audit --format json --output pip_audit.json --desc || true
+          pip-audit --desc
+        continue-on-error: false
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          report-format: json
+          report-path: gitleaks.json
+          no-git: false
+          verbose: true
+        continue-on-error: false
+      - name: Upload security artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-artifacts
+          path: |
+            bandit.json
+            pip_audit.json
+            gitleaks.json
+          retention-days: 30
+      - name: Security Summary
+        if: always()
+        run: |
+          echo "## Security Gate" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Bandit" >> $GITHUB_STEP_SUMMARY
+          if [ -f bandit.json ]; then
+            HIGH_ISSUES=$(python -c "import json; data=json.load(open('bandit.json')); print(sum(1 for r in data.get('results', []) if r.get('issue_severity') == 'HIGH'))" 2>/dev/null || echo "0")
+            echo "- **HIGH severity issues:** ${HIGH_ISSUES}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Status: No report generated" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### pip-audit" >> $GITHUB_STEP_SUMMARY
+          if [ -f pip_audit.json ]; then
+            VULN_COUNT=$(python -c "import json; data=json.load(open('pip_audit.json')); print(len(data.get('vulnerabilities', [])))" 2>/dev/null || echo "0")
+            if [ "${VULN_COUNT}" = "0" ]; then
+              echo "- **Status:** ✅ Clean (no vulnerabilities)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- **Status:** ⚠️ Found ${VULN_COUNT} vulnerability/vulnerabilities" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "- Status: No report generated" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Gitleaks" >> $GITHUB_STEP_SUMMARY
+          if [ -f gitleaks.json ]; then
+            LEAK_COUNT=$(python -c "import json; data=json.load(open('gitleaks.json')); print(len(data))" 2>/dev/null || echo "0")
+            if [ "${LEAK_COUNT}" = "0" ]; then
+              echo "- **Status:** ✅ Clean (no secrets detected)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- **Status:** ⚠️ Found ${LEAK_COUNT} potential secret(s)" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "- Status: No report generated" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  sbom:
+    name: SBOM Generation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Generate SBOM
+        run: |
+          cyclonedx-py -o sbom.cdx.json -e
+      - name: Upload SBOM artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.cdx.json
+          retention-days: 90
+      - name: SBOM Summary
+        if: always()
+        run: |
+          echo "## SBOM Generation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f sbom.cdx.json ]; then
+            COMPONENT_COUNT=$(python -c "import json; data=json.load(open('sbom.cdx.json')); print(len(data.get('components', [])))" 2>/dev/null || echo "N/A")
+            echo "- **Components:** ${COMPONENT_COUNT}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Format:** CycloneDX JSON" >> $GITHUB_STEP_SUMMARY
+            echo "- **Status:** ✅ Generated" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Status:** ❌ Failed to generate" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  complexity:
+    name: Complexity Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run radon complexity check
+        run: |
+          radon cc -s -n C src/ > radon.txt || true
+          radon cc -j src/ > radon.json
+          if grep -q "grade.*[DE]" radon.txt; then
+            echo "❌ Complexity check failed: Found grades worse than C"
+            cat radon.txt
+            exit 1
+          fi
+      - name: Upload radon artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: radon-artifacts
+          path: |
+            radon.json
+            radon.txt
+          retention-days: 30
+      - name: Complexity Summary
+        if: always()
+        run: |
+          echo "## Complexity Gate" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f radon.txt ]; then
+            echo "### Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            WORST_GRADE=$(grep -oP "grade \K[A-E]" radon.txt | sort | head -1 || echo "C")
+            FILES_ABOVE_C=$(grep -c "grade.*[DE]" radon.txt || echo "0")
+            AVG_COMPLEXITY=$(grep -oP "Average complexity: \K[0-9.]+" radon.txt || echo "N/A")
+            echo "- **Worst Grade:** ${WORST_GRADE}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Files > C:** ${FILES_ABOVE_C}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Average Complexity:** ${AVG_COMPLEXITY}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Full Report" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            head -50 radon.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
 
   determinism-check:
     name: Determinism Check
