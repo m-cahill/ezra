@@ -61,7 +61,8 @@ def build_hashes_dict(
     manifest_hash: str,
     detections_hash: str,
     state_hash: str,
-    delta_hash: str | None,
+    delta_hash: str | None = None,
+    zones_hash: str | None = None,
 ) -> dict[str, Any]:
     """Build hashes.json structure.
 
@@ -70,6 +71,7 @@ def build_hashes_dict(
         detections_hash: SHA256 hash of detections.json.
         state_hash: SHA256 hash of state.json (required).
         delta_hash: SHA256 hash of delta.json (or None if absent).
+        zones_hash: SHA256 hash of zones.json (or None if absent).
 
     Returns:
         Dictionary containing hashes.json structure with bundle_hash computed.
@@ -84,6 +86,10 @@ def build_hashes_dict(
     # Add delta.json only if present
     if delta_hash is not None:
         files["delta.json"] = delta_hash
+
+    # Add zones.json only if present
+    if zones_hash is not None:
+        files["zones.json"] = zones_hash
 
     # Compute bundle hash (excluding hashes.json)
     bundle_hash = compute_bundle_hash(files)
@@ -101,6 +107,9 @@ def build_hashes_dict(
 
     if delta_hash is not None:
         hashes_dict["files"]["delta.json"] = delta_hash
+
+    if zones_hash is not None:
+        hashes_dict["files"]["zones.json"] = zones_hash
 
     # Compute hashes.json hash (from structure without its own entry)
     hashes_json_hash = compute_file_hash(hashes_dict)

@@ -109,6 +109,46 @@ def test_build_hashes_dict_with_delta() -> None:
     assert files["delta.json"] == delta_hash
 
 
+def test_build_hashes_dict_with_zones() -> None:
+    """Test that zones.json is included when present."""
+    manifest_hash = "a" * 64
+    detections_hash = "b" * 64
+    state_hash = "c" * 64
+    zones_hash = "e" * 64
+
+    hashes_dict = build_hashes_dict(
+        manifest_hash=manifest_hash,
+        detections_hash=detections_hash,
+        state_hash=state_hash,
+        delta_hash=None,
+        zones_hash=zones_hash,
+    )
+
+    files = hashes_dict["files"]
+    assert files["zones.json"] == zones_hash
+
+
+def test_build_hashes_dict_with_delta_and_zones() -> None:
+    """Test that both delta.json and zones.json are included when present."""
+    manifest_hash = "a" * 64
+    detections_hash = "b" * 64
+    state_hash = "c" * 64
+    delta_hash = "d" * 64
+    zones_hash = "e" * 64
+
+    hashes_dict = build_hashes_dict(
+        manifest_hash=manifest_hash,
+        detections_hash=detections_hash,
+        state_hash=state_hash,
+        delta_hash=delta_hash,
+        zones_hash=zones_hash,
+    )
+
+    files = hashes_dict["files"]
+    assert files["delta.json"] == delta_hash
+    assert files["zones.json"] == zones_hash
+
+
 def test_build_hashes_dict_bundle_hash_excludes_hashes_json() -> None:
     """Test that bundle_hash excludes hashes.json from computation."""
     manifest_hash = "a" * 64
