@@ -111,6 +111,36 @@ def generate_epb_bundle(output_dir: Path, run_number: int) -> Path:
     bundle_dir = output_dir / f"bundle_run_{run_number}"
     write_epb_bundle(bundle, bundle_dir, zone_registry=registry)
 
+    # Generate projection and write projection.json
+    from ezra.types import OCRResult
+    from ezra.zones import project_state_to_zones, to_projection_canonical_json
+
+    # Convert detections to OCRResult objects
+    ocr_detections = [
+        OCRResult(
+            text=det["text"],
+            confidence=det["confidence"],
+            bbox=det["bbox"],
+            metadata=None,
+        )
+        for det in detections
+    ]
+
+    # Project detections into zones
+    projection = project_state_to_zones(
+        ocr_detections,
+        registry,
+        image_width=input_metadata["width"],
+        image_height=input_metadata["height"],
+    )
+
+    # Serialize projection to canonical JSON
+    projection_json = to_projection_canonical_json(projection)
+
+    # Write projection.json to bundle directory
+    projection_path = bundle_dir / "projection.json"
+    projection_path.write_text(projection_json, encoding="utf-8", newline="")
+
     return bundle_dir
 
 
