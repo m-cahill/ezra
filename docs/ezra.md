@@ -107,6 +107,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M09 | Determinism Multi-Run Gate (EPB Hardening) | Complete | v0.0.10-m09 | PR#10 | Determinism CI gate implemented, byte-identical bundles verified across N≥3 runs, timestamp injection added, all CI checks passing |
 | M10 | EPB Schema Validation Wiring (EPB Hardening Phase 2) | Complete | v0.0.11-m10 | PR#11 | JSON Schema validation wired into emission pipeline, invalid bundles fail fast, determinism gate confirmed validation does not mutate data, all CI checks passing |
 | M11 | EPB Hash Integrity Verification (EPB Hardening Phase 3) | Complete | v0.0.12-m11 | PR#12 | Hash verification wired into emission pipeline, tampered bundles fail verification, determinism gate confirmed verification does not mutate data, all CI checks passing |
+| M12 | Contract Hardening & Deterministic Zone Schema Lock | Complete | v0.0.13-m12 | PR#13 | Zone schema contract introduced with deterministic serialization, validation, and registry freeze semantics. Architecture boundaries enforced. All existing tests pass unchanged. CI Run: 22461501678 |
 
 ## 8. Local Dev Quickstart
 
