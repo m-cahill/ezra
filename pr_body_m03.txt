@@ -1,0 +1,39 @@
+## M03 — Structural Extraction of EasyOCR Integration
+
+**Mode:** Behavior-Preserving Structural Refactor  
+**Posture:** Preserve (Parity-Enforced)  
+**Baseline:** `v0.0.3-m02`
+
+### Objective
+
+Refactor `EasyOCRPlugin` into a cleanly layered integration boundary while preserving exact behavior verified by the M02 parity gate.
+
+### Changes
+
+- Created `EasyOCRAdapter` class to isolate all direct EasyOCR framework calls
+- Extracted `transform_easyocr_output()` as pure function in plugin module
+- Refactored `EasyOCRPlugin` to use adapter + transform pattern
+- Added comprehensive adapter unit tests (11 tests)
+- Updated plugin tests with minimal adjustments (mock adapter's easyocr import)
+
+### Validation
+
+- All tests pass (47 passed, 4 skipped)
+- Parity suite passes unchanged (4/4 tests)
+- Coverage: 93.17% (above 85% threshold)
+- Lint, format, type check all pass
+- No baseline update required (behavior preserved)
+
+### Files Changed
+
+- `src/ezra/plugins/easyocr_adapter.py` (new)
+- `src/ezra/plugins/easyocr_plugin.py` (refactored)
+- `tests/test_easyocr_adapter.py` (new)
+- `tests/test_easyocr_plugin.py` (updated mocks)
+
+### Architectural Impact
+
+After M03, all third-party ML framework calls are isolated in adapter modules, never in plugin orchestration layer. This prepares EZRA for multiple OCR backends and swappable inference adapters.
+
+**Parity Gate:** All parity tests pass without baseline update, proving no behavioral drift.
+
