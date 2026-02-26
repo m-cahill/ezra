@@ -111,19 +111,7 @@ jobs:
           if [ -f determinism_output/determinism_report.json ]; then
             echo "## Determinism Gate" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            python -c "
-import json
-with open('determinism_output/determinism_report.json') as f:
-    report = json.load(f)
-check = report['determinism_check']
-print(f\"Result: {check['result']}\")
-print(f\"Number of runs: {check['num_runs']}\")
-print()
-for i in range(check['num_runs']):
-    run_key = f'run_{i+1}'
-    run_info = check['hashes'][run_key]
-    print(f\"SHA{i+1} ({run_info['bundle_dir']}): {run_info['sha256']}\")
-"
+            python scripts/generate_determinism_summary.py >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
 
