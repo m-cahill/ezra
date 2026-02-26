@@ -103,6 +103,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M05 | Plugin Configuration & Interface Hardening | Complete | v0.0.6-m05 | PR#6 | Runtime config-driven resolution, strict interface validation, registry hardening |
 | M06 | Tesseract Plugin (Provider Boundary Extension) | Complete | v0.0.7-m06 | PR#7 | Second OCR backend plugin added, cross-plugin isolation verified, registry extensibility proven (coverage: 94.85% overall, 100% registry, 100% tesseract) |
 | M07 | EPB v1 Specification & External Certification Guardrail | Complete | v0.0.8-m07 | PR#8 | EPB v1 spec locked, RediAI separation rule formalized |
+| M08 | EPB v1 Emission (Runtime Wiring, Deterministic Bundle Output) | Complete | v0.0.9-m08 | PR#9 | EPB v1.0.0 bundle emission implemented, 100% EPB module coverage, coverage 96.33% (above 94.85% baseline) |
 
 ## 8. Local Dev Quickstart
 
