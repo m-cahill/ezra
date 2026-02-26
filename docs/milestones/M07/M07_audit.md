@@ -391,12 +391,13 @@
 
 ---
 
-## M07 MERGE READY
+## M07 MERGE COMPLETE
 
-**Tag:** v0.0.8-m07 (to be created after merge)  
-**PR:** #8  
+**Tag:** v0.0.8-m07  
+**Tag SHA:** ce2f1b98f843067cc6016a3aa9087cecd415aed4  
+**Merge Commit:** 021f056  
 **Audit:** PASS  
-**Summary:** PENDING  
-**CI on branch:** GREEN (Run 22432970960)  
-**Status:** READY FOR MERGE (awaiting explicit authorization)
+**Summary:** CREATED  
+**CI on main:** GREEN (Run 22433844507)  
+**Status:** CLOSED
 
