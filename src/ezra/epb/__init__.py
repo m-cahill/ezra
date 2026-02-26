@@ -9,13 +9,16 @@ from ezra.epb.hash_verifier import verify_epb_bundle
 from ezra.epb.hasher import compute_bundle_hash, compute_file_hash
 from ezra.epb.schema_validator import validate_bundle
 from ezra.epb.writer import write_epb_bundle
+from ezra.epb.zone_adapter import adapt_zone_registry_to_epb, to_zone_canonical_json
 
 __all__ = [
+    "adapt_zone_registry_to_epb",
     "build_epb_bundle",
     "canonicalize_float",
     "compute_bundle_hash",
     "compute_file_hash",
     "to_canonical_json",
+    "to_zone_canonical_json",
     "validate_bundle",
     "verify_epb_bundle",
     "write_epb_bundle",

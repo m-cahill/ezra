@@ -7,10 +7,12 @@ content and compares against hashes.json entries.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
 from ezra.epb.hasher import compute_bundle_hash, compute_file_hash
+from ezra.epb.zone_adapter import to_zone_canonical_json
 
 
 def verify_epb_bundle(bundle_dir: Path) -> None:
@@ -77,7 +79,14 @@ def verify_epb_bundle(bundle_dir: Path) -> None:
             file_content = file_path.read_text(encoding="utf-8")
             # Parse JSON to canonicalize (same as emission)
             file_dict = json.loads(file_content)
-            computed_hash = compute_file_hash(file_dict)
+            # zones.json uses 6dp precision (zone contract), not 8dp (EPB canonical)
+            if filename == "zones.json":
+                # Use zone canonicalization (6dp) for zones.json
+                zones_json = to_zone_canonical_json(file_dict)
+                computed_hash = hashlib.sha256(zones_json.encode("utf-8")).hexdigest()
+            else:
+                # Use EPB canonicalization (8dp) for all other files
+                computed_hash = compute_file_hash(file_dict)
         except json.JSONDecodeError as e:
             raise ValueError(f"EPB bundle file {filename} is invalid JSON: {e}") from e
 

@@ -30,6 +30,7 @@ epb/
   detections.json    # Raw OCR/detection results
   state.json         # Domain-agnostic structured state
   delta.json         # Optional: incremental state changes
+  zones.json         # Optional: zone schema definitions (M13 extension)
   hashes.json        # Deterministic hashes for all components
 ```
 
@@ -39,6 +40,7 @@ epb/
 * **`detections.json`** — Raw detection results from OCR/perception plugins (domain-agnostic)
 * **`state.json`** — Domain-agnostic structured state representation (e.g., board positions, UI elements)
 * **`delta.json`** — Optional: Incremental state changes from previous bundle (for temporal sequences)
+* **`zones.json`** — Optional: Zone schema definitions (M13 extension). Contains deterministic zone registry export with 6 decimal place float precision (zone contract). If present, included in bundle hash computation.
 * **`hashes.json`** — SHA256 hashes of all other files, plus bundle-level hash
 
 **Domain-specific artifacts** (e.g., `domain/chess/fen.txt`) are **not** part of the core EPB contract. They are layered on top as domain profiles.
@@ -117,7 +119,8 @@ All JSON files in an EPB bundle **must** conform to these canonicalization rules
     "delta.json": "sha256...",
     "hashes.json": "sha256...",
     "manifest.json": "sha256...",
-    "state.json": "sha256..."
+    "state.json": "sha256...",
+    "zones.json": "sha256..."  // Optional (M13 extension)
   }
 }
 ```
@@ -129,7 +132,10 @@ All JSON files in an EPB bundle **must** conform to these canonicalization rules
 3. Compute SHA256 of concatenated string
 4. Store as `bundle_hash`
 
-**Note:** `hashes.json` is excluded from bundle hash computation (circular dependency).
+**Notes:**
+* `hashes.json` is excluded from bundle hash computation (circular dependency).
+* `zones.json` (if present) is included in bundle hash computation (M13 extension).
+* `zones.json` uses 6 decimal place float precision (zone contract), not 8dp (EPB canonical). This preserves zone schema determinism established in M12.
 
 ---
 
@@ -224,7 +230,7 @@ epb/
       table.json       # Card-specific: table state
 ```
 
-**Core EPB contract:** Only `manifest.json`, `detections.json`, `state.json`, `delta.json`, and `hashes.json` are required. Domain-specific artifacts are **optional extensions**.
+**Core EPB contract:** Only `manifest.json`, `detections.json`, `state.json`, `delta.json`, and `hashes.json` are required. Domain-specific artifacts and `zones.json` (M13 extension) are **optional extensions**.
 
 ---
 

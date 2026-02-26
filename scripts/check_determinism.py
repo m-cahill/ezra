@@ -59,7 +59,7 @@ def compute_directory_hash(directory: Path) -> str:
 
 
 def generate_epb_bundle(output_dir: Path, run_number: int) -> Path:
-    """Generate an EPB bundle with fixed inputs.
+    """Generate an EPB bundle with fixed inputs and zones.
 
     Args:
         output_dir: Base output directory.
@@ -69,6 +69,7 @@ def generate_epb_bundle(output_dir: Path, run_number: int) -> Path:
         Path to generated bundle directory.
     """
     from ezra.epb import build_epb_bundle, write_epb_bundle
+    from ezra.zones import BBoxNorm, ZonePersistence, ZoneRegistry, ZoneSchema
 
     # Fixed input fixture (identical across all runs)
     detections = [
@@ -86,9 +87,29 @@ def generate_epb_bundle(output_dir: Path, run_number: int) -> Path:
         timestamp=FIXED_TIMESTAMP,
     )
 
-    # Write bundle to directory
+    # Create deterministic zone registry
+    registry = ZoneRegistry()
+    zone1 = ZoneSchema(
+        id="zone1",
+        kind="text",
+        channel_index=0,
+        bbox_norm=BBoxNorm(x_min=0.1, y_min=0.2, x_max=0.5, y_max=0.6),
+        persistence=ZonePersistence(sticky=True),
+    )
+    zone2 = ZoneSchema(
+        id="zone2",
+        kind="button",
+        channel_index=1,
+        bbox_norm=BBoxNorm(x_min=0.6, y_min=0.2, x_max=0.9, y_max=0.6),
+        persistence=ZonePersistence(sticky=False),
+    )
+    registry.register(zone1)
+    registry.register(zone2)
+    registry.freeze()
+
+    # Write bundle to directory with zones
     bundle_dir = output_dir / f"bundle_run_{run_number}"
-    write_epb_bundle(bundle, bundle_dir)
+    write_epb_bundle(bundle, bundle_dir, zone_registry=registry)
 
     return bundle_dir
 
