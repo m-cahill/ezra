@@ -35,7 +35,7 @@ dev = [
     "radon>=6.0.0",
     "bandit>=1.7.0",
     "pip-audit>=2.6.0",
-    "cyclonedx-py>=4.0.0",
+    "cyclonedx-py>=1.0.0",
 ]
 easyocr = [
     "easyocr==1.7.2",
