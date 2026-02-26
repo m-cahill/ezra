@@ -11,6 +11,7 @@ from typing import Any
 
 from ezra.epb.canonical import to_canonical_json
 from ezra.epb.hasher import build_hashes_dict, compute_file_hash
+from ezra.epb.schema_validator import validate_bundle
 
 
 def write_epb_bundle(bundle: dict[str, Any], output_dir: Path) -> None:
@@ -33,10 +34,14 @@ def write_epb_bundle(bundle: dict[str, Any], output_dir: Path) -> None:
         output_dir: Directory path to write EPB bundle to (created if needed).
 
     Raises:
+        ValueError: If bundle fails JSON Schema validation.
         OSError: If directory creation or file writing fails.
     """
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Validate bundle against JSON Schemas before hashing/writing
+    validate_bundle(bundle)
 
     # Compute file hashes (in deterministic order)
     manifest_hash = compute_file_hash(bundle["manifest"])
