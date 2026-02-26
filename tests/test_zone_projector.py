@@ -1,6 +1,7 @@
 """Tests for zone-scoped state projection."""
 
 import json
+
 import pytest
 
 from ezra.types import OCRResult
@@ -48,7 +49,8 @@ def test_zone_projector_basic_assignment():
         OCRResult(
             text="World",
             confidence=0.85,
-            bbox=[140.0, 140.0, 160.0, 160.0],  # Centroid at (150, 150) in 200x200 image = (0.75, 0.75)
+            # Centroid at (150, 150) in 200x200 image = (0.75, 0.75)
+            bbox=[140.0, 140.0, 160.0, 160.0],
         ),
     ]
 
@@ -302,8 +304,16 @@ def test_zone_projector_no_mutation():
 def test_to_projection_canonical_json_basic():
     """Test canonical JSON serialization of projection."""
     # Create a projection result
-    det1 = OCRResult(text="Hello", confidence=0.9123456789, bbox=[10.123456789, 20.123456789, 50.123456789, 40.123456789])
-    det2 = OCRResult(text="World", confidence=0.8567890123, bbox=[60.123456789, 20.123456789, 100.123456789, 40.123456789])
+    det1 = OCRResult(
+        text="Hello",
+        confidence=0.9123456789,
+        bbox=[10.123456789, 20.123456789, 50.123456789, 40.123456789],
+    )
+    det2 = OCRResult(
+        text="World",
+        confidence=0.8567890123,
+        bbox=[60.123456789, 20.123456789, 100.123456789, 40.123456789],
+    )
 
     projection = {
         "zone2": [det2],  # Intentionally non-sorted order

@@ -55,12 +55,14 @@ def test_zone_projection_snapshot_matches():
         OCRResult(
             text="Hello",
             confidence=0.9123456789,
-            bbox=[40.0, 40.0, 60.0, 60.0],  # Centroid at (50, 50) in 200x200 = (0.25, 0.25) -> ocr_zone
+            # Centroid at (50, 50) in 200x200 = (0.25, 0.25) -> ocr_zone
+            bbox=[40.0, 40.0, 60.0, 60.0],
         ),
         OCRResult(
             text="World",
             confidence=0.8567890123,
-            bbox=[140.0, 140.0, 160.0, 160.0],  # Centroid at (150, 150) in 200x200 = (0.75, 0.75) -> detection_zone
+            # Centroid at (150, 150) in 200x200 = (0.75, 0.75) -> detection_zone
+            bbox=[140.0, 140.0, 160.0, 160.0],
         ),
     ]
 
