@@ -39,4 +39,5 @@
 | 2026-02-26 | run_terminal_cmd | Get SBOM job logs | gh run view 22465701522 --log --job 65071044019 | ✅ Complete |
 | 2026-02-26 | run_terminal_cmd | Get test job logs | gh run view 22465701522 --log --job 65071044003 | ✅ Complete |
 | 2026-02-26 | write | Generate M15_run2.md analysis report | docs/milestones/M15/M15_run2.md | ✅ Complete |
+| 2026-02-26 | search_replace | Remove invalid -e flag from SBOM command | .github/workflows/ci.yml | ✅ Complete |
 

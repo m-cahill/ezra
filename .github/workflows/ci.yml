@@ -211,7 +211,7 @@ jobs:
           python -m pip install -e ".[dev]"
       - name: Generate SBOM
         run: |
-          cyclonedx-py environment -o sbom.cdx.json -e
+          cyclonedx-py environment -o sbom.cdx.json
       - name: Upload SBOM artifact
         if: always()
         uses: actions/upload-artifact@v4
