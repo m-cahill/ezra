@@ -96,4 +96,3 @@ class EasyOCRAdapter:
             return results  # type: ignore[no-any-return]
         except Exception as e:
             raise RuntimeError(f"EasyOCR inference failed: {e}") from e
-
