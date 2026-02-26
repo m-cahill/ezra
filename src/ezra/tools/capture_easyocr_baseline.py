@@ -20,9 +20,9 @@ except ImportError:
 try:
     from PIL import Image, ImageDraw, ImageFont
 except ImportError:
-    Image = None
-    ImageDraw = None
-    ImageFont = None
+    Image = None  # type: ignore[assignment]
+    ImageDraw = None  # type: ignore[assignment]
+    ImageFont = None  # type: ignore[assignment]
 
 from ezra.baseline.canonicalize import canonicalize_output, to_canonical_json
 from ezra.plugins.easyocr_plugin import EasyOCRPlugin
