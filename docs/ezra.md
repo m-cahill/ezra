@@ -61,14 +61,41 @@ EZRA's refactor safety comes from "baseline first":
 
 Golden outputs are only comparable if the manifest matches (or the milestone explicitly updates the baseline).
 
-## 6. Milestones
+## 6. Golden Parity Discipline
+
+After M02:
+
+* Golden baseline artifacts are binding.
+* Any change affecting:
+
+  * Plugin output
+  * Canonicalization logic
+  * Model invocation behavior
+* Must:
+
+  1. Run parity suite (`EZRA_RUN_PARITY=1 pytest -m parity`)
+  2. Pass manifest check
+  3. Update baseline explicitly in a dedicated milestone if behavior change is intentional
+
+Baseline updates require:
+
+* New milestone ID
+* Updated manifest
+* Explicit audit justification
+
+Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity`, and skip by default unless `EZRA_RUN_PARITY=1` is set. They are **not** run in CI by default (local refactor guard only).
+
+---
+
+## 7. Milestones
 
 | Milestone | Objective | Status | Tag | PR | Notes |
 |-----------|-----------|--------|-----|----|------|
 | M00 | Genesis baseline (CI + skeleton + governance) | Complete | v0.0.1-m00 | PR#1 | Non-mutating CI + LF normalization |
 | M01 | EasyOCR baseline harness (behavior capture) | Complete | v0.0.2-m01 | PR#2 | Golden baseline locked, deterministic canonicalization |
+| M02 | Golden Output Lock & Parity Verification | In Progress | v0.0.3-m02 | TBD | Hard parity gate enforced |
 
-## 7. Local Dev Quickstart
+## 8. Local Dev Quickstart
 
 - Create venv (Python 3.11+)
 - Install dev deps: `pip install -e ".[dev]"`

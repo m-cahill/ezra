@@ -71,6 +71,7 @@ python_functions = ["test_*"]
 addopts = "-v --strict-markers"
 markers = [
     "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+    "parity: marks tests as parity verification tests (requires EZRA_RUN_PARITY=1)",
 ]
 
 [tool.coverage.run]
