@@ -28,12 +28,18 @@ def test_write_epb_bundle_minimal(tmp_path: Path) -> None:
 
 def test_write_epb_bundle_with_delta(tmp_path: Path) -> None:
     """Test writing EPB bundle with delta."""
+    # Use schema-valid delta structure (per delta.schema.json)
+    delta = {
+        "version": "1.0.0",
+        "previous_bundle_hash": "0" * 64,  # 64-char hex string
+        "timestamp": "2024-01-01T00:00:00Z",
+    }
     bundle = build_epb_bundle(
         detections=[],
         plugin_name="test",
         plugin_version="1.0.0",
         input_metadata={"width": 100, "height": 200, "channels": 3},
-        delta={"changes": []},
+        delta=delta,
     )
 
     output_dir = tmp_path / "epb"
