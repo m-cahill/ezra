@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ezra.dev/schemas/epb/v1/detections.schema.json",
+  "title": "EPB Detections Schema",
+  "description": "Raw OCR/detection results from perception plugins (domain-agnostic)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["detections"],
+  "properties": {
+    "detections": {
+      "type": "array",
+      "description": "List of detection results, sorted deterministically (e.g., by top-left corner: y, then x)",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "confidence", "bbox"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Detected text content (may be empty string)"
+          },
+          "confidence": {
+            "type": "number",
+            "description": "Confidence score in range [0.0, 1.0]",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "bbox": {
+            "type": "array",
+            "description": "Axis-aligned bounding box [x1, y1, x2, y2] in pixel coordinates",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Optional plugin-specific metadata",
+            "additionalProperties": true
+          }
+        }
+      },
+      "minItems": 0
+    }
+  }
+}
+

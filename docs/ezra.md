@@ -29,6 +29,10 @@ These must remain true unless a milestone explicitly declares and justifies a ch
 - PR-gating checks must not require network access beyond dependency install (avoid "download model weights during PR gate").
 - Deterministic text normalization enforced (LF line endings via `.gitattributes`).
 - Plugin-first posture: core engine remains ML-free; ML is loaded via plugin interfaces.
+- **EPB bundle schema stability:** Once an EPB bundle is emitted, its schema must remain stable. The `epb_version` field is immutable.
+- **EPB canonicalization rules:** Canonical JSON rules (UTF-8, LF, sorted keys, 8 decimal place float precision, no NaN/Infinity) must be preserved.
+- **EPB hashing rules:** SHA256 hashing algorithm and bundle hash computation rules must not change without milestone-level justification.
+- **Artifact-boundary-only integration:** Integration between EZRA and RediAI v3 occurs only at the artifact boundary (EPB bundles). No code-level integration, no shared modules, no runtime-level integration.
 
 ## 4. Repository Layout
 
@@ -98,6 +102,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M04 | Multi-Plugin Abstraction Layer | Complete | v0.0.5-m04 | PR#5 | Plugin registry with lazy resolution, extensibility foundation |
 | M05 | Plugin Configuration & Interface Hardening | Complete | v0.0.6-m05 | PR#6 | Runtime config-driven resolution, strict interface validation, registry hardening |
 | M06 | Tesseract Plugin (Provider Boundary Extension) | Complete | v0.0.7-m06 | PR#7 | Second OCR backend plugin added, cross-plugin isolation verified, registry extensibility proven (coverage: 94.85% overall, 100% registry, 100% tesseract) |
+| M07 | EPB v1 Specification & External Certification Guardrail | Complete | v0.0.8-m07 | PR#8 | EPB v1 spec locked, RediAI separation rule formalized |
 
 ## 8. Local Dev Quickstart
 
@@ -183,5 +188,72 @@ The configuration format requires:
 
 ### Future Extensions
 
-Dynamic plugin discovery via entry points or packaging metadata is deferred to future milestones (M07+). The current static registry is deterministic, testable, and sufficient for initial extensibility needs.
+Dynamic plugin discovery via entry points or packaging metadata is deferred to future milestones. The current static registry is deterministic, testable, and sufficient for initial extensibility needs.
+
+---
+
+## 10. RediAI Separation & Certification Posture
+
+After M07:
+
+EZRA and RediAI v3 maintain **strict architectural separation** with integration occurring **only at the artifact boundary**.
+
+### Artifact Boundary Rule
+
+**Integration between EZRA and RediAI occurs only at the artifact boundary. No runtime code is shared. No plugin loaders are shared.**
+
+### Core Principles
+
+1. **EZRA produces EPB bundles** — EZRA runtime emits EZRA Perception Bundle (EPB) v1.0.0 artifacts containing:
+   * `manifest.json` — Bundle metadata, version, provenance
+   * `detections.json` — Raw OCR/detection results
+   * `state.json` — Domain-agnostic structured state
+   * `delta.json` — Optional: incremental state changes
+   * `hashes.json` — Deterministic SHA256 hashes
+
+2. **RediAI certifies EPB bundles** — RediAI v3 validates bundle integrity, schema compliance, and hash verification. RediAI does not execute EZRA code.
+
+3. **No code-level integration:**
+   * EZRA never imports RediAI modules
+   * RediAI never imports EZRA modules
+   * No shared plugin loaders
+   * No shared schemas (EPB schemas are defined in EZRA, consumed by RediAI)
+   * No runtime-level integration
+
+4. **No bidirectional communication** — EZRA does not call RediAI APIs. RediAI does not import EZRA code. Certification is a one-way validation process.
+
+### EPB Specification
+
+The EPB v1.0.0 specification is defined in:
+
+* **Specification document:** `docs/specs/epb_v1/EPB_V1_SPEC.md`
+* **JSON Schemas:** `docs/specs/epb_v1/schemas/` (manifest, detections, state, delta, hashes)
+
+EPB bundles are:
+* **Deterministic** — Identical inputs produce identical bundles (modulo ML nondeterminism containment)
+* **Certifiable** — RediAI v3 can validate bundle integrity and schema compliance
+* **Versioned** — Immutable version string (`epb_version: "1.0.0"`) prevents silent schema drift
+* **Domain-agnostic** — Core format supports multiple perception domains (chess, cards, UI automation, etc.)
+
+### Governance Rule
+
+**Any change to EPB directory structure, canonicalization rules, hashing algorithm, or schema definitions requires:**
+
+* A new milestone
+* A version bump in `epb_version` (e.g., `1.0.0` → `2.0.0`)
+* Explicit audit justification
+
+This prevents silent drift and ensures EPB remains a stable, certifiable output surface.
+
+### Certification Flow
+
+1. EZRA emits EPB bundle (deterministic, canonicalized per EPB v1.0.0 spec)
+2. RediAI v3 validates bundle against JSON schemas
+3. RediAI v3 verifies hash integrity (`hashes.json`)
+4. RediAI v3 certifies bundle (or rejects with validation errors)
+
+**No runtime integration. Artifact-boundary-only interaction.**
+
+---
+
 
