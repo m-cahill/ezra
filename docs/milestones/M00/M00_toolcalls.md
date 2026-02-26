@@ -67,3 +67,13 @@ Each entry includes:
   - All functional checks passed (typecheck, tests, coverage)
   - Next: Fix remaining formatting violation
 
+### 2026-02-26 - Fix Remaining Formatting Violation
+- **Tool:** `run_terminal_cmd` (ruff format)
+- **Purpose:** Format `tests/test_smoke.py` that failed in Run 2
+- **Files:** `tests/test_smoke.py`
+- **Status:** ✅ Completed
+- **Notes:**
+  - Applied `ruff format tests/test_smoke.py`
+  - Committed and pushed to trigger CI re-run
+  - Waiting for CI to complete
+
