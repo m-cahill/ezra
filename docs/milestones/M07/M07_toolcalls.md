@@ -13,4 +13,8 @@
 | 2026-02-26 | search_replace | Add EPB invariants to Section 3 | docs/ezra.md | Complete |
 | 2026-02-26 | search_replace | Add Section 10 (RediAI Separation) | docs/ezra.md | Complete |
 | 2026-02-26 | search_replace | Update milestone table with M07 entry | docs/ezra.md | Complete |
+| 2026-02-26 | run_terminal_cmd | Create working branch m07-epb-spec | git checkout -b m07-epb-spec | Complete |
+| 2026-02-26 | run_terminal_cmd | Commit all M07 changes | git commit | Complete |
+| 2026-02-26 | run_terminal_cmd | Push branch to origin | git push -u origin m07-epb-spec | Complete |
+| 2026-02-26 | run_terminal_cmd | Create PR to main | gh pr create | Complete |
 
