@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
-import jsonschema
+import jsonschema  # type: ignore[import-untyped]
 from jsonschema import ValidationError
 
 # Resolve schema directory relative to this file
@@ -51,12 +51,11 @@ def _load_schema(schema_name: str) -> dict[str, Any]:
     schema_path = SCHEMA_DIR / schema_name
     if not schema_path.exists():
         raise ValueError(
-            f"EPB schema file not found: {schema_path}. "
-            f"Expected schema directory: {SCHEMA_DIR}"
+            f"EPB schema file not found: {schema_path}. Expected schema directory: {SCHEMA_DIR}"
         )
 
     schema_content = schema_path.read_text(encoding="utf-8")
-    schema_dict = json.loads(schema_content)
+    schema_dict = cast(dict[str, Any], json.loads(schema_content))
 
     # Cache for future use
     _SCHEMA_CACHE[schema_name] = schema_dict
@@ -90,13 +89,11 @@ def _validate_against_schema(
         raise ValueError(error_msg) from e
     except FileNotFoundError as e:
         raise ValueError(
-            f"EPB schema file not found: {schema_name}. "
-            f"Cannot validate {component_name}."
+            f"EPB schema file not found: {schema_name}. Cannot validate {component_name}."
         ) from e
     except json.JSONDecodeError as e:
         raise ValueError(
-            f"EPB schema file {schema_name} is invalid JSON. "
-            f"Cannot validate {component_name}."
+            f"EPB schema file {schema_name} is invalid JSON. Cannot validate {component_name}."
         ) from e
 
 
@@ -135,4 +132,3 @@ def validate_bundle(bundle: dict[str, Any]) -> None:
     # Validate delta.json (optional, only if present)
     if bundle.get("delta") is not None:
         _validate_against_schema(bundle["delta"], DELTA_SCHEMA, "delta")
-

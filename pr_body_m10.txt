@@ -1,0 +1,44 @@
+Implements M10 — EPB Schema Validation Wiring (EPB Hardening Phase 2)
+
+## Changes
+
+- Add `jsonschema>=4.0` dependency
+- Implement `src/ezra/epb/schema_validator.py` with deterministic schema loading
+- Wire validation into `write_epb_bundle()` before hashing
+- Fix invalid delta test fixture to use schema-valid structure
+- Add comprehensive validation tests (11 tests: positive + negative)
+
+## Validation Flow
+
+New emission flow:
+```
+build → canonicalize → validate → hash → write
+```
+
+Validation occurs on in-memory dicts before hash computation. Invalid bundles fail with `ValueError` (hard error, no partial writes).
+
+## Test Results
+
+- ✅ All 118 tests pass (4 skipped as expected)
+- ✅ All validation tests pass (11/11)
+- ✅ All existing EPB tests pass unchanged
+- ✅ No behavior change for valid bundles
+
+## Invariants Preserved
+
+- ✅ CI remains truthful
+- ✅ EPB canonicalization rules unchanged
+- ✅ EPB hashing rules unchanged
+- ✅ EPB schema stability maintained
+- ✅ Determinism gate should remain green (to be verified in CI)
+
+## Schema Validation
+
+Validates:
+- `manifest.json` (required)
+- `detections.json` (required)
+- `state.json` (required)
+- `delta.json` (optional, if present)
+
+Refs: M10
+

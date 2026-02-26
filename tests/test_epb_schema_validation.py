@@ -10,9 +10,7 @@ from ezra.epb import build_epb_bundle, validate_bundle, write_epb_bundle
 def test_valid_bundle_passes_schema_validation() -> None:
     """Test that a valid EPB bundle passes schema validation."""
     bundle = build_epb_bundle(
-        detections=[
-            {"text": "Hello", "confidence": 0.9, "bbox": [10.0, 20.0, 50.0, 40.0]}
-        ],
+        detections=[{"text": "Hello", "confidence": 0.9, "bbox": [10.0, 20.0, 50.0, 40.0]}],
         plugin_name="test",
         plugin_version="1.0.0",
         input_metadata={"width": 100, "height": 200, "channels": 3},
@@ -83,9 +81,7 @@ def test_invalid_manifest_fails_validation() -> None:
 def test_invalid_detections_fails_validation() -> None:
     """Test that invalid detections structure fails validation."""
     bundle = build_epb_bundle(
-        detections=[
-            {"text": "Hello", "confidence": 0.9, "bbox": [10.0, 20.0, 50.0, 40.0]}
-        ],
+        detections=[{"text": "Hello", "confidence": 0.9, "bbox": [10.0, 20.0, 50.0, 40.0]}],
         plugin_name="test",
         plugin_version="1.0.0",
         input_metadata={"width": 100, "height": 200, "channels": 3},
@@ -195,4 +191,3 @@ def test_invalid_confidence_range_fails_validation() -> None:
 
     with pytest.raises(ValueError, match="EPB detections validation failed"):
         validate_bundle(bundle)
-
