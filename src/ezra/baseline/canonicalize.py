@@ -35,7 +35,7 @@ def canonicalize_detections(detections: list[dict[str, Any]]) -> list[dict[str, 
         )
 
     # Sort by top-left corner: first by y1, then by x1
-    canonicalized.sort(key=lambda d: (d["bbox"][1], d["bbox"][0]))
+    canonicalized.sort(key=lambda d: (d["bbox"][1], d["bbox"][0]))  # type: ignore[index]
 
     return canonicalized
 
@@ -69,4 +69,3 @@ def to_canonical_json(obj: Any) -> str:
         Canonical JSON string with sorted keys and rounded floats.
     """
     return json.dumps(obj, sort_keys=True, indent=2, ensure_ascii=False)
-

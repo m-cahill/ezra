@@ -5,9 +5,9 @@ from __future__ import annotations
 from typing import Any
 
 try:
-    import easyocr
+    import easyocr  # type: ignore[import-untyped]
 except ImportError:
-    easyocr = None  # type: ignore[assignment, misc]
+    easyocr = None  # type: ignore[assignment]
 
 from ezra.plugins.interface import OCRPlugin
 
@@ -30,10 +30,7 @@ class EasyOCRPlugin(OCRPlugin):
             ImportError: If easyocr is not installed.
         """
         if easyocr is None:
-            msg = (
-                "EasyOCR is not installed. Install it with: "
-                "pip install -e '.[easyocr]'"
-            )
+            msg = "EasyOCR is not installed. Install it with: pip install -e '.[easyocr]'"
             raise ImportError(msg)
 
         self.device = device
@@ -146,4 +143,3 @@ class EasyOCRPlugin(OCRPlugin):
                 ],
             },
         }
-

@@ -91,7 +91,7 @@ def test_to_canonical_json() -> None:
     json_str = to_canonical_json(obj)
 
     # Should be sorted by keys
-    assert json_str.startswith("{\n  \"a\":")
+    assert json_str.startswith('{\n  "a":')
     assert '"a"' in json_str
     assert '"m"' in json_str
     assert '"z"' in json_str
@@ -105,4 +105,3 @@ def test_to_canonical_json_deterministic() -> None:
     json2 = to_canonical_json(obj)
 
     assert json1 == json2
-

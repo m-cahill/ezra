@@ -127,4 +127,3 @@ def test_easyocr_plugin_load_failure(mock_easyocr: MagicMock) -> None:
 
     with pytest.raises(RuntimeError, match="Failed to load EasyOCR model"):
         plugin.load("")
-

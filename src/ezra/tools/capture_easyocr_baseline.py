@@ -13,16 +13,16 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import easyocr
+    import easyocr  # type: ignore[import-untyped]
 except ImportError:
-    easyocr = None  # type: ignore[assignment, misc]
+    easyocr = None  # type: ignore[assignment]
 
 try:
-    from PIL import Image, ImageDraw, ImageFont
+    from PIL import Image, ImageDraw, ImageFont  # type: ignore[import-untyped]
 except ImportError:
-    Image = None  # type: ignore[assignment, misc]
-    ImageDraw = None  # type: ignore[assignment, misc]
-    ImageFont = None  # type: ignore[assignment, misc]
+    Image = None  # type: ignore[assignment]
+    ImageDraw = None  # type: ignore[assignment]
+    ImageFont = None  # type: ignore[assignment]
 
 from ezra.baseline.canonicalize import canonicalize_output, to_canonical_json
 from ezra.plugins.easyocr_plugin import EasyOCRPlugin
@@ -47,8 +47,7 @@ def generate_synthetic_fixture(
     """
     if Image is None or ImageDraw is None or ImageFont is None:
         msg = (
-            "PIL (Pillow) is required for fixture generation. "
-            "Install with: pip install -e '.[dev]'"
+            "PIL (Pillow) is required for fixture generation. Install with: pip install -e '.[dev]'"
         )
         raise ImportError(msg)
 
@@ -57,11 +56,12 @@ def generate_synthetic_fixture(
     draw = ImageDraw.Draw(img)
 
     # Try to use default font, fallback to basic if not available
+    font: Any = None
     try:
-        font = ImageFont.truetype("arial.ttf", font_size)
+        font = ImageFont.truetype("arial.ttf", font_size)  # type: ignore[assignment]
     except OSError:
         try:
-            font = ImageFont.load_default()
+            font = ImageFont.load_default()  # type: ignore[assignment]
         except Exception:
             font = None
 
@@ -146,10 +146,7 @@ def capture_baseline(output_dir: Path) -> None:
         RuntimeError: If capture fails.
     """
     if easyocr is None:
-        msg = (
-            "EasyOCR is not installed. Install it with: "
-            "pip install -e '.[easyocr]'"
-        )
+        msg = "EasyOCR is not installed. Install it with: pip install -e '.[easyocr]'"
         raise ImportError(msg)
 
     if Image is None:
@@ -176,7 +173,7 @@ def capture_baseline(output_dir: Path) -> None:
     for text, width, height in fixtures:
         img = generate_synthetic_fixture(text, width, height)
         # Convert PIL Image to numpy array for EasyOCR
-        import numpy as np
+        import numpy as np  # type: ignore[import-untyped]
 
         img_array = np.array(img)
         result = plugin.infer(img_array)
@@ -193,6 +190,7 @@ def capture_baseline(output_dir: Path) -> None:
     # Collect manifest information
     try:
         import torch
+
         torch_version = torch.__version__
         torchvision_version = getattr(torch, "__version__", "unknown")
     except ImportError:
@@ -202,6 +200,7 @@ def capture_baseline(output_dir: Path) -> None:
     # Try to get torchvision version separately
     try:
         import torchvision
+
         torchvision_version = torchvision.__version__
     except ImportError:
         pass
@@ -257,4 +256,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

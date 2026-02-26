@@ -54,6 +54,15 @@ no_implicit_optional = true
 strict_equality = true
 warn_unused_ignores = true
 
+[[tool.mypy.overrides]]
+module = [
+    "easyocr.*",
+    "numpy.*",
+    "torch.*",
+    "torchvision.*",
+]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
@@ -70,6 +79,7 @@ branch = true
 omit = [
     "*/tests/*",
     "*/__init__.py",
+    "*/tools/*",  # CLI tools are not library code
 ]
 
 [tool.coverage.report]

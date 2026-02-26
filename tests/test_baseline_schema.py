@@ -98,4 +98,3 @@ def test_baseline_deterministic_format() -> None:
     canonical_parsed = json.loads(canonical_content)
 
     assert baseline_parsed == canonical_parsed
-
