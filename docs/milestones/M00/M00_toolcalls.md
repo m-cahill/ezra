@@ -28,8 +28,25 @@ Each entry includes:
 - **Status:** ✅ Completed
 - **Notes:** 
   - Branch `m00-genesis-baseline` pushed to origin
-  - PR needs to be created manually via GitHub UI due to branch history divergence
-  - PR URL: https://github.com/m-cahill/ezra/compare/main...m00-genesis-baseline
+  - PR #1 created: https://github.com/m-cahill/ezra/pull/1
   - Coverage: 100% (exceeds 85% requirement)
   - All tests passing locally
+
+### 2026-02-26 - CI Workflow Analysis (M00_run1.md)
+- **Tool:** `write`, `run_terminal_cmd` (gh CLI)
+- **Purpose:** Generate CI workflow analysis per RefactorWorkflowPrompt.md
+- **Files:** `docs/milestones/M00/M00_run1.md`
+- **Status:** ✅ Completed
+- **Notes:**
+  - CI Run ID: 22422255082
+  - Status: ❌ Failed (formatting violations)
+  - Issue: 8 files need `ruff format` applied
+  - All functional checks passed (lint, typecheck, tests, coverage)
+  - Next: Fix formatting and re-run CI
+
+### 2026-02-26 - Fix Formatting Violations
+- **Tool:** `run_terminal_cmd` (ruff format)
+- **Purpose:** Apply Ruff formatting to 8 files that failed format check
+- **Files:** All Python files in `src/` and `tests/`
+- **Status:** In Progress
 

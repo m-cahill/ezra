@@ -19,4 +19,3 @@ class EzraEngine:
             plugin: OCR plugin instance to use for inference.
         """
         self.plugin = plugin
-

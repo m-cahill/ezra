@@ -47,4 +47,3 @@ class OCRPlugin(ABC):
             - output_schema: Description of output structure
         """
         ...
-

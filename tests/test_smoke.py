@@ -45,4 +45,3 @@ def test_plugin_interface() -> None:
     assert hasattr(plugin, "load")
     assert hasattr(plugin, "infer")
     assert hasattr(plugin, "describe_capabilities")
-

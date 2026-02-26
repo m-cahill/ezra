@@ -35,4 +35,3 @@ class ModelArtifactMetadata:
     normalization: Optional[Dict[str, float]] = None
     preprocessing_config: Optional[Dict[str, Any]] = None
     postprocessing_config: Optional[Dict[str, Any]] = None
-
