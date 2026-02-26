@@ -11,11 +11,11 @@ from ezra.plugins.easyocr_plugin import EasyOCRPlugin
 def test_easyocr_plugin_import_without_easyocr() -> None:
     """Test that plugin module can be imported without EasyOCR installed."""
     # This should not raise ImportError
-    from ezra.plugins import easyocr_plugin  # noqa: F401
-
     # But instantiating should raise if easyocr is None
     # We need to mock the import to test this
     import importlib
+
+    from ezra.plugins import easyocr_plugin  # noqa: F401
 
     with patch.dict(sys.modules, {"easyocr": None}):
         # Force reload to pick up the mocked module
