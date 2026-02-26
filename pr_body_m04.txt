@@ -1,0 +1,42 @@
+## M04: Multi-Plugin Abstraction Layer
+
+Introduces plugin registry with lazy import pattern for extensibility.
+
+### Changes
+
+- ✅ Add `registry.py` with static registry mapping plugin names to module paths
+- ✅ Implement `get_plugin(name, **kwargs)` factory function
+- ✅ Implement `list_plugins()` helper function
+- ✅ Add comprehensive registry unit tests (7 tests, 100% coverage)
+- ✅ Update capture tool to use registry instead of direct import
+- ✅ Update `docs/ezra.md` with plugin registration policy
+
+### Verification
+
+- ✅ All unit tests pass (54 passed, 4 skipped)
+- ✅ Parity suite passes unchanged (4/4 tests)
+- ✅ Coverage: 93.61% (above 85% threshold)
+- ✅ Lint/format/mypy checks pass
+- ✅ No behavior changes (parity verified)
+
+### Registry Pattern
+
+Uses lazy import pattern to avoid importing heavy ML modules at registry import time:
+
+```python
+_PLUGIN_REGISTRY: dict[str, str] = {
+    "easyocr": "ezra.plugins.easyocr_plugin:EasyOCRPlugin",
+}
+```
+
+Plugins are resolved dynamically when `get_plugin()` is called.
+
+### Next Steps
+
+After merge, this enables:
+- Multiple OCR backends (Tesseract, custom models)
+- Runtime plugin selection
+- Clean separation between plugin interface, implementation, and discovery
+
+Refs: M04 plan
+
