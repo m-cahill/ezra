@@ -21,5 +21,14 @@
 | 2026-02-26 | run_terminal_cmd | Check git status before commit | git status | ✅ Complete |
 | 2026-02-26 | run_terminal_cmd | Stage all changes | git add -A | ✅ Complete |
 | 2026-02-26 | run_terminal_cmd | Commit M15 implementation | git commit -m "M15: CI Evidence..." | ✅ Complete |
-| 2026-02-26 | run_terminal_cmd | Push branch to origin | git push -u origin m15-ci-evidence-hardening | ⏳ Pending |
+| 2026-02-26 | run_terminal_cmd | Push branch to origin | git push -u origin m15-ci-evidence-hardening | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Create PR #16 | gh pr create | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Commit and push toolcalls update | git commit + push | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Check CI status for PR #16 | gh pr view 16 --json statusCheckRollup | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Get workflow run details | gh run view 22465122870 | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Get lint job logs | gh run view 22465122870 --log --job 65069150642 | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Get test job logs | gh run view 22465122870 --log --job 65069150632 | ✅ Complete |
+| 2026-02-26 | search_replace | Fix cyclonedx-py version in pyproject.toml | pyproject.toml | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Commit and push fix | git commit + push | ✅ Complete |
+| 2026-02-26 | write | Generate M15_run1.md analysis report | docs/milestones/M15/M15_run1.md | ✅ Complete |
 
