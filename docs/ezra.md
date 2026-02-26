@@ -94,6 +94,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M00 | Genesis baseline (CI + skeleton + governance) | Complete | v0.0.1-m00 | PR#1 | Non-mutating CI + LF normalization |
 | M01 | EasyOCR baseline harness (behavior capture) | Complete | v0.0.2-m01 | PR#2 | Golden baseline locked, deterministic canonicalization |
 | M02 | Golden Output Lock & Parity Verification | Complete | v0.0.3-m02 | PR#3 | Hard parity gate enforced |
+| M03 | Structural Extraction of EasyOCR Integration | Complete | v0.0.4-m03 | PR#4 | Adapter layer isolation, clean integration boundaries |
 
 ## 8. Local Dev Quickstart
 
