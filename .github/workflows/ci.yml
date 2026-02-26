@@ -77,3 +77,53 @@ jobs:
           echo "### Coverage" >> $GITHUB_STEP_SUMMARY
           coverage report >> $GITHUB_STEP_SUMMARY
 
+  determinism-check:
+    name: Determinism Check
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run determinism check
+        run: |
+          python scripts/check_determinism.py --output-dir determinism_output --runs 3
+      - name: Upload determinism artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: determinism-artifacts
+          path: |
+            determinism_output/bundle_run_1
+            determinism_output/bundle_run_2
+            determinism_output/bundle_run_3
+            determinism_output/determinism_report.json
+          retention-days: 7
+      - name: Determinism Summary
+        if: always()
+        run: |
+          if [ -f determinism_output/determinism_report.json ]; then
+            echo "## Determinism Gate" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            python -c "
+import json
+with open('determinism_output/determinism_report.json') as f:
+    report = json.load(f)
+check = report['determinism_check']
+print(f\"Result: {check['result']}\")
+print(f\"Number of runs: {check['num_runs']}\")
+print()
+for i in range(check['num_runs']):
+    run_key = f'run_{i+1}'
+    run_info = check['hashes'][run_key]
+    print(f\"SHA{i+1} ({run_info['bundle_dir']}): {run_info['sha256']}\")
+"
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+

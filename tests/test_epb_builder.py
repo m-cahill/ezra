@@ -1,5 +1,7 @@
 """Tests for EPB bundle builder."""
 
+from datetime import UTC, datetime
+
 from ezra.epb.builder import EPB_VERSION, build_epb_bundle
 
 
@@ -99,3 +101,60 @@ def test_build_epb_bundle_platform_info() -> None:
     assert "platform" in manifest
     assert "python_version" in manifest
     assert "timestamp" in manifest
+
+
+def test_build_epb_bundle_explicit_timestamp_stability() -> None:
+    """Test that explicit timestamp produces stable output across calls."""
+    fixed_timestamp = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
+    detections = [{"text": "Hello", "confidence": 0.9, "bbox": [10.0, 20.0, 50.0, 40.0]}]
+    input_metadata = {"width": 100, "height": 200, "channels": 3}
+
+    # Build bundle twice with same explicit timestamp
+    bundle1 = build_epb_bundle(
+        detections=detections,
+        plugin_name="test",
+        plugin_version="1.0.0",
+        input_metadata=input_metadata,
+        timestamp=fixed_timestamp,
+    )
+
+    bundle2 = build_epb_bundle(
+        detections=detections,
+        plugin_name="test",
+        plugin_version="1.0.0",
+        input_metadata=input_metadata,
+        timestamp=fixed_timestamp,
+    )
+
+    # Timestamps should be identical
+    assert bundle1["manifest"]["timestamp"] == bundle2["manifest"]["timestamp"]
+    assert bundle1["state"]["timestamp"] == bundle2["state"]["timestamp"]
+    assert bundle1["manifest"]["timestamp"] == "2024-01-01T00:00:00Z"
+    assert bundle2["state"]["timestamp"] == "2024-01-01T00:00:00Z"
+
+    # All other fields should be identical (deterministic)
+    assert bundle1["manifest"] == bundle2["manifest"]
+    assert bundle1["detections"] == bundle2["detections"]
+    assert bundle1["state"] == bundle2["state"]
+
+
+def test_build_epb_bundle_default_timestamp_behavior() -> None:
+    """Test that default behavior (no timestamp) still uses current UTC."""
+    detections = []
+    input_metadata = {"width": 100, "height": 200, "channels": 3}
+
+    bundle = build_epb_bundle(
+        detections=detections,
+        plugin_name="test",
+        plugin_version="1.0.0",
+        input_metadata=input_metadata,
+    )
+
+    # Timestamp should be present and valid ISO format
+    assert "timestamp" in bundle["manifest"]
+    assert "timestamp" in bundle["state"]
+    assert bundle["manifest"]["timestamp"].endswith("Z")
+    assert bundle["state"]["timestamp"].endswith("Z")
+
+    # Timestamps should match between manifest and state
+    assert bundle["manifest"]["timestamp"] == bundle["state"]["timestamp"]
