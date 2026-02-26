@@ -1,7 +1,7 @@
 """Abstract plugin interface for OCR and perception backends."""
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any
 
 
 class OCRPlugin(ABC):
@@ -21,7 +21,7 @@ class OCRPlugin(ABC):
         ...
 
     @abstractmethod
-    def infer(self, image: Any) -> Dict[str, Any]:
+    def infer(self, image: Any) -> dict[str, Any]:
         """Run inference on an input image.
 
         Args:
@@ -36,7 +36,7 @@ class OCRPlugin(ABC):
         ...
 
     @abstractmethod
-    def describe_capabilities(self) -> Dict[str, Any]:
+    def describe_capabilities(self) -> dict[str, Any]:
         """Describe plugin capabilities and metadata.
 
         Returns:

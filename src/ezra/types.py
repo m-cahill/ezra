@@ -1,7 +1,7 @@
 """Type definitions for EZRA core data structures."""
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -12,7 +12,7 @@ class ImageInput:
     width: int
     height: int
     channels: int = 3
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -21,8 +21,8 @@ class OCRResult:
 
     text: str
     confidence: float
-    bbox: List[float]  # [x1, y1, x2, y2]
-    metadata: Optional[Dict[str, Any]] = None
+    bbox: list[float]  # [x1, y1, x2, y2]
+    metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -32,6 +32,6 @@ class ModelArtifactMetadata:
     artifact_path: str
     version: str
     input_size: tuple[int, int]
-    normalization: Optional[Dict[str, float]] = None
-    preprocessing_config: Optional[Dict[str, Any]] = None
-    postprocessing_config: Optional[Dict[str, Any]] = None
+    normalization: dict[str, float] | None = None
+    preprocessing_config: dict[str, Any] | None = None
+    postprocessing_config: dict[str, Any] | None = None

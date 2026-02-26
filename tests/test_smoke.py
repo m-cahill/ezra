@@ -1,9 +1,5 @@
 """Smoke tests to verify basic import and instantiation."""
 
-from unittest.mock import Mock
-
-import pytest
-
 from ezra.core.engine import EzraEngine
 from ezra.plugins.interface import OCRPlugin
 

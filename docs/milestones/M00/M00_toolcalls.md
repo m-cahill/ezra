@@ -79,11 +79,25 @@ Each entry includes:
 
 ### 2026-02-26 - Enforce LF Normalization
 - **Tool:** `write`, `run_terminal_cmd` (git)
-- **Purpose:** Add `.gitattributes` with `* text=auto eol=lf` and renormalize working tree to fix persistent CRLF/LF drift causing CI format check failures
-- **Files:** `.gitattributes`, all tracked files (renormalization)
-- **Status:** 🔄 In Progress
+- **Purpose:** Add `.gitattributes` with `* text=auto eol=lf` for cross-platform line ending control
+- **Files:** `.gitattributes`
+- **Status:** ✅ Completed
 - **Notes:**
-  - Root cause: Windows CRLF line endings not normalized to LF for CI (Ubuntu)
-  - Ruff format is line-ending sensitive
-  - This is an environment determinism fix, not a formatting fix
+  - Added `.gitattributes` (environment determinism guardrail)
+  - Investigation revealed `core.autocrlf=true` was already normalizing blobs to LF
+  - Line endings were NOT the root cause (see next entry)
+
+### 2026-02-26 - Root Cause Analysis & Fix: CI Pipeline Ordering Bug
+- **Tool:** `run_terminal_cmd` (ruff, git), `search_replace` (ci.yml)
+- **Purpose:** Fix persistent CI format check failure — root cause was `fix = true` in pyproject.toml causing `ruff check` to mutate files in CI before `ruff format --check` ran
+- **Files:** `src/ezra/types.py`, `src/ezra/plugins/interface.py`, `tests/test_smoke.py`, `.github/workflows/ci.yml`
+- **Status:** ✅ Completed
+- **Notes:**
+  - ROOT CAUSE: `[tool.ruff] fix = true` + `ruff check .` in CI = auto-fix writes 19 changes to disk
+  - Then `ruff format --check .` sees modified-but-unformatted files → failure
+  - Fix applied:
+    1. Ran `ruff check --fix .` locally (19 UP035/UP007/F401 fixes: modern type hints, remove unused imports)
+    2. Ran `ruff format .` locally (1 file reformatted after lint fixes)
+    3. Changed CI to use `ruff check --no-fix .` (CI must never mutate files during checks)
+  - Verified locally: `ruff check --no-fix .` → All checks passed, `ruff format --check .` → 8 files already formatted
 
