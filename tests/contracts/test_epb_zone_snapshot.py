@@ -169,4 +169,3 @@ def test_epb_zones_byte_stable(tmp_path: Path) -> None:
     hashes1_content = (output_dir1 / "hashes.json").read_text(encoding="utf-8")
     hashes2_content = (output_dir2 / "hashes.json").read_text(encoding="utf-8")
     assert hashes1_content == hashes2_content
-

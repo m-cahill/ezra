@@ -148,7 +148,6 @@ def test_epb_zones_hash_included_in_bundle_hash(tmp_path: Path) -> None:
 
     # Verify zones.json is in files map
     assert "zones.json" in hashes["files"]
-    zones_hash = hashes["files"]["zones.json"]
 
     # Verify bundle_hash includes zones.json (by checking it's different from bundle without zones)
     bundle_with_zones_hash = hashes["bundle_hash"]
@@ -291,4 +290,3 @@ def test_epb_zones_hash_verification(tmp_path: Path) -> None:
     # Verification should fail
     with pytest.raises(ValueError, match="zones.json hash mismatch"):
         verify_epb_bundle(output_dir)
-

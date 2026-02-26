@@ -117,4 +117,3 @@ def adapt_zone_registry_to_epb(registry: ZoneRegistry) -> dict[str, Any]:
 
     # Export registry to dict (already deterministic, 6dp precision)
     return registry.export_to_dict()
-
