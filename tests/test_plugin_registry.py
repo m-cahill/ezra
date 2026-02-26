@@ -20,7 +20,10 @@ def test_list_plugins() -> None:
     plugins = list_plugins()
     assert isinstance(plugins, list)
     assert "easyocr" in plugins
+    assert "tesseract" in plugins
     assert plugins == sorted(plugins)
+    # Verify deterministic ordering: easyocr first, tesseract second
+    assert plugins == ["easyocr", "tesseract"]
 
 
 def test_get_plugin_success() -> None:
@@ -261,3 +264,79 @@ def test_kwargs_forwarding_behavior() -> None:
         plugin2 = get_plugin_from_config(config_no_kwargs)
         assert plugin2.device == "cpu"  # EasyOCRPlugin default
         assert plugin2.languages == ["en"]  # EasyOCRPlugin default
+
+
+def test_tesseract_plugin_loads() -> None:
+    """Test that Tesseract plugin can be instantiated and implements OCRPlugin interface."""
+    plugin = get_plugin("tesseract", languages=["eng", "fra"])
+    assert isinstance(plugin, OCRPlugin)
+    assert plugin.languages == ["eng", "fra"]
+    # Verify it has required methods
+    assert hasattr(plugin, "load")
+    assert hasattr(plugin, "infer")
+    assert hasattr(plugin, "describe_capabilities")
+    # Verify stub behavior
+    plugin.load("")
+    result = plugin.infer(None)
+    assert result == {"detections": []}
+    capabilities = plugin.describe_capabilities()
+    assert capabilities["version"] == "stub-0.0.1"
+    assert capabilities["plugin_name"] == "TesseractPlugin"
+
+
+def test_tesseract_plugin_default_languages() -> None:
+    """Test that Tesseract plugin uses default languages when none provided."""
+    plugin = get_plugin("tesseract")
+    assert plugin.languages == ["eng"]
+
+
+def test_registry_snapshot_updated() -> None:
+    """Test that registry snapshot includes tesseract with deterministic ordering."""
+    plugins = list_plugins()
+    # Verify both plugins present
+    assert "easyocr" in plugins
+    assert "tesseract" in plugins
+    # Verify deterministic ordering: easyocr first, tesseract second
+    assert plugins == ["easyocr", "tesseract"]
+    # Verify sorted order maintained
+    assert plugins == sorted(plugins)
+
+
+def test_tesseract_does_not_import_easyocr() -> None:
+    """Test that importing/instantiating Tesseract plugin does not import EasyOCR module.
+
+    This ensures lazy loading works correctly and there is no cross-plugin coupling.
+    """
+    # Remove easyocr from sys.modules if present (to test fresh import)
+    easyocr_modules = [k for k in sys.modules.keys() if k.startswith("easyocr")]
+    for mod in easyocr_modules:
+        del sys.modules[mod]
+
+    # Also remove the plugin modules to test fresh import
+    plugin_modules = [k for k in sys.modules.keys() if k.startswith("ezra.plugins.easyocr")]
+    for mod in plugin_modules:
+        del sys.modules[mod]
+
+    # Import registry - this should not import easyocr
+    import ezra.plugins.registry  # noqa: F401
+
+    # Verify easyocr is not in sys.modules
+    assert "easyocr" not in sys.modules
+    assert "easyocr.reader" not in sys.modules
+
+    # Now instantiate tesseract plugin - this should NOT trigger easyocr import
+    plugin = get_plugin("tesseract")
+    assert isinstance(plugin, OCRPlugin)
+
+    # Verify easyocr is still not in sys.modules after tesseract instantiation
+    assert "easyocr" not in sys.modules
+    assert "easyocr.reader" not in sys.modules
+    assert "ezra.plugins.easyocr_plugin" not in sys.modules
+    assert "ezra.plugins.easyocr_adapter" not in sys.modules
+
+
+def test_registry_validation_includes_tesseract() -> None:
+    """Test that validate_registry passes with tesseract plugin registered."""
+    with patch("ezra.plugins.easyocr_adapter.easyocr"):
+        # Should not raise - validates both easyocr and tesseract
+        validate_registry()

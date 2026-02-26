@@ -15,6 +15,7 @@ from ezra.plugins.interface import OCRPlugin
 # Static registry mapping plugin names to "module.path:ClassName" strings
 _PLUGIN_REGISTRY: dict[str, str] = {
     "easyocr": "ezra.plugins.easyocr_plugin:EasyOCRPlugin",
+    "tesseract": "ezra.plugins.tesseract_plugin:TesseractPlugin",
 }
 
 
