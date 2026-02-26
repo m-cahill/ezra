@@ -263,3 +263,4 @@ However, investigation confirmed `core.autocrlf=true` was already normalizing bl
 | Run 2.5 | 22424402274 | ❌ Failed | `.gitattributes` added but root cause was pipeline ordering, not line endings |
 | **Run 3** | **22424737964** | **✅ Success** | **Root cause fixed: lint fixes applied locally, CI uses `--no-fix`** |
 
+
