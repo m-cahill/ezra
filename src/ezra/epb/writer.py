@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from ezra.epb.canonical import to_canonical_json
+from ezra.epb.hash_verifier import verify_epb_bundle
 from ezra.epb.hasher import build_hashes_dict, compute_file_hash
 from ezra.epb.schema_validator import validate_bundle
 
@@ -84,3 +85,6 @@ def write_epb_bundle(bundle: dict[str, Any], output_dir: Path) -> None:
     hashes_path = output_dir / "hashes.json"
     hashes_json = to_canonical_json(hashes_dict)
     hashes_path.write_text(hashes_json + "\n", encoding="utf-8", newline="")
+
+    # 6. Verify bundle integrity (recompute hashes from disk and compare)
+    verify_epb_bundle(output_dir)

@@ -1,0 +1,24 @@
+{
+  "detections": [
+    {
+      "bbox": [
+        10.0,
+        20.0,
+        50.0,
+        40.0
+      ],
+      "confidence": 0.9,
+      "text": "Hello"
+    },
+    {
+      "bbox": [
+        60.0,
+        20.0,
+        100.0,
+        40.0
+      ],
+      "confidence": 0.85,
+      "text": "World"
+    }
+  ]
+}
