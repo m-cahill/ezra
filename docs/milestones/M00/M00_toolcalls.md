@@ -48,5 +48,22 @@ Each entry includes:
 - **Tool:** `run_terminal_cmd` (ruff format)
 - **Purpose:** Apply Ruff formatting to 8 files that failed format check
 - **Files:** All Python files in `src/` and `tests/`
-- **Status:** In Progress
+- **Status:** ✅ Completed
+- **Notes:**
+  - Applied `ruff format .` to fix all formatting violations
+  - Committed and pushed to trigger CI re-run
+  - Waiting for CI to complete
+
+### 2026-02-26 - CI Workflow Analysis (M00_run2.md)
+- **Tool:** `write`, `run_terminal_cmd` (gh CLI)
+- **Purpose:** Generate CI workflow analysis for Run 2 per RefactorWorkflowPrompt.md
+- **Files:** `docs/milestones/M00/M00_run2.md`
+- **Status:** ✅ Completed
+- **Notes:**
+  - CI Run ID: 22422346345
+  - Status: ❌ Failed (1 file still needs formatting)
+  - Issue: `tests/test_smoke.py` needs reformatting
+  - Ruff lint auto-fixed 19 errors (improvement)
+  - All functional checks passed (typecheck, tests, coverage)
+  - Next: Fix remaining formatting violation
 
