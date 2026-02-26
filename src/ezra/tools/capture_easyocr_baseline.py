@@ -189,7 +189,7 @@ def capture_baseline(output_dir: Path) -> None:
 
     # Collect manifest information
     try:
-        import torch
+        import torch  # type: ignore[import-untyped]
 
         torch_version = torch.__version__
         torchvision_version = getattr(torch, "__version__", "unknown")
@@ -199,7 +199,7 @@ def capture_baseline(output_dir: Path) -> None:
 
     # Try to get torchvision version separately
     try:
-        import torchvision
+        import torchvision  # type: ignore[import-untyped]
 
         torchvision_version = torchvision.__version__
     except ImportError:
