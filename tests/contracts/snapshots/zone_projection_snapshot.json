@@ -1,0 +1,26 @@
+{
+  "detection_zone": [
+    {
+      "bbox": [
+        140.0,
+        140.0,
+        160.0,
+        160.0
+      ],
+      "confidence": 0.856789,
+      "text": "World"
+    }
+  ],
+  "ocr_zone": [
+    {
+      "bbox": [
+        40.0,
+        40.0,
+        60.0,
+        60.0
+      ],
+      "confidence": 0.912346,
+      "text": "Hello"
+    }
+  ]
+}

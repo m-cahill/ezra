@@ -1,0 +1,46 @@
+Implements M14: Zone-Scoped State Projection (Behavior-Preserving Runtime Extension)
+
+## Summary
+
+Introduces deterministic, zone-scoped state projection inside the runtime without altering inference behavior. Moves zones from "artifact metadata" → "runtime-scoped projection primitive."
+
+## Changes
+
+- **Step 1**: Introduced `ZoneProjector` pure function (`project_state_to_zones`)
+- **Step 2**: Added deterministic canonical projection serializer (`to_projection_canonical_json`)
+- **Step 3**: Validation rules (frozen registry, strict mode for overlapping zones)
+- **Step 4**: Comprehensive tests (16 unit tests + 2 snapshot tests)
+- **Step 5**: Extended determinism gate to include `projection.json` emission
+- **Step 6**: Architecture boundary test (projector does not import EPB internals)
+
+## Key Features
+
+- Pure functional projection (no mutation)
+- Deterministic ordering (sorted by zone_id, stable detection order)
+- 6dp precision (zone contract)
+- Strict mode for overlapping zones (raises ValueError)
+- Unassigned detections silently dropped
+- Byte-level determinism verified across N≥3 runs
+
+## Testing
+
+- All existing tests pass unchanged (204 passed, 4 skipped)
+- 16 new projector tests
+- 2 snapshot tests
+- Determinism gate extended and passing
+- Architecture boundary tests passing
+
+## Invariants Preserved
+
+✅ CI truthfulness preserved
+✅ Determinism gate remains green
+✅ EPB canonicalization unchanged
+✅ Hash algorithm unchanged
+✅ Backward compatibility preserved
+✅ Coverage ≥ baseline
+✅ Adapter boundary preserved
+✅ Zone precision contract preserved (6dp)
+✅ NEW: Projected state deterministic across N≥3 runs
+
+Refs: M14 plan in `docs/milestones/M14/M14_plan.md`
+
