@@ -1,0 +1,27 @@
+## Milestone: M06 — Tesseract Plugin (Provider Boundary Extension)
+
+### Objective
+Introduce a second OCR backend plugin (tesseract) into the existing static plugin registry without changing default plugin resolution, altering get_plugin("easyocr") behavior, or introducing dynamic discovery.
+
+### Changes
+- Add TesseractPlugin stub implementation (tesseract_plugin.py)
+- Register tesseract in static plugin registry (preserve easyocr first, deterministic ordering)
+- Add tests: instantiation, snapshot, cross-plugin isolation, validation
+- Maintain 100% registry coverage, overall coverage 94.85%
+
+### Invariants Preserved
+- get_plugin("easyocr") behaves exactly as in M05
+- Registry remains static and deterministic
+- No public API changes
+- CI integrity maintained (coverage >= 85%, registry 100%)
+
+### Testing
+- All 22 registry tests pass (including 5 new tests for tesseract)
+- Coverage: 94.85% overall, 100% registry module, 100% tesseract plugin
+- Lint: pass
+- Format: pass
+- Type check: pass (pre-existing mypy error in capture_easyocr_baseline.py from M01, not blocking)
+
+### Refactor Posture
+Behavior-Preserving — No externally observable behavior changes for existing consumers.
+
