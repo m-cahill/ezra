@@ -41,4 +41,10 @@
 | 2026-02-26 | write | Generate M15_run2.md analysis report | docs/milestones/M15/M15_run2.md | ✅ Complete |
 | 2026-02-26 | search_replace | Remove invalid -e flag from SBOM command | .github/workflows/ci.yml | ✅ Complete |
 | 2026-02-26 | write | Generate M15_run3.md analysis report (final - all jobs passed) | docs/milestones/M15/M15_run3.md | ✅ Complete |
+| 2026-02-26 | write | Generate M15_audit.md | docs/milestones/M15/M15_audit.md | ✅ Complete |
+| 2026-02-26 | write | Generate M15_summary.md | docs/milestones/M15/M15_summary.md | ✅ Complete |
+| 2026-02-26 | search_replace | Update docs/ezra.md with M15 milestone entry | docs/ezra.md | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Merge PR #16 to main | PR #16 | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Tag v0.0.16-m15 | git tag | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Seed M16 milestone folder | docs/milestones/M16/ | ✅ Complete |
 

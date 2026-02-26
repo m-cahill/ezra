@@ -111,6 +111,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M13 | Zone-Aware EPB Extension (Adapter-Gated) | Complete | v0.0.14-m13 | PR#14 | Optional zones.json emission via adapter-gated wiring, deterministic, backward compatible. Hash integrity preserved. Determinism verified with zones. CI Run: 22462632573 |
 | M14 | Zone-Scoped State Projection (Behavior-Preserving Runtime Extension) | Complete | v0.0.15-m14 | PR#15 | Zone-scoped state projection utility introduced as pure functional runtime extension. Deterministic projection.json emission verified. Strict mode for overlapping zones. Architecture boundaries preserved. Opt-in design. CI Run: 22464039455 |
 | M14 | Zone-Scoped State Projection (Runtime Extension) | Complete | v0.0.15-m14 | PR#15 | Zone-scoped state projection as pure functional runtime utility, deterministic, opt-in only. Architecture boundaries preserved. Determinism verified with projection.json. CI Run: 22464039455 |
+| M15 | CI Evidence & Deterministic Quality Envelope Hardening | Complete | v0.0.16-m15 | PR#16 | Structured CI evidence, security/complexity/SBOM gates, audit-ready governance. All 7 jobs pass, all invariants preserved, zero runtime changes. CI Run: 22466225248 |
 
 ## 8. Local Dev Quickstart
 
