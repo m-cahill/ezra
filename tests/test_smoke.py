@@ -75,7 +75,7 @@ def test_engine_process_image_with_epb_emission(tmp_path) -> None:
     image = MockImage()
     epb_dir = tmp_path / "epb"
 
-    result = engine.process_image(image, emit_epb=True, epb_output_dir=epb_dir)
+    engine.process_image(image, emit_epb=True, epb_output_dir=epb_dir)
 
     # Verify EPB bundle was written
     assert (epb_dir / "manifest.json").exists()
