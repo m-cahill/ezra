@@ -49,3 +49,10 @@ determinism_output/
 determinism_test/
 determinism_final/
 
+# CI quality artifacts
+sbom.cdx.json
+bandit.json
+pip_audit.json
+radon.json
+radon.txt
+

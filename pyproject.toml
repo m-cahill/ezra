@@ -32,6 +32,10 @@ dev = [
     "pytest-cov>=4.1.0",
     "coverage[toml]>=7.3.0",
     "pillow>=10.0.0",
+    "radon>=6.0.0",
+    "bandit>=1.7.0",
+    "pip-audit>=2.6.0",
+    "cyclonedx-py>=1.0.0",
 ]
 easyocr = [
     "easyocr==1.7.2",
