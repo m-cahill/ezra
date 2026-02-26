@@ -34,4 +34,9 @@
 | 2026-02-26 | run_terminal_cmd | Get complexity check job logs | gh run view 22465175019 --log --job 65069324509 | ✅ Complete |
 | 2026-02-26 | write | Update M15_run1.md with second run analysis (after fix) | docs/milestones/M15/M15_run1.md | ✅ Complete |
 | 2026-02-26 | search_replace | Fix SBOM command syntax (add 'environment' subcommand) | .github/workflows/ci.yml | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Check CI status for PR #16 (after SBOM fix) | gh pr view 16 --json statusCheckRollup | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Get workflow run details | gh run list --branch m15-ci-evidence-hardening --limit 1 | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Get SBOM job logs | gh run view 22465701522 --log --job 65071044019 | ✅ Complete |
+| 2026-02-26 | run_terminal_cmd | Get test job logs | gh run view 22465701522 --log --job 65071044003 | ✅ Complete |
+| 2026-02-26 | write | Generate M15_run2.md analysis report | docs/milestones/M15/M15_run2.md | ✅ Complete |
 
