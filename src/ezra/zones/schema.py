@@ -9,6 +9,7 @@ This module defines the core data structures for the Universal Zone Schema:
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -58,3 +59,25 @@ class ZoneSchema:
     channel_index: int
     bbox_norm: BBoxNorm
     persistence: ZonePersistence
+
+    def to_dict(self) -> dict[str, Any]:
+        """Serialize zone schema to deterministic dictionary.
+
+        Returns:
+            Dictionary with stable key ordering and 6 decimal place float precision.
+            Keys: ["id", "kind", "channel_index", "bbox_norm", "persistence"]
+        """
+        return {
+            "id": self.id,
+            "kind": self.kind,
+            "channel_index": self.channel_index,
+            "bbox_norm": {
+                "x_min": round(self.bbox_norm.x_min, 6),
+                "y_min": round(self.bbox_norm.y_min, 6),
+                "x_max": round(self.bbox_norm.x_max, 6),
+                "y_max": round(self.bbox_norm.y_max, 6),
+            },
+            "persistence": {
+                "sticky": self.persistence.sticky,
+            },
+        }
