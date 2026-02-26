@@ -1,0 +1,34 @@
+Implements M11 — EPB Hash Integrity Verification (Self-Validation Hardening Phase 3)
+
+## Changes
+
+- **New module**: `src/ezra/epb/hash_verifier.py` — Runtime verification of EPB bundle hash integrity
+- **Integration**: Verification automatically runs after `write_epb_bundle()` completes
+- **Tests**: 13 new unit tests covering positive cases and tamper detection
+
+## Verification Features
+
+- Recomputes SHA256 hashes from on-disk files
+- Verifies all files listed in `hashes.json.files` match declared hashes
+- Verifies `bundle_hash` matches recomputed value
+- Verifies `hashes.json` self-hash (computed before self-entry is added)
+- Ignores extra on-disk files not in `hashes.json.files`
+- Raises `ValueError` with descriptive messages on mismatch
+
+## Test Results
+
+- ✅ All 131 tests pass (13 new hash verification tests)
+- ✅ Coverage: 94.13% (above baseline)
+- ✅ Determinism gate: PASS (bundles remain byte-identical)
+- ✅ No type errors in new code
+- ✅ All lint/format checks pass
+
+## Constraints Maintained
+
+- ✅ No hashing algorithm changes
+- ✅ No canonicalization changes
+- ✅ No schema changes
+- ✅ Determinism preserved
+
+Refs: M11 plan
+
