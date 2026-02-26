@@ -105,6 +105,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M07 | EPB v1 Specification & External Certification Guardrail | Complete | v0.0.8-m07 | PR#8 | EPB v1 spec locked, RediAI separation rule formalized |
 | M08 | EPB v1 Emission (Runtime Wiring, Deterministic Bundle Output) | Complete | v0.0.9-m08 | PR#9 | EPB v1.0.0 bundle emission implemented, 100% EPB module coverage, coverage 96.33% (above 94.85% baseline) |
 | M09 | Determinism Multi-Run Gate (EPB Hardening) | Complete | v0.0.10-m09 | PR#10 | Determinism CI gate implemented, byte-identical bundles verified across N≥3 runs, timestamp injection added, all CI checks passing |
+| M10 | EPB Schema Validation Wiring (EPB Hardening Phase 2) | Complete | v0.0.11-m10 | PR#11 | JSON Schema validation wired into emission pipeline, invalid bundles fail fast, determinism gate confirmed validation does not mutate data, all CI checks passing |
 
 ## 8. Local Dev Quickstart
 
