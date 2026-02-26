@@ -97,3 +97,14 @@ Each entry includes:
   - Generated 4 detections in baseline.json
   - Captured 2 model file checksums in manifest.json
 
+### 2026-02-26 - M01 Closure
+- **Tool:** `run_terminal_cmd` (gh, git)
+- **Purpose:** Merge PR #2, create tag v0.0.2-m01, verify main branch CI
+- **Files:** N/A
+- **Status:** ✅ Completed
+- **Notes:**
+  - PR #2 merged to main (merge commit: 92bb042)
+  - Tag v0.0.2-m01 created and pushed
+  - Main branch CI verified green (Run: 22426628285)
+  - No diff between PR head and merge commit (no formatting drift)
+
