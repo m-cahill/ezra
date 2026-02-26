@@ -13,16 +13,16 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import easyocr  # type: ignore[import-untyped]
+    import easyocr
 except ImportError:
-    easyocr = None  # type: ignore[assignment]
+    easyocr = None
 
 try:
-    from PIL import Image, ImageDraw, ImageFont  # type: ignore[import-untyped]
+    from PIL import Image, ImageDraw, ImageFont
 except ImportError:
-    Image = None  # type: ignore[assignment]
-    ImageDraw = None  # type: ignore[assignment]
-    ImageFont = None  # type: ignore[assignment]
+    Image = None
+    ImageDraw = None
+    ImageFont = None
 
 from ezra.baseline.canonicalize import canonicalize_output, to_canonical_json
 from ezra.plugins.easyocr_plugin import EasyOCRPlugin
@@ -58,10 +58,10 @@ def generate_synthetic_fixture(
     # Try to use default font, fallback to basic if not available
     font: Any = None
     try:
-        font = ImageFont.truetype("arial.ttf", font_size)  # type: ignore[assignment]
+        font = ImageFont.truetype("arial.ttf", font_size)
     except OSError:
         try:
-            font = ImageFont.load_default()  # type: ignore[assignment]
+            font = ImageFont.load_default()
         except Exception:
             font = None
 
@@ -173,7 +173,7 @@ def capture_baseline(output_dir: Path) -> None:
     for text, width, height in fixtures:
         img = generate_synthetic_fixture(text, width, height)
         # Convert PIL Image to numpy array for EasyOCR
-        import numpy as np  # type: ignore[import-untyped]
+        import numpy as np
 
         img_array = np.array(img)
         result = plugin.infer(img_array)
@@ -189,7 +189,7 @@ def capture_baseline(output_dir: Path) -> None:
 
     # Collect manifest information
     try:
-        import torch  # type: ignore[import-untyped]
+        import torch
 
         torch_version = torch.__version__
         torchvision_version = getattr(torch, "__version__", "unknown")
@@ -199,7 +199,7 @@ def capture_baseline(output_dir: Path) -> None:
 
     # Try to get torchvision version separately
     try:
-        import torchvision  # type: ignore[import-untyped]
+        import torchvision
 
         torchvision_version = torchvision.__version__
     except ImportError:

@@ -5,9 +5,9 @@ from __future__ import annotations
 from typing import Any
 
 try:
-    import easyocr  # type: ignore[import-untyped]
+    import easyocr
 except ImportError:
-    easyocr = None  # type: ignore[assignment]
+    easyocr = None
 
 from ezra.plugins.interface import OCRPlugin
 
