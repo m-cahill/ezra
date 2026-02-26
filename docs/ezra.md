@@ -97,6 +97,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M03 | Structural Extraction of EasyOCR Integration | Complete | v0.0.4-m03 | PR#4 | Adapter layer isolation, clean integration boundaries |
 | M04 | Multi-Plugin Abstraction Layer | Complete | v0.0.5-m04 | PR#5 | Plugin registry with lazy resolution, extensibility foundation |
 | M05 | Plugin Configuration & Interface Hardening | Complete | v0.0.6-m05 | PR#6 | Runtime config-driven resolution, strict interface validation, registry hardening |
+| M06 | Tesseract Plugin (Provider Boundary Extension) | Complete | v0.0.7-m06 | PR#7 | Second OCR backend plugin added, cross-plugin isolation verified, registry extensibility proven (coverage: 94.85% overall, 100% registry, 100% tesseract) |
 
 ## 8. Local Dev Quickstart
 
@@ -152,6 +153,7 @@ To add a new plugin:
 ### Current Plugins
 
 * `easyocr` — EasyOCR-backed OCR plugin (requires `pip install -e ".[easyocr]"`)
+* `tesseract` — Tesseract-backed OCR plugin stub (M06, no external dependencies required)
 
 ### Plugin Configuration Format
 
@@ -181,5 +183,5 @@ The configuration format requires:
 
 ### Future Extensions
 
-Dynamic plugin discovery via entry points or packaging metadata is deferred to future milestones (M06+). The current static registry is deterministic, testable, and sufficient for initial extensibility needs.
+Dynamic plugin discovery via entry points or packaging metadata is deferred to future milestones (M07+). The current static registry is deterministic, testable, and sufficient for initial extensibility needs.
 

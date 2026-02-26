@@ -392,8 +392,10 @@
 ## M06 MERGE COMPLETE
 
 **Tag:** v0.0.7-m06  
+**Tag SHA:** 889559f46f93db51e1b29f697a9a70ff3e069490  
+**Merge Commit:** 103297e  
 **Audit:** PASS  
 **Summary:** CREATED  
-**CI on main:** GREEN (to be verified post-merge)  
+**CI on main:** GREEN (Run 22432481461)  
 **Status:** CLOSED
 
