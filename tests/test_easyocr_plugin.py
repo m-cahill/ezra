@@ -19,24 +19,26 @@ def test_easyocr_plugin_import_without_easyocr() -> None:
 
     with patch.dict(sys.modules, {"easyocr": None}):
         # Force reload to pick up the mocked module
+        import ezra.plugins.easyocr_adapter as adapter_module
         import ezra.plugins.easyocr_plugin as plugin_module
 
+        importlib.reload(adapter_module)
         importlib.reload(plugin_module)
         # Now try to instantiate - should raise ImportError
         with pytest.raises(ImportError, match="EasyOCR is not installed"):
             plugin_module.EasyOCRPlugin()
 
 
-@patch("ezra.plugins.easyocr_plugin.easyocr")
+@patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_initialization(mock_easyocr: MagicMock) -> None:
     """Test plugin initialization with mocked EasyOCR."""
     plugin = EasyOCRPlugin(device="cpu", languages=["en"])
     assert plugin.device == "cpu"
     assert plugin.languages == ["en"]
-    assert not plugin._loaded
+    assert not plugin._adapter._loaded
 
 
-@patch("ezra.plugins.easyocr_plugin.easyocr")
+@patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_load(mock_easyocr: MagicMock) -> None:
     """Test plugin load method."""
     mock_reader = MagicMock()
@@ -50,11 +52,11 @@ def test_easyocr_plugin_load(mock_easyocr: MagicMock) -> None:
         gpu=False,
         verbose=False,
     )
-    assert plugin._loaded
-    assert plugin._reader is mock_reader
+    assert plugin._adapter._loaded
+    assert plugin._adapter._reader is mock_reader
 
 
-@patch("ezra.plugins.easyocr_plugin.easyocr")
+@patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_infer(mock_easyocr: MagicMock) -> None:
     """Test plugin infer method."""
     # Mock EasyOCR readtext output
@@ -94,7 +96,7 @@ def test_easyocr_plugin_infer(mock_easyocr: MagicMock) -> None:
     mock_reader.readtext.assert_called_once_with(mock_image)
 
 
-@patch("ezra.plugins.easyocr_plugin.easyocr")
+@patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_infer_not_loaded(mock_easyocr: MagicMock) -> None:
     """Test that infer raises RuntimeError if model not loaded."""
     plugin = EasyOCRPlugin(device="cpu", languages=["en"])
@@ -103,7 +105,7 @@ def test_easyocr_plugin_infer_not_loaded(mock_easyocr: MagicMock) -> None:
         plugin.infer(MagicMock())
 
 
-@patch("ezra.plugins.easyocr_plugin.easyocr")
+@patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_describe_capabilities(mock_easyocr: MagicMock) -> None:
     """Test plugin describe_capabilities method."""
     plugin = EasyOCRPlugin(device="cpu", languages=["en", "fr"])
@@ -118,7 +120,7 @@ def test_easyocr_plugin_describe_capabilities(mock_easyocr: MagicMock) -> None:
     assert "output_schema" in caps
 
 
-@patch("ezra.plugins.easyocr_plugin.easyocr")
+@patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_load_failure(mock_easyocr: MagicMock) -> None:
     """Test that load raises RuntimeError on failure."""
     mock_easyocr.Reader.side_effect = Exception("Model load failed")
