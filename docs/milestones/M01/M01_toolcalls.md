@@ -86,3 +86,9 @@ Each entry includes:
 - **Files:** `tests/test_canonicalize.py`
 - **Status:** ✅ Completed
 
+### 2025-01-27 - Baseline Capture Execution
+- **Tool:** `run_terminal_cmd` (pip, python -m)
+- **Purpose:** Install EasyOCR and run baseline capture tool to generate golden outputs
+- **Files:** `docs/baselines/easyocr/1.7.2/synthetic_basic/baseline.json`, `docs/baselines/easyocr/1.7.2/synthetic_basic/manifest.json`
+- **Status:** ⏳ In Progress
+

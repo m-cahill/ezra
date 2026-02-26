@@ -175,7 +175,11 @@ def capture_baseline(output_dir: Path) -> None:
     all_detections = []
     for text, width, height in fixtures:
         img = generate_synthetic_fixture(text, width, height)
-        result = plugin.infer(img)
+        # Convert PIL Image to numpy array for EasyOCR
+        import numpy as np
+
+        img_array = np.array(img)
+        result = plugin.infer(img_array)
         all_detections.extend(result["detections"])
 
     # Canonicalize output
@@ -220,7 +224,7 @@ def capture_baseline(output_dir: Path) -> None:
     with open(manifest_path, "w", encoding="utf-8") as f:
         f.write(to_canonical_json(manifest))
 
-    print(f"✅ Baseline captured to {output_dir}")
+    print(f"Baseline captured to {output_dir}")
     print(f"   - baseline.json: {len(canonical_output['detections'])} detections")
     print(f"   - manifest.json: {len(model_checksums)} model files checksummed")
 
@@ -247,7 +251,7 @@ def main() -> None:
     try:
         capture_baseline(args.output_dir)
     except Exception as e:
-        print(f"❌ Baseline capture failed: {e}", file=sys.stderr)
+        print(f"Baseline capture failed: {e}", file=sys.stderr)
         sys.exit(1)
 
 
