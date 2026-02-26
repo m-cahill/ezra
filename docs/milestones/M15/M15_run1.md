@@ -1,24 +1,24 @@
-# M15 CI Run Analysis — Run 1
+# M15 CI Run Analysis — Run 1 (After Fix)
 
 **Workflow:** CI  
-**Run ID:** 22465122870  
+**Run ID:** 22465175019  
 **Trigger:** Pull Request #16  
 **Branch:** `m15-ci-evidence-hardening`  
-**Commit:** `d08b620` (merge commit)  
-**URL:** https://github.com/m-cahill/ezra/actions/runs/22465122870  
-**Conclusion:** ❌ **FAILURE** (all jobs failed due to dependency installation error)
+**Commit:** `eff8edc` (merge commit after cyclonedx-py fix)  
+**URL:** https://github.com/m-cahill/ezra/actions/runs/22465175019  
+**Conclusion:** ⚠️ **PARTIAL SUCCESS** (6/7 jobs passed, SBOM Generation failed)
 
 ---
 
 ## 1. Workflow Identity
 
 - **Workflow Name:** CI
-- **Run ID:** 22465122870
+- **Run ID:** 22465175019
 - **Trigger:** Pull Request #16 (`m15-ci-evidence-hardening`)
 - **Branch:** `m15-ci-evidence-hardening`
-- **Commit SHA:** `d08b620` (merge commit of PR #16)
+- **Commit SHA:** `eff8edc` (merge commit after cyclonedx-py version fix)
 - **PR Number:** #16
-- **Run History:** First run — failed on dependency installation
+- **Run History:** Second run — first run failed on dependency installation (fixed), this run executed all jobs but SBOM generation failed
 
 ---
 
@@ -28,13 +28,11 @@
 - **Declared Intent:** Governance and signal-strengthening milestone. Add structured CI job summaries, upload machine-readable artifacts (coverage, radon, security JSON, etc.), introduce deterministic quality dashboards, formalize quality envelope contracts. **No runtime code changes.**
 - **Refactor Target Surface:**
   - Modified: `.github/workflows/ci.yml` (added 3 new jobs: security, complexity, sbom; enhanced test job summary)
-  - Modified: `pyproject.toml` (added dev dependencies: radon, bandit, pip-audit, cyclonedx-py)
+  - Modified: `pyproject.toml` (added dev dependencies: radon, bandit, pip-audit, cyclonedx-py>=1.0.0)
   - Modified: `.gitignore` (added CI artifact patterns)
   - New: `docs/qa.md` (comprehensive QA documentation with compliance mapping)
-  - Modified: `docs/milestones/M15/M15_plan.md` (plan populated)
-  - Modified: `docs/milestones/M15/M15_toolcalls.md` (tool calls logged)
 - **Posture:** **Governance-only (no runtime changes)** — CI workflow updates only, artifact uploads, documentation. No runtime code changes, no new domain features, no plugin additions, no architectural layer movement.
-- **Run Type:** Initial (first CI run with new quality gates)
+- **Run Type:** Corrective (after fixing cyclonedx-py version issue)
 
 ---
 
@@ -58,22 +56,22 @@
 
 | Job / Check | Required? | Purpose | Pass/Fail | Notes |
 |-------------|-----------|---------|-----------|-------|
-| Lint | ✅ Yes | Ruff lint + format check | ❌ **FAIL** | Failed on dependency installation (cyclonedx-py version) |
-| Type Check | ✅ Yes | Mypy type checking | ❌ **FAIL** | Failed on dependency installation (cyclonedx-py version) |
-| Test | ✅ Yes | Pytest with coverage | ❌ **FAIL** | Failed on dependency installation (cyclonedx-py version) |
-| Security Check | ✅ Yes (NEW) | Bandit, pip-audit, gitleaks | ❌ **FAIL** | Failed on dependency installation (cyclonedx-py version) |
-| Complexity Check | ✅ Yes (NEW) | Radon complexity analysis | ❌ **FAIL** | Failed on dependency installation (cyclonedx-py version) |
-| SBOM Generation | ✅ Yes (NEW) | CycloneDX SBOM generation | ❌ **FAIL** | Failed on dependency installation (cyclonedx-py version) |
-| Determinism Check | ✅ Yes | Multi-run bundle determinism verification | ⏭️ **SKIPPED** | Skipped because test job failed (needs: test) |
+| Lint | ✅ Yes | Ruff lint + format check | ✅ **PASS** | All checks passed |
+| Type Check | ✅ Yes | Mypy type checking | ✅ **PASS** | All checks passed |
+| Test | ✅ Yes | Pytest with coverage | ✅ **PASS** | 205 passed, 4 skipped, 95.69% coverage (above 85% threshold) |
+| Security Check | ✅ Yes (NEW) | Bandit, pip-audit, gitleaks | ✅ **PASS** | 0 HIGH issues (bandit), 0 vulnerabilities (pip-audit), 0 leaks (gitleaks) |
+| Complexity Check | ✅ Yes (NEW) | Radon complexity analysis | ✅ **PASS** | All functions grade C or better, no D/E grades found |
+| SBOM Generation | ✅ Yes (NEW) | CycloneDX SBOM generation | ❌ **FAIL** | Command syntax error: `cyclonedx-py` requires subcommand (environment/env/venv/requirements/pipenv/poetry) |
+| Determinism Check | ✅ Yes | Multi-run bundle determinism verification | ✅ **PASS** | All determinism checks passed |
 
 **All checks are merge-blocking.** No checks use `continue-on-error` (except summary steps which use `if: always()`).
 
 **New Checks Added:**
 - **Security Check** — Bandit (fail on HIGH), pip-audit (strict), gitleaks (detect mode)
 - **Complexity Check** — Radon (fail on grade > C)
-- **SBOM Generation** — CycloneDX SBOM generation (does not block build)
+- **SBOM Generation** — CycloneDX SBOM generation (currently failing due to command syntax)
 
-**Critical Observation:** All jobs failed at the dependency installation step due to incorrect `cyclonedx-py>=4.0.0` version requirement. The package only has versions 1.0.0 and 1.0.1 available on PyPI.
+**Critical Observation:** 6 out of 7 jobs passed successfully. SBOM Generation failed due to incorrect command syntax — `cyclonedx-py -o sbom.cdx.json -e` is invalid; the tool requires a subcommand like `environment` or `env`.
 
 ---
 
@@ -81,31 +79,47 @@
 
 ### A) Tests
 
-- **Tiers Ran:** None — tests did not run due to dependency installation failure
-- **Coverage of Refactor Target:** N/A — tests did not execute
-- **Failures:** N/A — dependency installation blocked test execution
-- **Golden/Snapshot Tests:** N/A — not reached
-- **Missing Tests:** N/A — not reached
+- **Tiers Ran:** Unit tests (205 passed, 4 skipped)
+- **Coverage of Refactor Target:** N/A — no runtime code changes in this milestone
+- **Failures:** None
+- **Golden/Snapshot Tests:** All determinism tests passed
+- **Missing Tests:** N/A — no new runtime code to test
+
+**Test Results:**
+- ✅ 205 tests passed
+- ⏭️ 4 tests skipped (unchanged from baseline)
+- ✅ Coverage: 95.69% (above 85% threshold)
+- ✅ All determinism checks passed
 
 ### B) Coverage
 
 - **Enforcement:** Line + branch coverage, ≥85% threshold (unchanged)
-- **Scoped Correctly:** N/A — coverage check did not run
+- **Scoped Correctly:** Yes — coverage measures `src/` directory only
 - **Exclusions:** None introduced/expanded
-- **Coverage Change:** N/A — coverage check did not run
+- **Coverage Change:** 95.69% (maintained above 85% threshold)
+
+**Coverage Breakdown:**
+- Total: 672 statements, 19 missed, 210 branches, 19 partial
+- Coverage: 95.69% (exceeds 85% threshold)
+- Lowest coverage module: `src/ezra/epb/schema_validator.py` (79.66%) — acceptable
 
 ### C) Static / Policy Gates
 
-- **Linting:** Did not run — blocked by dependency installation
-- **Type Checking:** Did not run — blocked by dependency installation
-- **Formatting:** Did not run — blocked by dependency installation
+- **Linting:** ✅ Passed — Ruff found no issues
+- **Type Checking:** ✅ Passed — Mypy found no issues
+- **Formatting:** ✅ Passed — Ruff format check passed
 
 ### D) Security / Supply Chain Signals
 
-- **Bandit:** Did not run — blocked by dependency installation
-- **pip-audit:** Did not run — blocked by dependency installation
-- **Gitleaks:** Did not run — blocked by dependency installation
-- **SBOM:** Did not run — blocked by dependency installation
+- **Bandit:** ✅ Passed — 0 HIGH severity issues (1 LOW issue found, not blocking)
+- **pip-audit:** ✅ Passed — No known vulnerabilities found
+- **Gitleaks:** ✅ Passed — No secrets detected (scanned 4 commits, ~40KB)
+- **SBOM:** ❌ Failed — Command syntax error prevented generation
+
+**Security Summary:**
+- Bandit: 0 HIGH issues, 1 LOW issue (non-blocking)
+- pip-audit: Clean (no vulnerabilities)
+- Gitleaks: Clean (no secrets detected)
 
 ### E) Performance / Benchmarks
 
@@ -119,7 +133,7 @@
 
 **Files Modified:**
 - `.github/workflows/ci.yml` — Added 3 new jobs (security, complexity, sbom), enhanced test job summary
-- `pyproject.toml` — Added dev dependencies: radon>=6.0.0, bandit>=1.7.0, pip-audit>=2.6.0, cyclonedx-py>=4.0.0 (incorrect version)
+- `pyproject.toml` — Added dev dependencies: radon>=6.0.0, bandit>=1.7.0, pip-audit>=2.6.0, cyclonedx-py>=1.0.0
 - `.gitignore` — Added CI artifact patterns (sbom.cdx.json, bandit.json, pip_audit.json, radon.json, radon.txt)
 - `docs/qa.md` — New comprehensive QA documentation
 
@@ -135,22 +149,23 @@
 - All existing checks continue to pass
 
 **Observed:**
-- All jobs failed at dependency installation step
-- Root cause: `cyclonedx-py>=4.0.0` version requirement is invalid (only 1.0.0 and 1.0.1 exist on PyPI)
-- No tests executed
-- No quality gates executed
-- Determinism check skipped (depends on test job)
+- ✅ 6 out of 7 jobs passed successfully
+- ✅ All existing checks continue to pass
+- ✅ New quality gates execute and produce artifacts (security, complexity)
+- ❌ SBOM generation failed due to command syntax error
+- ✅ Coverage maintained at 95.69% (above 85% threshold)
+- ✅ Determinism gate passed
 
 ### Refactor-Specific Drift Detection
 
 **Signal Drift:**
-- None — failure is due to configuration error, not refactor drift
+- None — all quality gates execute correctly (except SBOM command syntax)
 
 **Coupling Revealed:**
-- None — failure is isolated to dependency version specification
+- None — new jobs are independent and do not affect existing checks
 
 **Hidden Dependencies:**
-- None — failure is explicit and traceable
+- None — all failures are explicit and traceable
 
 ---
 
@@ -159,24 +174,28 @@
 ### Failure Classification
 
 **Type:** CI misconfiguration  
-**Root Cause:** Invalid version requirement for `cyclonedx-py` package  
+**Root Cause:** Incorrect command syntax for `cyclonedx-py`  
 **Details:**
-- Specified: `cyclonedx-py>=4.0.0`
-- Available on PyPI: `1.0.0`, `1.0.1` only
-- Error: `ERROR: Could not find a version that satisfies the requirement cyclonedx-py>=4.0.0`
+- Command used: `cyclonedx-py -o sbom.cdx.json -e`
+- Error: `cyclonedx-py: error: argument <command>: invalid choice: 'sbom.cdx.json' (choose from 'environment', 'env', 'venv', 'requirements', 'pipenv', 'poetry')`
+- Issue: `cyclonedx-py` requires a subcommand (e.g., `environment` or `env`) before output options
 
-**Is this in-scope for the milestone?** ✅ Yes — dependency specification is part of M15 implementation  
-**Is it blocking?** ✅ Yes — blocks all CI jobs from executing  
-**Is it deferrable?** ❌ No — must be fixed to proceed
+**Is this in-scope for the milestone?** ✅ Yes — SBOM generation is part of M15 implementation  
+**Is it blocking?** ✅ Yes — blocks SBOM artifact generation  
+**Is it deferrable?** ❌ No — must be fixed to complete milestone
 
 ### Fix Required
 
-**Action:** Update `pyproject.toml` to use correct version:
-```toml
-"cyclonedx-py>=1.0.0",  # Changed from >=4.0.0
+**Action:** Update SBOM generation command in `.github/workflows/ci.yml`:
+```yaml
+# Current (incorrect):
+cyclonedx-py -o sbom.cdx.json -e
+
+# Should be:
+cyclonedx-py environment -o sbom.cdx.json -e
 ```
 
-**Status:** ✅ Fixed in commit `c0993c9` (pushed after initial run)
+**Status:** ⏳ **Pending** — Fix not yet applied
 
 ---
 
@@ -190,20 +209,21 @@
 | Refactor did not expand scope into feature work | ✅ Preserved | Only CI workflow and documentation changes |
 | Public surfaces remained compatible | ✅ Preserved | No runtime code changes |
 | Schema/contract outputs remain valid | ✅ Preserved | No schema changes |
-| Determinism/golden outputs preserved | ⏭️ Not verified | Determinism check skipped (depends on test job) |
+| Determinism/golden outputs preserved | ✅ Preserved | All determinism checks passed |
 | No "green but misleading" path | ✅ Preserved | Failure is explicit and traceable |
+| Coverage threshold maintained | ✅ Preserved | 95.69% (above 85% threshold) |
 
-**Critical Observation:** All invariants are preserved. The failure is a configuration error (incorrect package version), not a refactor drift or invariant violation. The fix is straightforward and has been applied.
+**Critical Observation:** All invariants are preserved. The SBOM failure is a configuration error (incorrect command syntax), not a refactor drift or invariant violation. The fix is straightforward.
 
 ---
 
 ## 9. Verdict
 
 **Verdict:**  
-CI run failed due to incorrect `cyclonedx-py` version requirement in `pyproject.toml`. The package only has versions 1.0.0 and 1.0.1 available on PyPI, but the specification required `>=4.0.0`. This is a configuration error, not a refactor issue. The fix has been applied (changed to `>=1.0.0`). All invariants are preserved. No runtime code changes were made. The failure is explicit, traceable, and fixable. Once the corrected dependency specification is merged, CI should pass.
+CI run shows 6 out of 7 jobs passed successfully. All existing quality gates continue to pass, new security and complexity gates execute correctly and produce expected artifacts, coverage is maintained at 95.69% (above 85% threshold), and determinism checks pass. The only failure is SBOM generation due to incorrect command syntax — `cyclonedx-py` requires a subcommand (`environment` or `env`) before output options. This is a configuration error, not a refactor issue. All invariants are preserved. No runtime code changes were made. The failure is explicit, traceable, and fixable. Once the SBOM command syntax is corrected, all jobs should pass.
 
 **Recommended Outcome:**  
-🔁 **Re-run required** — Fix applied, need to verify CI passes with corrected dependency version.
+🔁 **Re-run required** — Fix SBOM command syntax, then verify all jobs pass.
 
 ---
 
@@ -211,11 +231,9 @@ CI run failed due to incorrect `cyclonedx-py` version requirement in `pyproject.
 
 | ID | Task | Owner | Scope | Milestone | Guardrail |
 |----|------|-------|-------|-----------|-----------|
-| 1 | Verify CI passes with corrected `cyclonedx-py>=1.0.0` | Cursor | `pyproject.toml` | M15 | Re-run CI after fix |
-| 2 | Verify all new quality gates execute successfully | Cursor | CI workflow | M15 | Check job outputs |
-| 3 | Verify artifacts are uploaded correctly | Cursor | CI artifacts | M15 | Download and inspect artifacts |
-| 4 | Verify coverage threshold maintained | Cursor | Coverage report | M15 | Ensure ≥85% maintained |
-| 5 | Verify determinism gate passes | Cursor | Determinism check | M15 | Ensure byte-identical bundles |
+| 1 | Fix SBOM command syntax: use `cyclonedx-py environment -o sbom.cdx.json -e` | Cursor | `.github/workflows/ci.yml` | M15 | Re-run CI after fix |
+| 2 | Verify SBOM artifact is generated and uploaded correctly | Cursor | CI artifacts | M15 | Download and inspect SBOM artifact |
+| 3 | Verify all quality gates pass after SBOM fix | Cursor | CI workflow | M15 | Check all job outputs |
 
 **All actions are in-scope for M15.** No new milestone required.
 
@@ -223,33 +241,37 @@ CI run failed due to incorrect `cyclonedx-py` version requirement in `pyproject.
 
 ## 11. Minimal Fix Set
 
-**Fix Applied:**
-- ✅ Updated `pyproject.toml`: Changed `cyclonedx-py>=4.0.0` to `cyclonedx-py>=1.0.0`
-- ✅ Committed fix: `c0993c9` (pushed to branch)
+**Fix Required:**
+- ⏳ Update `.github/workflows/ci.yml`: Change `cyclonedx-py -o sbom.cdx.json -e` to `cyclonedx-py environment -o sbom.cdx.json -e`
 
 **Verification Required:**
-- Re-run CI to confirm all jobs pass with corrected dependency
-- Verify all new quality gates execute and produce expected artifacts
-- Verify coverage threshold maintained
-- Verify determinism gate passes
+- Re-run CI to confirm all jobs pass with corrected SBOM command
+- Verify SBOM artifact is generated and uploaded correctly
+- Verify all quality gates execute and produce expected artifacts
 
 ---
 
 ## 12. CI Root Cause Summary
 
-**First Run Failure:**
-- **Issue:** All jobs failed at dependency installation step
-- **Root Cause:** Invalid version requirement `cyclonedx-py>=4.0.0` (package only has 1.0.0 and 1.0.1 on PyPI)
-- **Resolution:** Updated to `cyclonedx-py>=1.0.0` in `pyproject.toml`
-- **Status:** ✅ Fixed (committed and pushed)
+**Second Run Status:**
+- **Issue:** SBOM Generation job failed
+- **Root Cause:** Incorrect command syntax — `cyclonedx-py` requires subcommand before output options
+- **Resolution:** Update command to `cyclonedx-py environment -o sbom.cdx.json -e`
+- **Status:** ⏳ **Pending** — Fix not yet applied
+
+**Other Jobs:**
+- ✅ Lint: Passed
+- ✅ Type Check: Passed
+- ✅ Test: Passed (205 passed, 4 skipped, 95.69% coverage)
+- ✅ Security Check: Passed (0 HIGH issues, 0 vulnerabilities, 0 leaks)
+- ✅ Complexity Check: Passed (all functions grade C or better)
+- ✅ Determinism Check: Passed
 
 **Next Run Expected:**
-- All jobs should execute successfully
-- New quality gates should produce artifacts
-- Coverage should be maintained
-- Determinism gate should pass
+- All 7 jobs should pass successfully
+- SBOM artifact should be generated and uploaded
+- All quality gates should produce expected artifacts
 
 ---
 
 **End of Analysis**
-
