@@ -108,6 +108,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M10 | EPB Schema Validation Wiring (EPB Hardening Phase 2) | Complete | v0.0.11-m10 | PR#11 | JSON Schema validation wired into emission pipeline, invalid bundles fail fast, determinism gate confirmed validation does not mutate data, all CI checks passing |
 | M11 | EPB Hash Integrity Verification (EPB Hardening Phase 3) | Complete | v0.0.12-m11 | PR#12 | Hash verification wired into emission pipeline, tampered bundles fail verification, determinism gate confirmed verification does not mutate data, all CI checks passing |
 | M12 | Contract Hardening & Deterministic Zone Schema Lock | Complete | v0.0.13-m12 | PR#13 | Zone schema contract introduced with deterministic serialization, validation, and registry freeze semantics. Architecture boundaries enforced. All existing tests pass unchanged. CI Run: 22461501678 |
+| M13 | Zone-Aware EPB Extension (Adapter-Gated) | Complete | v0.0.14-m13 | PR#14 | Optional zones.json emission via adapter-gated wiring, deterministic, backward compatible. Hash integrity preserved. Determinism verified with zones. CI Run: 22462632573 |
 
 ## 8. Local Dev Quickstart
 
