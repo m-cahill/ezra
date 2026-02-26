@@ -29,13 +29,12 @@ def main() -> int:
     print()
 
     for i in range(check["num_runs"]):
-        run_key = f"run_{i+1}"
+        run_key = f"run_{i + 1}"
         run_info = check["hashes"][run_key]
-        print(f"SHA{i+1} ({run_info['bundle_dir']}): {run_info['sha256']}")
+        print(f"SHA{i + 1} ({run_info['bundle_dir']}): {run_info['sha256']}")
 
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
-

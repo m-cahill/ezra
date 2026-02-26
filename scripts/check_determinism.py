@@ -142,7 +142,7 @@ def main() -> int:
             "num_runs": num_runs,
             "result": "PASS" if all_identical else "FAIL",
             "hashes": {
-                f"run_{i+1}": {
+                f"run_{i + 1}": {
                     "bundle_dir": str(bundle_dirs[i].name),
                     "sha256": bundle_hashes[i],
                 }
@@ -178,4 +178,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
