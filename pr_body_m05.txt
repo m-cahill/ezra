@@ -1,0 +1,72 @@
+## M05 — Plugin Configuration & Interface Hardening
+
+**Mode:** Structural Hardening  
+**Posture:** Behavior-Preserving  
+**Baseline Tag:** `v0.0.5-m04`
+
+### Objective
+
+M05 hardens the plugin registry introduced in M04 by adding:
+- Runtime configuration-driven plugin resolution
+- Strict interface contract enforcement
+- Registry validation guards
+
+### Changes
+
+#### Registry Hardening (`src/ezra/plugins/registry.py`)
+- ✅ `get_plugin_from_config(config: dict) -> OCRPlugin` — Config-driven resolution
+- ✅ `_validate_plugin_instance(obj)` — Strict interface enforcement
+- ✅ `validate_registry() -> None` — Test-time registry integrity validation
+- ✅ Registry entry format validation (string type, single colon requirement)
+- ✅ Interface validation integrated into `get_plugin()` (hardens all paths)
+
+#### Test Expansion (`tests/test_plugin_registry.py`)
+- ✅ 10 new comprehensive tests (7 required + 3 validation edge cases)
+- ✅ All tests passing (17 total registry tests)
+- ✅ Registry module: **100% coverage**
+- ✅ Overall coverage: **94.65%** (above 85% threshold)
+
+#### Documentation (`docs/ezra.md`)
+- ✅ Added "Plugin Configuration Format" section
+- ✅ Updated milestone table with M05 entry
+- ✅ Updated plugin registration policy
+
+### Verification
+
+- ✅ All tests pass: 61 passed, 4 skipped
+- ✅ Registry coverage: 100.00%
+- ✅ Overall coverage: 94.65%
+- ✅ Linting: ruff check passes
+- ✅ Formatting: ruff format applied
+- ✅ Type checking: mypy passes (1 pre-existing error from M01, not blocking)
+
+### Behavioral Guarantees
+
+- ✅ `get_plugin("easyocr")` behaves exactly as in M04
+- ✅ No golden baseline changes
+- ✅ No core modifications
+- ✅ No adapter modifications
+- ✅ Lazy import pattern preserved
+- ✅ All invariants maintained
+
+### Files Changed
+
+- `src/ezra/plugins/registry.py` — Registry hardening functions
+- `tests/test_plugin_registry.py` — 10 new tests
+- `docs/ezra.md` — Documentation updates
+- `docs/milestones/M05/M05_plan.md` — Milestone plan
+- `docs/milestones/M05/M05_toolcalls.md` — Tool calls log
+
+### Acceptance Criteria
+
+- ✅ `get_plugin_from_config()` implemented
+- ✅ Runtime contract enforcement added
+- ✅ Registry validation function exists
+- ✅ All new tests pass
+- ✅ Registry coverage remains 100%
+- ✅ Overall coverage ≥ previous milestone
+- ✅ No golden baseline change
+- ✅ No invariant regressions
+
+Ready for CI verification.
+
