@@ -6,22 +6,26 @@ import hashlib
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 try:
     import easyocr
 except ImportError:
     easyocr = None
 
-try:
+if TYPE_CHECKING:
     import torch
-except ImportError:
-    torch = None  # type: ignore[assignment]
-
-try:
     import torchvision
-except ImportError:
-    torchvision = None
+else:
+    try:
+        import torch
+    except ImportError:
+        torch = None
+
+    try:
+        import torchvision
+    except ImportError:
+        torchvision = None
 
 
 def load_baseline(path: Path) -> dict[str, Any]:

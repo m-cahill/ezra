@@ -183,4 +183,3 @@ def test_validate_manifest_environment_torch_not_installed() -> None:
     with patch("ezra.baseline.parity.torch", None):
         with pytest.raises(ValueError, match="torch is not installed"):
             validate_manifest_environment(manifest)
-
