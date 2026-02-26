@@ -66,7 +66,7 @@ Golden outputs are only comparable if the manifest matches (or the milestone exp
 | Milestone | Objective | Status | Tag | PR | Notes |
 |-----------|-----------|--------|-----|----|------|
 | M00 | Genesis baseline (CI + skeleton + governance) | Complete | v0.0.1-m00 | PR#1 | Non-mutating CI + LF normalization |
-| M01 | EasyOCR baseline harness (behavior capture) | In Progress | - | - | Pin EasyOCR version + capture golden outputs |
+| M01 | EasyOCR baseline harness (behavior capture) | Complete | v0.0.2-m01 | PR#2 | Golden baseline locked, deterministic canonicalization |
 
 ## 7. Local Dev Quickstart
 
