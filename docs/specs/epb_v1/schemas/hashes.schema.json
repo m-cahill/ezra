@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ezra.dev/schemas/epb/v1/hashes.schema.json",
+  "title": "EPB Hashes Schema",
+  "description": "Deterministic SHA256 hashes for all EPB bundle components",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["epb_version", "bundle_hash", "files"],
+  "properties": {
+    "epb_version": {
+      "type": "string",
+      "description": "EPB specification version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["1.0.0"]
+    },
+    "bundle_hash": {
+      "type": "string",
+      "description": "SHA256 hash of concatenated file hashes (sorted alphabetically by filename, excluding hashes.json)",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "files": {
+      "type": "object",
+      "description": "SHA256 hashes of individual EPB files",
+      "additionalProperties": false,
+      "required": ["detections.json", "manifest.json", "state.json", "hashes.json"],
+      "properties": {
+        "detections.json": {
+          "type": "string",
+          "description": "SHA256 hash of detections.json (canonical JSON)",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "delta.json": {
+          "type": "string",
+          "description": "SHA256 hash of delta.json (if present, canonical JSON)",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "hashes.json": {
+          "type": "string",
+          "description": "SHA256 hash of hashes.json itself (computed after all other hashes, excluding this field)",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "manifest.json": {
+          "type": "string",
+          "description": "SHA256 hash of manifest.json (canonical JSON)",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "state.json": {
+          "type": "string",
+          "description": "SHA256 hash of state.json (canonical JSON)",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}
+
