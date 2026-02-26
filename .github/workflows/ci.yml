@@ -69,6 +69,15 @@ jobs:
         with:
           name: coverage-xml
           path: coverage.xml
+      - name: Export zone schema JSON
+        run: |
+          python -c "from ezra.zones.registry import ZoneRegistry; from ezra.zones.export import export_zone_schema_json; from pathlib import Path; r = ZoneRegistry(); r.freeze(); export_zone_schema_json(r, Path('zone_schema.json'))"
+      - name: Upload zone schema artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zone-schema
+          path: zone_schema.json
+          retention-days: 30
       - name: CI Summary
         if: always()
         run: |
