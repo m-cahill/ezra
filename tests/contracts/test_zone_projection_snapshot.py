@@ -78,9 +78,7 @@ def test_zone_projection_snapshot_matches():
 
     # Compare JSON strings (should be identical, ignoring trailing whitespace)
     assert json_str == expected_json, (
-        f"Projection JSON does not match snapshot.\n"
-        f"Expected:\n{expected_json}\n\n"
-        f"Got:\n{json_str}"
+        f"Projection JSON does not match snapshot.\nExpected:\n{expected_json}\n\nGot:\n{json_str}"
     )
 
 
@@ -106,4 +104,3 @@ def test_zone_projection_snapshot_roundtrip():
 
     # Compare structure
     assert parsed_projection == parsed_snapshot
-

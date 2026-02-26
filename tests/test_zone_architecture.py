@@ -50,9 +50,7 @@ def test_zones_projector_does_not_import_epb():
     Projector should remain independent of EPB module to preserve
     zone schema portability.
     """
-    projector_file = (
-        Path(__file__).parent.parent / "src" / "ezra" / "zones" / "projector.py"
-    )
+    projector_file = Path(__file__).parent.parent / "src" / "ezra" / "zones" / "projector.py"
 
     forbidden_imports = [
         "ezra.epb",

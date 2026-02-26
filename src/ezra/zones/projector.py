@@ -91,10 +91,7 @@ def project_state_to_zones(
         for zone in zones:
             bbox = zone.bbox_norm
             # Check if centroid is within zone bbox (inclusive x_min/y_min, exclusive x_max/y_max)
-            if (
-                bbox.x_min <= nx < bbox.x_max
-                and bbox.y_min <= ny < bbox.y_max
-            ):
+            if bbox.x_min <= nx < bbox.x_max and bbox.y_min <= ny < bbox.y_max:
                 matching_zones.append(zone)
 
         # Strict mode: error if multiple zones match
@@ -220,4 +217,3 @@ def to_projection_canonical_json(
         ensure_ascii=False,
         allow_nan=False,
     )
-

@@ -398,4 +398,3 @@ def test_to_projection_canonical_json_no_metadata():
     parsed = json.loads(json_str)
 
     assert "metadata" not in parsed["zone1"][0]
-
