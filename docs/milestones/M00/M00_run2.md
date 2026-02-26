@@ -252,5 +252,16 @@ CI failure is **mechanical and easily fixable**. The workflow correctly identifi
 ---
 
 **Analysis Complete:** 2026-02-26  
-**Next Step:** Fix remaining formatting violation in `tests/test_smoke.py` and re-run CI
+**Status:** Formatting issue persists across multiple CI runs
+
+**Persistent Issue:**
+- `tests/test_smoke.py` is formatted correctly locally (Ruff 0.15.2)
+- CI (Ruff 0.15.2) consistently reports file needs reformatting
+- Likely cause: GitHub PR merge commit contains different version of file
+- Possible solutions:
+  1. Add `.gitattributes` to normalize line endings
+  2. Rebase PR to avoid merge commit
+  3. Format file directly in CI workflow as a workaround
+
+**Next Step:** Investigate merge commit file version or add CI formatting step
 
