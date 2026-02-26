@@ -33,4 +33,5 @@
 | 2026-02-26 | write | Generate M15_run1.md analysis report | docs/milestones/M15/M15_run1.md | ✅ Complete |
 | 2026-02-26 | run_terminal_cmd | Get complexity check job logs | gh run view 22465175019 --log --job 65069324509 | ✅ Complete |
 | 2026-02-26 | write | Update M15_run1.md with second run analysis (after fix) | docs/milestones/M15/M15_run1.md | ✅ Complete |
+| 2026-02-26 | search_replace | Fix SBOM command syntax (add 'environment' subcommand) | .github/workflows/ci.yml | ✅ Complete |
 
