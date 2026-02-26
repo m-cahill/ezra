@@ -1,24 +1,24 @@
 # M09 CI Run Analysis — Run 1
 
 **Workflow:** CI  
-**Run ID:** 22435962999  
+**Run ID:** 22436339222 (Latest) | 22435962999 | 22435939863  
 **Trigger:** Pull Request #10  
 **Branch:** `m09-determinism-gate`  
-**Commit:** `b1c89ed` (toolcalls log update)  
-**URL:** https://github.com/m-cahill/ezra/actions/runs/22435962999  
-**Conclusion:** ❌ **FAILURE**
+**Commit:** `73cb3b2` (M09_run1.md) | `b1c89ed` | `232b466`  
+**URL:** https://github.com/m-cahill/ezra/actions/runs/22436339222  
+**Conclusion:** ❌ **FAILURE** (All 3 runs failed)
 
 ---
 
 ## 1. Workflow Identity
 
 - **Workflow Name:** CI
-- **Run ID:** 22435962999
+- **Run ID:** 22436339222 (latest), 22435962999, 22435939863
 - **Trigger:** Pull Request #10 (`m09-determinism-gate`)
 - **Branch:** `m09-determinism-gate`
-- **Commit SHA:** `b1c89ed` (after toolcalls log update)
+- **Commit SHA:** `73cb3b2` (latest - M09_run1.md), `b1c89ed`, `232b466`
 - **PR Number:** #10
-- **Previous Run:** 22435939863 (also failed)
+- **Run History:** All 3 runs failed (consistent failure pattern)
 
 ---
 
@@ -61,7 +61,10 @@
 
 **All checks are merge-blocking.** No checks use `continue-on-error`. The `determinism-check` job is new and depends on `test` job.
 
-**Note:** Detailed job status and logs are not available via GitHub CLI (logs may be archived or require web interface access). Failure conclusion indicates at least one job failed.
+**Note:** Detailed job status and logs are not available via GitHub CLI (logs may be archived or require web interface access). All 3 runs (22436339222, 22435962999, 22435939863) failed with consistent failure pattern, suggesting a systematic issue rather than transient failure.
+
+**Critical:** Web interface access required to identify which specific job/step failed:
+- https://github.com/m-cahill/ezra/actions/runs/22436339222
 
 ---
 
@@ -147,9 +150,16 @@
 
 ### Failure Classification
 
-**Status:** ❌ **FAILURE** (Run 22435962999)
+**Status:** ❌ **FAILURE** (Runs 22436339222, 22435962999, 22435939863)
 
-**Classification:** Unknown (requires log access to determine)
+**Classification:** Systematic failure (all 3 runs failed, consistent pattern)
+
+**Pattern Analysis:**
+- Run 1 (22435939863): Initial commit `232b466` - FAILED
+- Run 2 (22435962999): After toolcalls update `b1c89ed` - FAILED  
+- Run 3 (22436339222): After run analysis `73cb3b2` - FAILED
+
+**Consistency:** All runs failed, suggesting a persistent configuration or code issue rather than transient environment problem.
 
 **Possible Failure Modes:**
 1. **CI Misconfiguration:** YAML syntax error, job dependency issue, or step configuration error
@@ -218,8 +228,11 @@ CI run failed with conclusion "failure" for run 22435962999. The failure is like
 
 ### Immediate Actions (Blocking)
 
-1. **Investigate CI Failure** (Owner: Cursor)
-   - Access CI logs via web interface: https://github.com/m-cahill/ezra/actions/runs/22435962999
+1. **Investigate CI Failure** (Owner: Cursor/Human)
+   - Access CI logs via web interface: https://github.com/m-cahill/ezra/actions/runs/22436339222
+   - Check latest run first, then compare with previous runs if needed
+   - Identify which job failed (lint, typecheck, test, or determinism-check)
+   - Identify which step within the failed job caused the failure
    - Identify which job failed and root cause
    - Check for:
      - YAML syntax errors in workflow
