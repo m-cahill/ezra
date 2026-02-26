@@ -77,3 +77,13 @@ Each entry includes:
   - Committed and pushed to trigger CI re-run
   - Waiting for CI to complete
 
+### 2026-02-26 - Enforce LF Normalization
+- **Tool:** `write`, `run_terminal_cmd` (git)
+- **Purpose:** Add `.gitattributes` with `* text=auto eol=lf` and renormalize working tree to fix persistent CRLF/LF drift causing CI format check failures
+- **Files:** `.gitattributes`, all tracked files (renormalization)
+- **Status:** 🔄 In Progress
+- **Notes:**
+  - Root cause: Windows CRLF line endings not normalized to LF for CI (Ubuntu)
+  - Ruff format is line-ending sensitive
+  - This is an environment determinism fix, not a formatting fix
+
