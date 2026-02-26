@@ -96,6 +96,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M02 | Golden Output Lock & Parity Verification | Complete | v0.0.3-m02 | PR#3 | Hard parity gate enforced |
 | M03 | Structural Extraction of EasyOCR Integration | Complete | v0.0.4-m03 | PR#4 | Adapter layer isolation, clean integration boundaries |
 | M04 | Multi-Plugin Abstraction Layer | Complete | v0.0.5-m04 | PR#5 | Plugin registry with lazy resolution, extensibility foundation |
+| M05 | Plugin Configuration & Interface Hardening | Complete | v0.0.6-m05 | PR#6 | Runtime config-driven resolution, strict interface validation, registry hardening |
 
 ## 8. Local Dev Quickstart
 
@@ -109,12 +110,14 @@ Optional (M01+):
 
 ## 9. Plugin Registration Policy
 
-After M04:
+After M05:
 
 EZRA uses a **static plugin registry** for plugin resolution. The registry is located in `src/ezra/plugins/registry.py` and provides:
 
 * `get_plugin(name: str, **kwargs) -> OCRPlugin` — Factory function to resolve and instantiate plugins by name
+* `get_plugin_from_config(config: dict) -> OCRPlugin` — Factory function to resolve plugins from configuration dictionary
 * `list_plugins() -> list[str]` — Returns sorted list of registered plugin names
+* `validate_registry() -> None` — Test-time validation function to verify registry integrity
 
 ### Registration Pattern
 
@@ -149,6 +152,32 @@ To add a new plugin:
 ### Current Plugins
 
 * `easyocr` — EasyOCR-backed OCR plugin (requires `pip install -e ".[easyocr]"`)
+
+### Plugin Configuration Format
+
+After M05, plugins can be resolved from configuration dictionaries:
+
+```python
+config = {
+    "name": "easyocr",
+    "kwargs": {
+        "device": "cpu",
+        "languages": ["en"]
+    }
+}
+plugin = get_plugin_from_config(config)
+```
+
+The configuration format requires:
+- `"name"`: str (required) - Plugin name matching a registered plugin
+- `"kwargs"`: dict (optional) - Plugin-specific initialization arguments passed directly to the plugin constructor
+
+**Important constraints:**
+- Registry remains static (no dynamic discovery)
+- No environment variable resolution
+- No entry-point discovery
+- Deterministic resolution only
+- Configuration validation is strict (raises `ValueError` for missing name or unknown plugin)
 
 ### Future Extensions
 
