@@ -95,6 +95,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M01 | EasyOCR baseline harness (behavior capture) | Complete | v0.0.2-m01 | PR#2 | Golden baseline locked, deterministic canonicalization |
 | M02 | Golden Output Lock & Parity Verification | Complete | v0.0.3-m02 | PR#3 | Hard parity gate enforced |
 | M03 | Structural Extraction of EasyOCR Integration | Complete | v0.0.4-m03 | PR#4 | Adapter layer isolation, clean integration boundaries |
+| M04 | Multi-Plugin Abstraction Layer | Complete | v0.0.5-m04 | PR#5 | Plugin registry with lazy resolution, extensibility foundation |
 
 ## 8. Local Dev Quickstart
 
@@ -105,4 +106,51 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 Optional (M01+):
 - Install EasyOCR extras: `pip install -e ".[easyocr]"`
 - Run baseline capture tool: `python -m ezra.tools.capture_easyocr_baseline`
+
+## 9. Plugin Registration Policy
+
+After M04:
+
+EZRA uses a **static plugin registry** for plugin resolution. The registry is located in `src/ezra/plugins/registry.py` and provides:
+
+* `get_plugin(name: str, **kwargs) -> OCRPlugin` — Factory function to resolve and instantiate plugins by name
+* `list_plugins() -> list[str]` — Returns sorted list of registered plugin names
+
+### Registration Pattern
+
+Plugins are registered using a **lazy import pattern** to avoid importing heavy ML modules at registry import time:
+
+```python
+_PLUGIN_REGISTRY: dict[str, str] = {
+    "easyocr": "ezra.plugins.easyocr_plugin:EasyOCRPlugin",
+}
+```
+
+The registry maps plugin names to `"module.path:ClassName"` strings, which are resolved dynamically when `get_plugin()` is called.
+
+### Naming Conventions
+
+* Plugin names should be lowercase, alphanumeric with underscores (e.g., `"easyocr"`, `"tesseract"`)
+* Plugin class names should follow `{Name}Plugin` pattern (e.g., `EasyOCRPlugin`)
+* Module paths should be relative to `ezra.plugins` package
+
+### Extension Pattern
+
+To add a new plugin:
+
+1. Implement `OCRPlugin` ABC in `src/ezra/plugins/{name}_plugin.py`
+2. Add entry to `_PLUGIN_REGISTRY` in `registry.py`:
+   ```python
+   "plugin_name": "ezra.plugins.plugin_name_plugin:PluginNamePlugin",
+   ```
+3. Add unit tests in `tests/test_plugin_registry.py`
+4. Ensure parity suite passes (if applicable)
+
+### Current Plugins
+
+* `easyocr` — EasyOCR-backed OCR plugin (requires `pip install -e ".[easyocr]"`)
+
+### Future Extensions
+
+Dynamic plugin discovery via entry points or packaging metadata is deferred to future milestones (M06+). The current static registry is deterministic, testable, and sufficient for initial extensibility needs.
 
