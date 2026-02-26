@@ -12,12 +12,19 @@
 ## 1. Workflow Identity
 
 - **Workflow:** CI (`.github/workflows/ci.yml`)
-- **Run ID:** 22427141408
+- **Run ID 1:** 22427141408 (failed)
+- **Run ID 2:** 22427343492 (Test ✅, Lint/TypeCheck ❌)
+- **Run ID 3:** 22427510093 (pending)
 - **Trigger:** Pull request #3
 - **Branch:** `m02-golden-parity-lock`
-- **Commit:** `b1eff41` → `[fix commit]` — feat(m02): Golden Output Lock & Parity Verification Framework
+- **Commits:** 
+  - `b1eff41` — Initial implementation
+  - `a0b4acf` — Fix CI failures (numpy import, line length, type ignore)
+  - `7e602aa` — Update M02_run1.md
+  - `4f1c954` — Fix format and type checking (TYPE_CHECKING pattern)
+  - `b5e81a6` — Update M02_run1.md with Run 2 analysis
 - **PR:** [#3](https://github.com/m-cahill/ezra/pull/3)
-- **Status:** ❌ Failed (all 3 jobs failed)
+- **Status:** ⏳ Run 3 pending (all fixes applied)
 
 ---
 
@@ -49,13 +56,13 @@
 
 ## 4. Workflow Inventory
 
-| Job / Check | Required? | Purpose | Pass/Fail | Notes |
-|-------------|-----------|---------|-----------|-------|
-| Lint (Ruff) | ✅ Yes | Code style and linting | ❌ Failed | Line too long in test_parity_unit.py:23 |
-| Format (Ruff) | ✅ Yes | Code formatting check | ⏳ Not run | Check-only |
-| Type Check (Mypy) | ✅ Yes | Static type checking | ❌ Failed | Unused type ignore in parity.py:19 |
-| Test (Pytest) | ✅ Yes | Unit and integration tests | ❌ Failed | ModuleNotFoundError: numpy in test_parity.py |
-| Coverage (≥85%) | ✅ Yes | Code coverage enforcement | ⏳ Not run | Expected: ~91% (local verified) |
+| Job / Check | Required? | Purpose | Run 1 | Run 2 | Run 3 | Notes |
+|-------------|-----------|---------|-------|-------|-------|-------|
+| Lint (Ruff) | ✅ Yes | Code style and linting | ❌ Failed | ✅ Pass | ⏳ Pending | Line length fixed |
+| Format (Ruff) | ✅ Yes | Code formatting check | ⏳ Not run | ❌ Failed | ⏳ Pending | Format applied |
+| Type Check (Mypy) | ✅ Yes | Static type checking | ❌ Failed | ❌ Failed | ⏳ Pending | TYPE_CHECKING pattern applied |
+| Test (Pytest) | ✅ Yes | Unit and integration tests | ❌ Failed | ✅ Pass | ⏳ Pending | 93.56% coverage |
+| Coverage (≥85%) | ✅ Yes | Code coverage enforcement | ⏳ Not run | ✅ 93.56% | ⏳ Pending | Above threshold |
 
 **Merge-blocking:** All checks are required and merge-blocking  
 **Informational:** None  
@@ -250,5 +257,5 @@ Local verification confirms all checks pass. The parity verification framework i
 
 **Analysis Date:** 2025-01-27  
 **Analyst:** Cursor AI Agent  
-**Status:** ⏳ CI Run 2 in progress (Test ✅, Format/TypeCheck fixes pushed, awaiting final run)
+**Status:** ⏳ CI Run 3 pending (All fixes applied: format, TYPE_CHECKING pattern. Test job passed in Run 2 with 93.56% coverage)
 
