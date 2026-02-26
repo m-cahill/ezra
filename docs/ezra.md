@@ -109,6 +109,8 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M11 | EPB Hash Integrity Verification (EPB Hardening Phase 3) | Complete | v0.0.12-m11 | PR#12 | Hash verification wired into emission pipeline, tampered bundles fail verification, determinism gate confirmed verification does not mutate data, all CI checks passing |
 | M12 | Contract Hardening & Deterministic Zone Schema Lock | Complete | v0.0.13-m12 | PR#13 | Zone schema contract introduced with deterministic serialization, validation, and registry freeze semantics. Architecture boundaries enforced. All existing tests pass unchanged. CI Run: 22461501678 |
 | M13 | Zone-Aware EPB Extension (Adapter-Gated) | Complete | v0.0.14-m13 | PR#14 | Optional zones.json emission via adapter-gated wiring, deterministic, backward compatible. Hash integrity preserved. Determinism verified with zones. CI Run: 22462632573 |
+| M14 | Zone-Scoped State Projection (Behavior-Preserving Runtime Extension) | Complete | v0.0.15-m14 | PR#15 | Zone-scoped state projection utility introduced as pure functional runtime extension. Deterministic projection.json emission verified. Strict mode for overlapping zones. Architecture boundaries preserved. Opt-in design. CI Run: 22464039455 |
+| M14 | Zone-Scoped State Projection (Runtime Extension) | Complete | v0.0.15-m14 | PR#15 | Zone-scoped state projection as pure functional runtime utility, deterministic, opt-in only. Architecture boundaries preserved. Determinism verified with projection.json. CI Run: 22464039455 |
 
 ## 8. Local Dev Quickstart
 
