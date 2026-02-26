@@ -22,6 +22,7 @@ def build_epb_bundle(
     input_metadata: dict[str, Any],
     state: dict[str, Any] | None = None,
     delta: dict[str, Any] | None = None,
+    timestamp: datetime | None = None,
 ) -> dict[str, Any]:
     """Build an in-memory EPB v1.0.0 bundle dictionary.
 
@@ -32,6 +33,7 @@ def build_epb_bundle(
         input_metadata: Input image metadata (width, height, channels, etc.).
         state: Optional structured state dictionary (domain-agnostic).
         delta: Optional delta dictionary (incremental state changes).
+        timestamp: Optional explicit timestamp (defaults to current UTC time).
 
     Returns:
         Dictionary containing EPB bundle structure:
@@ -42,13 +44,14 @@ def build_epb_bundle(
             "delta": {...} or None,
         }
     """
-    timestamp = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    ts = timestamp or datetime.now(UTC)
+    timestamp_str = ts.isoformat().replace("+00:00", "Z")
 
     # Build manifest.json structure
     manifest: dict[str, Any] = {
         "epb_version": EPB_VERSION,
         "ezra_version": "v0.0.8-m07",  # TODO: Get from package metadata
-        "timestamp": timestamp,
+        "timestamp": timestamp_str,
         "plugin_versions": {
             plugin_name: {
                 "name": plugin_name,
@@ -70,7 +73,7 @@ def build_epb_bundle(
         state = {}
     state_dict: dict[str, Any] = {
         "version": "1.0.0",  # State schema version
-        "timestamp": timestamp,
+        "timestamp": timestamp_str,
         **state,  # Merge in provided state fields
     }
 

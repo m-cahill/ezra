@@ -77,3 +77,41 @@ jobs:
           echo "### Coverage" >> $GITHUB_STEP_SUMMARY
           coverage report >> $GITHUB_STEP_SUMMARY
 
+  determinism-check:
+    name: Determinism Check
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run determinism check
+        run: |
+          python scripts/check_determinism.py --output-dir determinism_output --runs 3
+      - name: Upload determinism artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: determinism-artifacts
+          path: |
+            determinism_output/bundle_run_1
+            determinism_output/bundle_run_2
+            determinism_output/bundle_run_3
+            determinism_output/determinism_report.json
+          retention-days: 7
+      - name: Determinism Summary
+        if: always()
+        run: |
+          if [ -f determinism_output/determinism_report.json ]; then
+            echo "## Determinism Gate" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            python scripts/generate_determinism_summary.py >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
