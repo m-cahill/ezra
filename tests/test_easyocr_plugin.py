@@ -1,5 +1,6 @@
 """Tests for EasyOCR plugin implementation."""
 
+import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -12,9 +13,18 @@ def test_easyocr_plugin_import_without_easyocr() -> None:
     # This should not raise ImportError
     from ezra.plugins import easyocr_plugin  # noqa: F401
 
-    # But instantiating should raise
-    with pytest.raises(ImportError, match="EasyOCR is not installed"):
-        EasyOCRPlugin()
+    # But instantiating should raise if easyocr is None
+    # We need to mock the import to test this
+    import importlib
+
+    with patch.dict(sys.modules, {"easyocr": None}):
+        # Force reload to pick up the mocked module
+        import ezra.plugins.easyocr_plugin as plugin_module
+
+        importlib.reload(plugin_module)
+        # Now try to instantiate - should raise ImportError
+        with pytest.raises(ImportError, match="EasyOCR is not installed"):
+            plugin_module.EasyOCRPlugin()
 
 
 @patch("ezra.plugins.easyocr_plugin.easyocr")
