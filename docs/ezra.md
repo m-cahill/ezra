@@ -10,5 +10,5 @@ See: [docs/VISION.md](VISION.md)
 
 | Milestone | Status | Tag |
 |-----------|--------|-----|
-| M00 | In Progress | - |
+| M00 | Complete | v0.0.1-m00 |
 
