@@ -1,0 +1,42 @@
+## M07: EPB v1 Specification & RediAI Separation Guardrail
+
+This milestone defines and locks the **EZRA Perception Bundle (EPB) v1.0.0 specification** and formally documents the architectural separation between EZRA and RediAI v3.
+
+### Changes
+
+- **EPB v1.0.0 Specification** (`docs/specs/epb_v1/EPB_V1_SPEC.md`)
+  - Directory structure contract
+  - Canonical JSON rules (UTF-8, LF, sorted keys, 8 decimal place float precision)
+  - Deterministic SHA256 hashing rules
+  - ML nondeterminism containment requirements
+  - Versioning and forward compatibility guidance
+
+- **Production-Grade JSON Schemas** (`docs/specs/epb_v1/schemas/`)
+  - `manifest.schema.json` - Bundle metadata, version, provenance
+  - `detections.schema.json` - Raw OCR/detection results
+  - `state.schema.json` - Domain-agnostic structured state
+  - `delta.schema.json` - Optional incremental state changes
+  - `hashes.schema.json` - Deterministic SHA256 hashes
+
+- **Governance Updates** (`docs/ezra.md`)
+  - Added EPB invariants to Section 3 (Standing Invariants)
+  - Added Section 10: RediAI Separation & Certification Posture
+  - Updated milestone table with M07 entry
+
+### Invariants
+
+- ✅ No runtime changes
+- ✅ No plugin modifications
+- ✅ No CI changes
+- ✅ No dependency changes
+- ✅ Documentation-only milestone
+
+### Verification
+
+- [ ] CI passes (Lint, Type Check, Test)
+- [ ] Coverage unchanged (~94-95%)
+- [ ] No changes in `src/`
+- [ ] No CI workflow diffs
+
+Refs: M07 plan in `docs/milestones/M07/M07_plan.md`
+
