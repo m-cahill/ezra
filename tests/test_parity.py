@@ -7,7 +7,6 @@ All tests are marked as integration and parity tests, and require EZRA_RUN_PARIT
 import os
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 from ezra.baseline.canonicalize import canonicalize_output
@@ -34,7 +33,7 @@ def _should_run_parity() -> bool:
     return os.getenv("EZRA_RUN_PARITY") == "1"
 
 
-def _generate_synthetic_fixture(text: str, width: int = 200, height: int = 50) -> np.ndarray:
+def _generate_synthetic_fixture(text: str, width: int = 200, height: int = 50):  # type: ignore[no-untyped-def]
     """Generate synthetic text image (same logic as capture tool).
 
     Args:
@@ -45,6 +44,11 @@ def _generate_synthetic_fixture(text: str, width: int = 200, height: int = 50) -
     Returns:
         numpy array representation of image.
     """
+    try:
+        import numpy as np
+    except ImportError:
+        pytest.skip("numpy is required for parity tests")
+
     try:
         from PIL import Image, ImageDraw, ImageFont
     except ImportError:

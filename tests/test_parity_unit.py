@@ -20,7 +20,9 @@ from ezra.baseline.parity import (
 def test_load_baseline() -> None:
     """Test loading baseline JSON from file."""
     with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        baseline_data = {"detections": [{"text": "test", "confidence": 0.9, "bbox": [0, 0, 10, 10]}]}
+        baseline_data = {
+            "detections": [{"text": "test", "confidence": 0.9, "bbox": [0, 0, 10, 10]}]
+        }
         json.dump(baseline_data, f)
         temp_path = Path(f.name)
 
