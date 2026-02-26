@@ -1,0 +1,21 @@
+{
+  "determinism_check": {
+    "num_runs": 3,
+    "result": "PASS",
+    "hashes": {
+      "run_1": {
+        "bundle_dir": "bundle_run_1",
+        "sha256": "38d5766bf32bf5d2d90084138f9d6a2d450595509705743ccdd1e9ba3717a2d5"
+      },
+      "run_2": {
+        "bundle_dir": "bundle_run_2",
+        "sha256": "38d5766bf32bf5d2d90084138f9d6a2d450595509705743ccdd1e9ba3717a2d5"
+      },
+      "run_3": {
+        "bundle_dir": "bundle_run_3",
+        "sha256": "38d5766bf32bf5d2d90084138f9d6a2d450595509705743ccdd1e9ba3717a2d5"
+      }
+    },
+    "all_identical": true
+  }
+}

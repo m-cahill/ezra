@@ -1,0 +1,10 @@
+{
+  "bundle_hash": "bf72b2ac0ce30df9ca642677dc4019553b0651a44df6a825535a3de4f22c590c",
+  "epb_version": "1.0.0",
+  "files": {
+    "detections.json": "0192e2a9259c735d370222874d6dc31dddeefb0a97e8a1016a286e66dc555504",
+    "hashes.json": "53b150eb7584e07682e3e4c29e67602104b4ee6fc019b2c7620cc936e7167350",
+    "manifest.json": "0f778fb2ae6dd27328acb8ce91960629fbc341f95fed3f4e4a59939514d831cd",
+    "state.json": "f401b8eda480ff95823fe1b8a967c0112e1d1f048b6eee44be3abe51f8f2655b"
+  }
+}

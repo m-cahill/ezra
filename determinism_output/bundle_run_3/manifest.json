@@ -1,0 +1,18 @@
+{
+  "epb_version": "1.0.0",
+  "ezra_version": "v0.0.8-m07",
+  "input_metadata": {
+    "channels": 3,
+    "height": 100,
+    "width": 200
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "plugin_versions": {
+    "test": {
+      "name": "test",
+      "version": "1.0.0"
+    }
+  },
+  "python_version": "3.12.10",
+  "timestamp": "2024-01-01T00:00:00Z"
+}
