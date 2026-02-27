@@ -294,8 +294,10 @@ def test_i4_schema_version_in_schema_file():
     import importlib.resources
 
     # Load schema file
-    schema_text = importlib.resources.files("ezra.zones").joinpath("schema_v1.json").read_text(
-        encoding="utf-8"
+    schema_text = (
+        importlib.resources.files("ezra.zones")
+        .joinpath("schema_v1.json")
+        .read_text(encoding="utf-8")
     )
     schema = json.loads(schema_text)
 
@@ -378,4 +380,3 @@ def test_zone_data_roundtrip():
     # Should match original
     assert len(reconstructed_zones) == 1
     assert reconstructed_zones[0] == original
-

@@ -93,11 +93,12 @@ def validate_zone_data_against_schema(data: dict[str, Any]) -> None:
     import jsonschema  # type: ignore[import-untyped]
 
     # Load schema from package
-    schema_text = importlib.resources.files("ezra.zones").joinpath("schema_v1.json").read_text(
-        encoding="utf-8"
+    schema_text = (
+        importlib.resources.files("ezra.zones")
+        .joinpath("schema_v1.json")
+        .read_text(encoding="utf-8")
     )
     schema = json.loads(schema_text)
 
     # Validate data against schema
     jsonschema.validate(instance=data, schema=schema)
-
