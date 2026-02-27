@@ -1,0 +1,111 @@
+{
+  "$id": "https://github.com/m-cahill/ezra/schemas/zones/schema_v1.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "BBoxNorm": {
+      "additionalProperties": false,
+      "description": "Normalized bounding box in 0-1 coordinate space. Coordinates are normalized to image dimensions: x_min, y_min (top-left, inclusive), x_max, y_max (bottom-right, exclusive)",
+      "properties": {
+        "x_max": {
+          "description": "Right edge (exclusive), normalized 0-1",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "x_min": {
+          "description": "Left edge (inclusive), normalized 0-1",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "y_max": {
+          "description": "Bottom edge (exclusive), normalized 0-1",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        "y_min": {
+          "description": "Top edge (inclusive), normalized 0-1",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "x_min",
+        "y_min",
+        "x_max",
+        "y_max"
+      ],
+      "type": "object"
+    },
+    "ZonePersistence": {
+      "additionalProperties": false,
+      "description": "Zone persistence semantics controlling whether zone state persists across frames",
+      "properties": {
+        "sticky": {
+          "description": "If true, zone state persists across frames; if false, zone state is ephemeral",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "sticky"
+      ],
+      "type": "object"
+    },
+    "ZoneSchema": {
+      "additionalProperties": false,
+      "description": "Complete zone schema definition mapping a visual zone to a tensor channel",
+      "properties": {
+        "bbox_norm": {
+          "$ref": "#/definitions/BBoxNorm"
+        },
+        "channel_index": {
+          "description": "Tensor channel assignment (int >= 0, globally unique across registry)",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "id": {
+          "description": "Unique zone identifier (non-empty string)",
+          "minLength": 1,
+          "pattern": "^[^\\s]+$",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Zone kind/category (free-form, non-empty string)",
+          "minLength": 1,
+          "pattern": "^[^\\s]+$",
+          "type": "string"
+        },
+        "persistence": {
+          "$ref": "#/definitions/ZonePersistence"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "channel_index",
+        "bbox_norm",
+        "persistence"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Formal JSON Schema for EZRA zone definitions. Defines the structure for mapping visual zones to tensor channels with persistence semantics.",
+  "properties": {
+    "zones": {
+      "description": "List of zone schemas, sorted by (channel_index, id) for deterministic ordering",
+      "items": {
+        "$ref": "#/definitions/ZoneSchema"
+      },
+      "minItems": 0,
+      "type": "array"
+    }
+  },
+  "required": [
+    "zones"
+  ],
+  "title": "EZRA Universal Zone Mapping Schema v1.0.0",
+  "type": "object"
+}
