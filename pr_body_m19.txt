@@ -1,0 +1,39 @@
+## M19 -- Post-Merge CI Integrity and Release Attestation Closure
+
+### Summary
+
+Resolves deferred CI-001 and CI-002 from M18. Fixes post-merge CI configuration failures for SLSA Provenance and Documentation Deploy jobs.
+
+### Changes
+
+**CI-001: SLSA Provenance**
+- Removed invalid `build-workflow-path` input from `actions/attest-build-provenance@v1`
+- Added `subject-path: dist/` to attest all built artifacts (wheel + sdist)
+
+**CI-002: Documentation Deploy**
+- Fixed `docs-deploy` permissions: `pages: write` + `id-token: write`
+- Added `environment: github-pages` with deployment URL output
+- Added `actions/upload-pages-artifact@v3` to `docs-build` for proper artifact handoff
+- Removed redundant rebuild in `docs-deploy` (now consumes artifact from `docs-build`)
+
+### Guardrails
+
+- No `continue-on-error` on provenance or docs-deploy jobs
+- Both jobs fail visibly on main if misconfigured
+- Green means green
+
+### Invariants Preserved
+
+- All 214 tests pass
+- Coverage >= 85%
+- Determinism intact
+- EPB schema unchanged
+- Hash algorithm unchanged
+- Exception hierarchy unchanged
+- No runtime code changes
+- No new coverage exclusions
+
+### Type
+
+Stability-hardening (CI-only, no runtime changes)
+
