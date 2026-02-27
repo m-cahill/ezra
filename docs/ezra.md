@@ -123,6 +123,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M25 | EPB Consumer Certification & Artifact Reproducibility Hardening | Complete | v0.0.26-m25 | PR#26 | Stdlib-only `epb_certify.py` validates EPB bundle structure, hash integrity, and bundle hash without EZRA runtime imports. Subprocess-isolated certification test, reproducibility gate (emit → rmtree → re-emit), and CI “EPB Consumer Certification” step added. All 262 tests pass (256 baseline + 6 new), coverage 95.90% (unchanged), no invariant drift. CI Run: 22477994937 |
 | M26 | EPB Artifact Signing & Verification (Detached Ed25519) | Complete | v0.0.27-m26 | PR#27 | Detached Ed25519 signing (`epb_sign.py`) and verification (`epb_verify.py`) via stdlib + `cryptography==46.0.5`. Ephemeral key by default; optional `--private-key`. `bundle.sig` format (algorithm, bundle_hash, signature, public_key). 6 new contract tests. CI "EPB Artifact Signing" step. All 268 tests pass (262 baseline + 6 new), coverage 95.70%, no invariant drift. CI Run: 22503081806 |
 | M29 | Hermetic Reproducibility Gate | Complete | v0.0.28-m29 | PR#28 | Added dedicated hermetic matrix gate across Python 3.10/3.11/3.12 with per-version `hermetic_hash.txt` artifacts and required cross-matrix comparison job. Canonical bundle hash equivalence enforced in CI (all matrix hashes identical). Test gate unchanged at Python 3.11; 268 tests pass, coverage 95.90%, no runtime/schema/canonicalization drift. CI Run: 22504741873 |
+| M27 | Detached Certification Metadata Layer | Complete | v0.0.29-m27 | PR#29 | `epb_generate_cert_metadata.py` produces `bundle.cert.json` envelope (nested certification/signature/environment). Certifier version from ezra.__version__ or package metadata. No hard-fail on missing signature. 8 new contract tests; CI step "EPB Certification Metadata". 276 tests pass, coverage 95.70%, no schema/canonicalization/hashing drift. CI Run: 22506873541 |
 
 ## 7A. Phase V — Remaining Milestones (Planned)
 
@@ -131,7 +132,7 @@ All remain behavior-preserving unless explicitly justified.
 
 | Milestone | Objective | Status | Notes |
 |-----------|-----------|--------|-------|
-| M27 | Detached Certification Metadata Layer | Planned | Separate certification metadata from emission logic; supports archival and compliance workflows |
+| M27 | Detached Certification Metadata Layer | Complete | v0.0.29-m27, PR#29 — bundle.cert.json envelope; archival/compliance |
 | M28 | Artifact-Only Distribution Mode | Planned | Lightweight EPB validation package (`ezra-epb-tools`); enables artifact validation without full runtime install |
 | M29 | Hermetic Reproducibility Gate | Complete | Matrix CI (Python 3.10/3.11/3.12, Ubuntu) enforcing canonical digest equivalence across interpreters |
 | M30 | Plugin Isolation Sandbox | Future | Subprocess isolation for OCR plugins; runtime safety extension, not required for v1 |
