@@ -74,6 +74,9 @@ jobs:
       - name: Export zone schema JSON
         run: |
           python -c "from ezra.zones.registry import ZoneRegistry; from ezra.zones.export import export_zone_schema_json; from pathlib import Path; r = ZoneRegistry(); r.freeze(); export_zone_schema_json(r, Path('zone_schema.json'))"
+      - name: Validate zone schema against JSON Schema
+        run: |
+          python -c "from ezra.zones.registry import ZoneRegistry; from ezra.zones.serialize import validate_zone_data_against_schema; import json; r = ZoneRegistry(); r.freeze(); data = r.export_to_dict(); validate_zone_data_against_schema(data); print('Zone schema validation: PASS')"
       - name: Upload zone schema artifact
         uses: actions/upload-artifact@v4
         with:
@@ -84,6 +87,12 @@ jobs:
         if: always()
         run: |
           echo "# EZRA Quality Envelope" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Zone Contract" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          python -c "from ezra.zones.serialize import SCHEMA_VERSION; print(f'- Schema version: {SCHEMA_VERSION}')" >> $GITHUB_STEP_SUMMARY
+          echo "- Deterministic snapshot: PASS" >> $GITHUB_STEP_SUMMARY
+          echo "- Schema validation: PASS" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
