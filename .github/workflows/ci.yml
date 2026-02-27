@@ -98,6 +98,14 @@ jobs:
           echo "snapshot_match=PASS" >> $GITHUB_OUTPUT
           echo "determinism=PASS" >> $GITHUB_OUTPUT
           echo "schema_version=PASS" >> $GITHUB_OUTPUT
+      - name: EPB Consumer Certification
+        id: epb_consumer_cert
+        run: |
+          pytest tests/contracts/test_epb_consumer_certification.py -v
+          echo "structure_validation=PASS" >> $GITHUB_OUTPUT
+          echo "hash_integrity=PASS" >> $GITHUB_OUTPUT
+          echo "bundle_hash=PASS" >> $GITHUB_OUTPUT
+          echo "reproducibility=PASS" >> $GITHUB_OUTPUT
       - name: Upload zone schema artifact
         uses: actions/upload-artifact@v4
         with:
@@ -133,6 +141,13 @@ jobs:
           echo "- Snapshot match: ${{ steps.epb_contract.outputs.snapshot_match || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Determinism: ${{ steps.epb_contract.outputs.determinism || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Schema version: ${{ steps.epb_contract.outputs.schema_version || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## EPB Consumer Certification" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Structure validation: ${{ steps.epb_consumer_cert.outputs.structure_validation || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Hash integrity: ${{ steps.epb_consumer_cert.outputs.hash_integrity || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Bundle hash: ${{ steps.epb_consumer_cert.outputs.bundle_hash || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Reproducibility: ${{ steps.epb_consumer_cert.outputs.reproducibility || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

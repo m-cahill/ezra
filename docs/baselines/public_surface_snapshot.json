@@ -112,6 +112,7 @@
     "ezra.plugins.registry",
     "ezra.plugins.tesseract_plugin",
     "ezra.tools.capture_easyocr_baseline",
+    "ezra.tools.epb_certify",
     "ezra.types",
     "ezra.zones.export",
     "ezra.zones.projector",
