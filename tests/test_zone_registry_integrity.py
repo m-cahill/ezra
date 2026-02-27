@@ -231,4 +231,3 @@ def test_channel_index_ordering_preserved():
     zones = registry.list_all()
     assert [z.id for z in zones] == ["zone_c", "zone_a", "zone_b"]
     assert [z.channel_index for z in zones] == [0, 1, 2]
-

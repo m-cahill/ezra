@@ -111,14 +111,14 @@ def test_registry_snapshot_matches():
         snapshot_data = json.loads(snapshot_json)
         # Compare data structures (order-insensitive on parse, but structure should match)
         assert canonical_data == snapshot_data, (
-            "Registry snapshot mismatch. "
-            "If this is an intentional change, update the baseline."
+            "Registry snapshot mismatch. If this is an intentional change, update the baseline."
         )
     else:
         # First run: write snapshot baseline
         snapshot_path.parent.mkdir(parents=True, exist_ok=True)
         # Use pretty-printed format for baseline (easier to review)
         from ezra.zones.serialize import serialize_zone_registry_pretty
+
         pretty_json = serialize_zone_registry_pretty(registry)
         snapshot_path.write_text(pretty_json, encoding="utf-8", newline="")
         # Verify canonical matches
@@ -179,4 +179,3 @@ def test_registry_canonical_json_determinism():
     data = json.loads(json1)
     assert "zones" in data
     assert isinstance(data["zones"], list)
-
