@@ -1,0 +1,21 @@
+## M27 — Detached Certification Metadata Layer
+
+Adds detached `bundle.cert.json` envelope that aggregates certification and signature verification results for archival/compliance.
+
+### Deliverables
+- **Tool:** `epb_generate_cert_metadata.py` — generates canonical JSON envelope (nested: certification, signature, environment)
+- **Contract tests:** 8 tests — valid structure, no-signature case, with-signature valid, tamper payload/hashes/signature, subprocess exit 0/1
+- **CI:** Required step "EPB Certification Metadata" in Test job; Quality Envelope summary updated
+- **Governance:** Public surface snapshot updated; M27 milestone scaffold
+
+### Invariants
+- No edits to `src/ezra/core/` or `docs/specs/epb_v1/`
+- No canonicalization/hashing/dependency changes
+- `certifier_version` from `ezra.__version__` or package metadata, fallback `unknown`
+- Missing `bundle.sig` does not hard-fail; `present: false, valid: false`
+
+### Test delta
+- **+8** contract tests (276 passed, 4 skipped total)
+- Coverage: 95.70% (no drop > 0.1% vs baseline)
+
+Ready for CI run and M27_run1 analysis.
