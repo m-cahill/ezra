@@ -122,6 +122,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M24 | Consumer Contract Harness & Invariant Hardening | Complete | v0.0.25-m24 | PR#25 | Introduced EPB consumer contract harness with golden snapshot baseline and Python-level determinism invariant enforcement. All 256 tests pass (252 baseline + 4 new), coverage 95.90% (↑ from 95.78%), no public surface drift, no CI weakening. EPB Contract Harness step and summary in CI. CI Run: 22476148423 |
 | M25 | EPB Consumer Certification & Artifact Reproducibility Hardening | Complete | v0.0.26-m25 | PR#26 | Stdlib-only `epb_certify.py` validates EPB bundle structure, hash integrity, and bundle hash without EZRA runtime imports. Subprocess-isolated certification test, reproducibility gate (emit → rmtree → re-emit), and CI “EPB Consumer Certification” step added. All 262 tests pass (256 baseline + 6 new), coverage 95.90% (unchanged), no invariant drift. CI Run: 22477994937 |
 | M26 | EPB Artifact Signing & Verification (Detached Ed25519) | Complete | v0.0.27-m26 | PR#27 | Detached Ed25519 signing (`epb_sign.py`) and verification (`epb_verify.py`) via stdlib + `cryptography==46.0.5`. Ephemeral key by default; optional `--private-key`. `bundle.sig` format (algorithm, bundle_hash, signature, public_key). 6 new contract tests. CI "EPB Artifact Signing" step. All 268 tests pass (262 baseline + 6 new), coverage 95.70%, no invariant drift. CI Run: 22503081806 |
+| M29 | Hermetic Reproducibility Gate | Complete | v0.0.28-m29 | PR#28 | Added dedicated hermetic matrix gate across Python 3.10/3.11/3.12 with per-version `hermetic_hash.txt` artifacts and required cross-matrix comparison job. Canonical bundle hash equivalence enforced in CI (all matrix hashes identical). Test gate unchanged at Python 3.11; 268 tests pass, coverage 95.90%, no runtime/schema/canonicalization drift. CI Run: 22504741873 |
 
 ## 7A. Phase V — Remaining Milestones (Planned)
 
@@ -132,7 +133,7 @@ All remain behavior-preserving unless explicitly justified.
 |-----------|-----------|--------|-------|
 | M27 | Detached Certification Metadata Layer | Planned | Separate certification metadata from emission logic; supports archival and compliance workflows |
 | M28 | Artifact-Only Distribution Mode | Planned | Lightweight EPB validation package (`ezra-epb-tools`); enables artifact validation without full runtime install |
-| M29 | Hermetic Reproducibility Gate | Planned | Matrix CI (Python versions / OS) verifying canonical digest equivalence; research-grade reproducibility assurance |
+| M29 | Hermetic Reproducibility Gate | Complete | Matrix CI (Python 3.10/3.11/3.12, Ubuntu) enforcing canonical digest equivalence across interpreters |
 | M30 | Plugin Isolation Sandbox | Future | Subprocess isolation for OCR plugins; runtime safety extension, not required for v1 |
 | M31 | Runtime Resource Ceiling Enforcement | Future | Timeout + memory guardrails; hardening extension |
 | M32 | EPB v2 Governance Draft & Schema Evolution Framework | Future | Formal versioning and migration plan for EPB v2; no EPB v2 implementation — governance planning only |

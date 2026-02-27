@@ -396,6 +396,133 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
 
+  hermetic-hash-matrix:
+    name: Hermetic Hash (Py ${{ matrix.python-version }})
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Generate hermetic hash artifact
+        run: |
+          PYTHONPATH=src python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from ezra.tools._epb_hash import (
+              _compute_bundle_hash_from_file_hashes,
+              _compute_file_hash,
+              _to_canonical_json,
+              compute_bundle_hash,
+          )
+
+          bundle_dir = Path("hermetic_bundle")
+          bundle_dir.mkdir(parents=True, exist_ok=True)
+
+          files = {
+              "manifest.json": {
+                  "epb_version": "1.0.0",
+                  "ezra_version": "m29-hermetic-fixture",
+                  "input_metadata": {"channels": 3, "height": 100, "width": 200},
+                  "platform": "hermetic-ci",
+                  "plugin_versions": {"test": {"name": "test", "version": "1.0.0"}},
+                  "python_version": "matrix-independent",
+                  "timestamp": "2024-01-01T00:00:00+00:00",
+              },
+              "detections.json": {
+                  "detections": [
+                      {"bbox": [10.0, 20.0, 50.0, 40.0], "confidence": 0.9, "text": "Hello"}
+                  ]
+              },
+              "state.json": {"timestamp": "2024-01-01T00:00:00+00:00", "version": "1.0.0"},
+          }
+
+          per_file_hashes = {}
+          for filename, payload in files.items():
+              canonical = _to_canonical_json(payload)
+              (bundle_dir / filename).write_text(canonical + "\n", encoding="utf-8")
+              per_file_hashes[filename] = _compute_file_hash(canonical)
+
+          bundle_hash = _compute_bundle_hash_from_file_hashes(per_file_hashes)
+          hashes_payload = {
+              "bundle_hash": bundle_hash,
+              "epb_version": "1.0.0",
+              "files": {
+                  "detections.json": per_file_hashes["detections.json"],
+                  "hashes.json": "<UNUSED_FOR_BUNDLE_HASH_VERIFICATION>",
+                  "manifest.json": per_file_hashes["manifest.json"],
+                  "state.json": per_file_hashes["state.json"],
+              },
+          }
+          (bundle_dir / "hashes.json").write_text(
+              _to_canonical_json(hashes_payload) + "\n",
+              encoding="utf-8",
+          )
+
+          verified_hash = compute_bundle_hash(bundle_dir)
+          Path("hermetic_hash.txt").write_text(verified_hash + "\n", encoding="utf-8")
+          print(f"Hermetic bundle hash: {verified_hash}")
+          PY
+      - name: Upload hermetic hash artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hermetic-hash-py${{ matrix.python-version }}
+          path: hermetic_hash.txt
+          retention-days: 30
+
+  hermetic-reproducibility:
+    name: Hermetic Reproducibility
+    needs: hermetic-hash-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download hermetic hash artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: hermetic-hash-py*
+          path: hermetic-hashes
+      - name: Compare matrix bundle hashes
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+
+          root = Path("hermetic-hashes")
+          hash_files = sorted(root.glob("*/hermetic_hash.txt"))
+          if not hash_files:
+              print("No hermetic hash artifacts found.", file=sys.stderr)
+              sys.exit(1)
+
+          records = []
+          for file_path in hash_files:
+              hash_value = file_path.read_text(encoding="utf-8").strip()
+              label = file_path.parent.name
+              records.append((label, hash_value))
+
+          print("Hermetic reproducibility matrix hashes:")
+          for label, hash_value in records:
+              print(f"- {label}: {hash_value}")
+
+          unique_hashes = {hash_value for _, hash_value in records}
+          if len(unique_hashes) != 1:
+              print("Hash divergence detected across Python matrix.", file=sys.stderr)
+              sys.exit(1)
+
+          print("All matrix hashes are identical.")
+          PY
+      - name: Hermetic reproducibility summary
+        if: always()
+        run: |
+          echo "## Hermetic Reproducibility Gate" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Downloaded matrix hash artifacts and compared canonical bundle hashes." >> $GITHUB_STEP_SUMMARY
+          echo "Build fails if any hash differs." >> $GITHUB_STEP_SUMMARY
+
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
