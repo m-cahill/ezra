@@ -234,6 +234,10 @@ class TestStructuralHashCrossValidation:
 
     def test_epb_bundle_structural_hash_deterministic(self) -> None:
         """Test that EPB bundle structural hash is deterministic across rebuilds."""
+        from datetime import UTC, datetime
+
+        # Use explicit timestamp to ensure determinism
+        timestamp = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
         detections = [{"text": "Hello", "confidence": 0.9, "bbox": [10.0, 20.0, 50.0, 40.0]}]
         input_metadata = {"width": 100, "height": 200}
 
@@ -243,14 +247,16 @@ class TestStructuralHashCrossValidation:
             plugin_name="test",
             plugin_version="1.0.0",
             input_metadata=input_metadata,
+            timestamp=timestamp,
         )
 
-        # Build second bundle with same inputs
+        # Build second bundle with same inputs (including timestamp)
         bundle2 = build_epb_bundle(
             detections=detections,
             plugin_name="test",
             plugin_version="1.0.0",
             input_metadata=input_metadata,
+            timestamp=timestamp,
         )
 
         # Compute structural hashes
@@ -283,4 +289,3 @@ class TestStructuralHashCrossValidation:
         hash2 = assert_structural_hash(bundle2)
 
         assert hash1 != hash2
-

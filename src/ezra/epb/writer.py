@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 
 from ezra.epb.canonical import to_canonical_json
@@ -19,7 +20,7 @@ from ezra.zones.registry import ZoneRegistry
 
 
 def write_epb_bundle(
-    bundle: dict[str, Any],
+    bundle: dict[str, Any] | MappingProxyType[str, Any],
     output_dir: Path,
     zone_registry: ZoneRegistry | None = None,
 ) -> None:

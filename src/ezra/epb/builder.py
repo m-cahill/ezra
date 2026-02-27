@@ -24,7 +24,7 @@ def build_epb_bundle(
     state: dict[str, Any] | None = None,
     delta: dict[str, Any] | None = None,
     timestamp: datetime | None = None,
-) -> dict[str, Any]:
+) -> MappingProxyType[str, Any]:
     """Build an in-memory EPB v1.0.0 bundle dictionary.
 
     Args:
