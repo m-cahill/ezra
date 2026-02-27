@@ -110,7 +110,6 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M12 | Contract Hardening & Deterministic Zone Schema Lock | Complete | v0.0.13-m12 | PR#13 | Zone schema contract introduced with deterministic serialization, validation, and registry freeze semantics. Architecture boundaries enforced. All existing tests pass unchanged. CI Run: 22461501678 |
 | M13 | Zone-Aware EPB Extension (Adapter-Gated) | Complete | v0.0.14-m13 | PR#14 | Optional zones.json emission via adapter-gated wiring, deterministic, backward compatible. Hash integrity preserved. Determinism verified with zones. CI Run: 22462632573 |
 | M14 | Zone-Scoped State Projection (Behavior-Preserving Runtime Extension) | Complete | v0.0.15-m14 | PR#15 | Zone-scoped state projection utility introduced as pure functional runtime extension. Deterministic projection.json emission verified. Strict mode for overlapping zones. Architecture boundaries preserved. Opt-in design. CI Run: 22464039455 |
-| M14 | Zone-Scoped State Projection (Runtime Extension) | Complete | v0.0.15-m14 | PR#15 | Zone-scoped state projection as pure functional runtime utility, deterministic, opt-in only. Architecture boundaries preserved. Determinism verified with projection.json. CI Run: 22464039455 |
 | M15 | CI Evidence & Deterministic Quality Envelope Hardening | Complete | v0.0.16-m15 | PR#16 | Structured CI evidence, security/complexity/SBOM gates, audit-ready governance. All 7 jobs pass, all invariants preserved, zero runtime changes. CI Run: 22466225248 |
 | M16 | Runtime Exception Contract & Failure Surface Hardening | Complete | v0.0.17-m16 | PR#17 | Typed exception hierarchy with dual inheritance, zero generic exception leakage, backward compatibility preserved. All 213 tests pass (205 original + 8 new), all invariants preserved, zero runtime behavior changes. CI Run: 22467380030 |
 | M17 | Release Lock Program (Phase V Initiation) | Complete | v0.0.18-m17 | PR#18 | Public surface freeze test and snapshot baseline, exception taxonomy frozen, EPB v1.0.0 contract frozen, CI enforcement strengthened (gitleaks full-repo scan). All 214 tests pass (213 original + 1 new), all invariants preserved, zero runtime behavior changes. Release-candidate ready. CI Run: 22468659282 |
@@ -121,6 +120,22 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M22 | Zone Schema Evolution Guardrails & Diff Governance | Complete | v0.0.23-m22 | PR#23 | Schema evolution governance guardrails: snapshot baseline (zone_schema_snapshot.json), schema diff enforcement test, version-schema coupling test, CI schema governance step, Schema Evolution Policy documentation. All 241 tests pass (239 baseline + 2 new), coverage maintained, all invariants preserved, zero runtime behavior drift. Schema governance step successfully added and executing. CI Run: 22473936860 |
 | M23 | Zone Registry Deterministic State & Integrity Hardening | Complete | v0.0.24-m23 | PR#24 | Registry integrity hardening: snapshot baseline (zone_registry_snapshot.json), hash determinism, freeze enforcement, channel ordering invariants, CI registry integrity section. All 252 tests pass (241 baseline + 10 new + 1 existing), coverage maintained, all invariants preserved, zero runtime behavior drift. Registry Integrity section visible in CI. CI Run: 22475261410 |
 | M24 | Consumer Contract Harness & Invariant Hardening | Complete | v0.0.25-m24 | PR#25 | Introduced EPB consumer contract harness with golden snapshot baseline and Python-level determinism invariant enforcement. All 256 tests pass (252 baseline + 4 new), coverage 95.90% (↑ from 95.78%), no public surface drift, no CI weakening. EPB Contract Harness step and summary in CI. CI Run: 22476148423 |
+| M25 | EPB Consumer Certification & Artifact Reproducibility Hardening | Complete | v0.0.26-m25 | PR#26 | Stdlib-only `epb_certify.py` validates EPB bundle structure, hash integrity, and bundle hash without EZRA runtime imports. Subprocess-isolated certification test, reproducibility gate (emit → rmtree → re-emit), and CI “EPB Consumer Certification” step added. All 262 tests pass (256 baseline + 6 new), coverage 95.90% (unchanged), no invariant drift. CI Run: 22477994937 |
+
+## 7A. Phase V — Remaining Milestones (Planned)
+
+These milestones complete Release Lock and artifact-governed posture.
+All remain behavior-preserving unless explicitly justified.
+
+| Milestone | Objective | Status | Notes |
+|-----------|-----------|--------|-------|
+| M26 | EPB Artifact Signing & Verification | Planned | Add detached signature support (Ed25519), `epb_sign.py` and `epb_verify.py`; cryptographic attestability; no schema change |
+| M27 | Detached Certification Metadata Layer | Planned | Separate certification metadata from emission logic; supports archival and compliance workflows |
+| M28 | Artifact-Only Distribution Mode | Planned | Lightweight EPB validation package (`ezra-epb-tools`); enables artifact validation without full runtime install |
+| M29 | Hermetic Reproducibility Gate | Planned | Matrix CI (Python versions / OS) verifying canonical digest equivalence; research-grade reproducibility assurance |
+| M30 | Plugin Isolation Sandbox | Future | Subprocess isolation for OCR plugins; runtime safety extension, not required for v1 |
+| M31 | Runtime Resource Ceiling Enforcement | Future | Timeout + memory guardrails; hardening extension |
+| M32 | EPB v2 Governance Draft & Schema Evolution Framework | Future | Formal versioning and migration plan for EPB v2; no EPB v2 implementation — governance planning only |
 
 ## 8. Local Dev Quickstart
 
@@ -271,6 +286,44 @@ This prevents silent drift and ensures EPB remains a stable, certifiable output 
 4. RediAI v3 certifies bundle (or rejects with validation errors)
 
 **No runtime integration. Artifact-boundary-only interaction.**
+
+### Artifact Trust Model (Post-M25 Target)
+
+After M25+, EPB bundles must be:
+
+1. Structurally valid (JSON Schema)
+2. Canonically serialized
+3. Hash-self-consistent
+4. Deterministically reproducible
+5. Validatable via stdlib-only tool
+
+After M26:
+
+6. Cryptographically signed (optional but recommended)
+
+This reinforces artifact-boundary-only integration and governance maturity.
+
+---
+
+## 11. Phase V Completion Criteria (v1.0.0 Readiness)
+
+EZRA may be declared v1.0.0 when the following milestones are complete:
+
+* M25 (Consumer Certification)
+* M26 (Artifact Signing)
+* M29 (Hermetic Reproducibility Gate)
+
+At that point, EZRA achieves:
+
+* Schema lock
+* Registry lock
+* Snapshot-locked artifact boundary
+* Determinism at test + workflow layer
+* External consumer validation
+* Cryptographic attestability
+* Reproducibility across environments
+
+This is criteria documentation only. No version bump implied.
 
 ---
 

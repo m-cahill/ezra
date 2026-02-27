@@ -2,20 +2,22 @@
 
 **Milestone:** M25 — EPB Consumer Certification & Artifact Reproducibility Hardening  
 **Posture:** Behavior-preserving (consumer certification harness only; no runtime/schema changes)  
-**Run type:** Initial implementation + local verification
+**Run type:** Initial implementation + CI verification
 
 ---
 
-## 1. Workflow identity (post-push)
+## 1. Workflow identity
 
 | Field        | Value |
 |-------------|--------|
 | Workflow    | CI (`.github/workflows/ci.yml`) |
-| Run ID      | *(To be filled after PR creation and CI run)* |
-| Trigger     | Pull request (expected) |
+| Run ID      | **22477994937** |
+| URL         | https://github.com/m-cahill/ezra/actions/runs/22477994937 |
+| Trigger     | pull_request |
 | Branch      | `m25-epb-consumer-certification` |
-| Commit SHA  | `6b24e1b` |
-| PR number   | *(To be filled when PR is opened)* |
+| PR          | **#26** (m-cahill/ezra#26) |
+| Conclusion  | success |
+| Duration    | ~1m 25s |
 
 ---
 
@@ -40,23 +42,24 @@
 
 ---
 
-## 4. Jobs / checks (CI inventory — expected)
+## 4. Jobs / checks (CI inventory — Run 22477994937)
 
-| Job / Check | Required? | Purpose |
-|-------------|-----------|---------|
-| Lint | Yes | Ruff lint + format, pydocstyle |
-| Type Check | Yes | Mypy |
-| Test | Yes | Pytest + coverage, zone schema/registry, **EPB Contract Harness**, **EPB Consumer Certification** |
-| Security Check | Yes | Bandit, pip-audit, gitleaks |
-| SBOM | Yes | CycloneDX |
-| Complexity | Yes | Radon |
-| Determinism Check | Yes | Multi-run bundle determinism |
-| Dependency Review | continue-on-error | Infra (SEC-001) |
-| Scorecard | continue-on-error | Informational |
-| Provenance | Conditional | Push/tag |
-| Docs Build | Yes | Sphinx |
+| Job / Check | Required? | Result | Notes |
+|-------------|-----------|--------|-------|
+| Lint | Yes | ✓ Pass | 27s |
+| Type Check | Yes | ✓ Pass | 25s |
+| Test | Yes | ✓ Pass | 48s; 262 passed, 4 skipped; coverage 95.90% |
+| Security Check | Yes | ✓ Pass | 32s |
+| SBOM Generation | Yes | ✓ Pass | 36s |
+| Complexity Check | Yes | ✓ Pass | 25s |
+| Determinism Check | Yes | ✓ Pass | 28s |
+| Documentation Build | Yes | ✓ Pass | 18s |
+| Dependency Review | continue-on-error | ✗ Fail | SEC-001 (repo/org config; not blocking) |
+| OpenSSF Scorecard | continue-on-error | ✓ Pass | 12s |
+| SLSA Provenance | Conditional (push/tag) | Skipped | PR trigger |
+| Documentation Deploy | Conditional (push/main) | Skipped | PR trigger |
 
-**New in M25:** Step “EPB Consumer Certification” in Test job; summary section “## EPB Consumer Certification” in Quality Envelope.
+**EPB Consumer Certification step (inside Test job):** 6 tests passed in 1.50s. Outputs: structure_validation=PASS, hash_integrity=PASS, bundle_hash=PASS, reproducibility=PASS.
 
 ---
 
@@ -83,7 +86,7 @@ Certifier output shape (success):
 ## 6. Failures encountered
 
 - **Local:** None. Public surface freeze failed initially until `docs/baselines/public_surface_snapshot.json` was updated to include `ezra.tools.epb_certify` (in-scope for M25).
-- **CI:** *(To be filled after workflow run.)*
+- **CI:** Dependency Review job failed (Dependency graph / GitHub Advanced Security not enabled). Known SEC-001; `continue-on-error: true`. All **9/9 required (merge-blocking) checks passed**. No corrective action required for M25.
 
 ---
 
@@ -94,15 +97,15 @@ Certifier output shape (success):
 | New files | `src/ezra/tools/epb_certify.py`, `tests/contracts/test_epb_consumer_certification.py` |
 | Modified | `.github/workflows/ci.yml`, `docs/baselines/public_surface_snapshot.json`, `docs/milestones/M25/*` |
 | Test count | 256 → 262 (+6) |
-| Coverage | 95.70% (tools omitted; no regression) |
+| Coverage (CI) | **95.90%** (tools omitted; matches M24) |
 
 ---
 
-## 8. Verdict (pre-CI)
+## 8. Verdict
 
-**Verdict:** Implementation complete and locally verified. All 262 tests pass, lint/format/type checks pass, public surface snapshot updated. CI run required to confirm 9/9 required checks and EPB Consumer Certification step.
+**Verdict:** CI run 22477994937 completed successfully. All 9/9 required checks passed. EPB Consumer Certification step ran and reported PASS for structure validation, hash integrity, bundle hash, and reproducibility. Coverage 95.90% (unchanged from M24). Dependency Review failure is known infra (SEC-001) and non-blocking.
 
-**Recommended next step:** Push branch, open PR, run CI; then fill **CI run ID** and any CI failure notes above and in exit criteria below.
+**Outcome:** ✅ **Merge approved.**
 
 ---
 
@@ -112,12 +115,24 @@ Certifier output shape (success):
 |-----------|--------|
 | 100% EPB self-consistency verified | Yes (tests + certifier) |
 | Consumer certification runs in isolation | Yes (subprocess test) |
-| CI 9/9 required checks passing | *(Pending run)* |
-| Coverage unchanged or improved | Yes (95.70%, tools omitted) |
+| CI 9/9 required checks passing | ✅ Met (Run 22477994937) |
+| Coverage unchanged or improved | ✅ 95.90% (matches M24) |
 | No invariant drift | Yes |
 | Certification JSON output stable | Yes (deterministic, stdout-only) |
 
 ---
 
-**CI run ID:** *(To be filled after PR and workflow run)*  
-**Coverage delta:** 95.70% (M24 baseline 95.90% on measured src; tools excluded from coverage by design.)
+**CI run ID:** 22477994937  
+**PR:** #26  
+**Coverage (CI):** 95.90% (M24 baseline 95.90%; tools excluded by design.)
+
+---
+
+## 10. Next actions
+
+| Action | Owner | Scope |
+|--------|--------|--------|
+| Merge PR #26 | Human | After approval |
+| Tag `v0.0.26-m25` | Human | Post-merge |
+| Generate M25_audit.md, M25_summary.md | Cursor / Human | After CI green confirmed |
+| Update docs/ezra.md milestone table | Cursor / Human | Closeout |
