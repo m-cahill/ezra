@@ -10,4 +10,8 @@
 | 2026-02-27 | write | Create requirements-dev.in | requirements-dev.in | ✅ Complete |
 | 2026-02-27 | run_terminal_cmd | Generate requirements-dev.txt lockfile | pip-compile | ✅ Complete |
 | 2026-02-27 | write | Create CODEOWNERS file | CODEOWNERS | ✅ Complete |
+| 2026-02-27 | search_replace | Add pydocstyle to lint job | .github/workflows/ci.yml | ✅ Complete |
+| 2026-02-27 | search_replace | Add Dependency Review job (PR-only) | .github/workflows/ci.yml | ✅ Complete |
+| 2026-02-27 | search_replace | Add OpenSSF Scorecard job (warn-first, SARIF) | .github/workflows/ci.yml | ✅ Complete |
+| 2026-02-27 | search_replace | Add SLSA Provenance job (job-level id-token) | .github/workflows/ci.yml | ✅ Complete |
 
