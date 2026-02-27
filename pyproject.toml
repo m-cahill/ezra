@@ -39,6 +39,8 @@ dev = [
     "pydocstyle>=6.3.0",
     "pre-commit>=3.5.0",
     "pip-tools>=7.4.0",
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=2.0.0",
 ]
 easyocr = [
     "easyocr==1.7.2",

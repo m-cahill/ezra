@@ -8,13 +8,16 @@ This document describes EZRA's quality gates, how to reproduce them locally, and
 
 EZRA's CI pipeline enforces a deterministic quality envelope through the following gates:
 
-1. **Lint** — Code style and formatting consistency
-2. **Type Check** — Static type analysis
+1. **Lint** — Code style and formatting consistency (ruff, pydocstyle)
+2. **Type Check** — Static type analysis (mypy)
 3. **Test** — Unit and integration test execution with coverage requirements
 4. **Complexity** — Cyclomatic complexity analysis (radon)
 5. **Security** — Static security analysis (bandit, pip-audit, gitleaks)
 6. **SBOM** — Software Bill of Materials generation
 7. **Determinism** — Byte-identical bundle verification across multiple runs
+8. **Dependency Review** — Automated dependency change review (PR-only)
+9. **OpenSSF Scorecard** — Security posture assessment (warn-first, non-blocking)
+10. **SLSA Provenance** — Build attestation for supply chain integrity
 
 ---
 
@@ -22,26 +25,29 @@ EZRA's CI pipeline enforces a deterministic quality envelope through the followi
 
 ### 1. Lint Gate
 
-**Tool:** `ruff`  
+**Tools:** `ruff`, `pydocstyle`  
 **Enforcement:** Fail on any style violations  
-**Configuration:** `pyproject.toml` `[tool.ruff]` section
+**Configuration:** `pyproject.toml` `[tool.ruff]` and `[tool.pydocstyle]` sections
 
 **What it enforces:**
 - Code style consistency (PEP 8 alignment)
 - Import sorting
 - Unused imports/variables
 - Code formatting (black-compatible)
+- Docstring compliance (Google convention, src/ only)
 
 **Reproduce locally:**
 ```bash
 ruff check --no-fix .
 ruff format --check .
+pydocstyle src/
 ```
 
 **Fix issues:**
 ```bash
 ruff check .  # Auto-fixes where possible
 ruff format .  # Auto-formats code
+# Fix docstring issues manually per pydocstyle output
 ```
 
 ---
@@ -286,14 +292,76 @@ EZRA's quality gates align with the following enterprise governance frameworks:
 | Maintained | Coverage + Complexity | Test coverage and complexity gates |
 | Signed-Releases | SBOM | CycloneDX SBOM generation |
 
-### SLSA Provenance (Future)
+### 8. Dependency Review Gate
 
-**Status:** Out of scope for M15. SLSA provenance attestation is planned for a future milestone.
+**Tool:** `actions/dependency-review-action@v4`  
+**Enforcement:** Fail on moderate+ severity vulnerabilities in dependency changes  
+**Scope:** Pull requests only (compares base vs head dependencies)
 
-**Planned alignment:**
-- Build attestations
-- Provenance metadata
-- Supply chain integrity verification
+**What it enforces:**
+- Detects new vulnerabilities introduced by dependency changes
+- Reviews dependency additions/updates for security issues
+- Blocks PRs with moderate+ severity vulnerabilities
+
+**Reproduce locally:**
+```bash
+# Dependency review runs automatically on PRs
+# To check locally, review dependency changes manually
+pip-audit --desc  # Check current dependencies
+```
+
+**Note:** This gate only runs on `pull_request` events, not on `push` to main.
+
+---
+
+### 9. OpenSSF Scorecard Gate (Informational)
+
+**Tool:** `ossf/scorecard-action@v2`  
+**Enforcement:** Warn-first (non-blocking, `continue-on-error: true`)  
+**Scope:** All CI runs
+
+**What it enforces:**
+- Automated security posture assessment
+- Checks security policy, dependency updates, code review practices, etc.
+- Uploads SARIF results to GitHub Security tab
+
+**Reproduce locally:**
+```bash
+# Install scorecard CLI (see https://github.com/ossf/scorecard)
+scorecard --repo=https://github.com/OWNER/REPO
+```
+
+**Note:** This check is **informational and non-blocking**. It does not block merges but provides security posture insights.
+
+**Artifacts:**
+- `scorecard-results.sarif` — Scorecard results in SARIF format (uploaded to Security tab and as artifact)
+
+---
+
+### 10. SLSA Provenance Gate
+
+**Tool:** `actions/attest-build-provenance@v1`  
+**Enforcement:** Generate build attestations  
+**Scope:** `push` to `main` and tags only
+
+**What it enforces:**
+- Build attestation generation for supply chain integrity
+- Provenance metadata for package builds
+- SLSA Level 1+ compliance
+
+**Reproduce locally:**
+```bash
+# Build package
+python -m build
+
+# Attestation is generated automatically in CI on main/tags
+```
+
+**Note:** This gate only runs on `push` to `main` and tag events. It requires `id-token: write` permission (job-level).
+
+**Artifacts:**
+- Build artifacts (`dist/*.whl`, `dist/*.tar.gz`) — Uploaded as provenance artifacts
+- SLSA attestations — Generated and stored in GitHub attestations
 
 ---
 
