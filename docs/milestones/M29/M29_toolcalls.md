@@ -26,3 +26,11 @@
 | 2026-02-27 | rg | Find unintended matrix references in workflow | .github/workflows/ci.yml | Complete |
 | 2026-02-27 | ApplyPatch | Re-scope M29 to dedicated hermetic matrix job | .github/workflows/ci.yml | Complete |
 | 2026-02-27 | Shell | Validate hermetic hash module import path | src/ezra/tools/_epb_hash.py | Complete |
+| 2026-02-27 | Shell | Commit and push dedicated hermetic matrix workflow | .github/workflows/ci.yml, docs/milestones/M29/M29_toolcalls.md | Complete |
+| 2026-02-27 | Shell | Monitor green CI run and check matrix statuses | GitHub Actions run 22504550465 | Complete |
+| 2026-02-27 | Shell | Capture hermetic comparison logs and hash evidence | Hermetic Reproducibility job logs | Complete |
+| 2026-02-27 | Shell | Capture test/coverage evidence from CI logs | Test job logs (run 22504550465) | Complete |
+| 2026-02-27 | ReadFile | Review prior milestone run-analysis formats | docs/milestones/M25/M25_run1.md, docs/milestones/M26/M26_run1.md | Complete |
+| 2026-02-27 | ApplyPatch | Create M29 run analysis, audit, and summary docs | docs/milestones/M29/M29_run1.md, M29_audit.md, M29_summary.md | Complete |
+| 2026-02-27 | ApplyPatch | Update ledger with M29 completion | docs/ezra.md | Complete |
+| 2026-02-27 | ReadLints | Verify no new lint issues in edited files | .github/workflows/ci.yml, docs/ezra.md, docs/milestones/M29/* | Complete |
