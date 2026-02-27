@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ezra.errors import ZoneSchemaError
 from ezra.zones.schema import ZoneSchema
 from ezra.zones.validator import validate_registry
 
@@ -33,10 +34,10 @@ class ZoneRegistry:
             schema: Zone schema to register.
 
         Raises:
-            ValueError: If registry is frozen, schema is invalid, or ID/channel conflicts exist.
+            ZoneSchemaError: If registry is frozen, schema is invalid, or ID/channel conflicts exist.
         """
         if self._frozen:
-            raise ValueError("Cannot register zone: registry is frozen")
+            raise ZoneSchemaError("Cannot register zone: registry is frozen")
 
         # Validate schema individually
         from ezra.zones.validator import validate_zone_schema
@@ -45,7 +46,7 @@ class ZoneRegistry:
 
         # Check for duplicate ID
         if schema.id in self._zones:
-            raise ValueError(f"Duplicate zone id: {schema.id}")
+            raise ZoneSchemaError(f"Duplicate zone id: {schema.id}")
 
         # Check for duplicate channel index
         existing_with_channel = [
@@ -53,7 +54,7 @@ class ZoneRegistry:
         ]
         if existing_with_channel:
             existing_ids = [z.id for z in existing_with_channel]
-            raise ValueError(
+            raise ZoneSchemaError(
                 f"Duplicate channel index {schema.channel_index} "
                 f"(already used by zones: {existing_ids})"
             )

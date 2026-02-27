@@ -13,6 +13,7 @@ import json
 import math
 from typing import Any
 
+from ezra.errors import EPBCanonicalError, ZoneSchemaError
 from ezra.zones.registry import ZoneRegistry
 
 # Zone schema contract requires 6 decimal places for float precision
@@ -39,9 +40,9 @@ def _canonicalize_zone_value(obj: Any) -> Any:
     elif isinstance(obj, float):
         # Reject NaN and Infinity
         if math.isnan(obj):
-            raise ValueError("NaN values are not permitted in zone schemas")
+            raise EPBCanonicalError("NaN values are not permitted in zone schemas")
         if math.isinf(obj):
-            raise ValueError("Infinity values are not permitted in zone schemas")
+            raise EPBCanonicalError("Infinity values are not permitted in zone schemas")
         # Round to 6 decimal places (zone contract precision)
         return round(obj, ZONE_FLOAT_PRECISION)
     else:
@@ -71,7 +72,7 @@ def to_zone_canonical_json(obj: Any) -> str:
         Canonical JSON string with sorted keys and 6dp rounded floats.
 
     Raises:
-        ValueError: If object contains NaN or Infinity values.
+        EPBCanonicalError: If object contains NaN or Infinity values.
     """
     # Canonicalize the object (round floats to 6dp, sort dict keys)
     canonicalized = _canonicalize_zone_value(obj)
@@ -110,10 +111,10 @@ def adapt_zone_registry_to_epb(registry: ZoneRegistry) -> dict[str, Any]:
         Zones are sorted by (channel_index, id) for determinism.
 
     Raises:
-        ValueError: If registry is not frozen.
+        ZoneSchemaError: If registry is not frozen.
     """
     if not registry.is_frozen:
-        raise ValueError("Zone registry must be frozen before EPB emission")
+        raise ZoneSchemaError("Zone registry must be frozen before EPB emission")
 
     # Export registry to dict (already deterministic, 6dp precision)
     return registry.export_to_dict()

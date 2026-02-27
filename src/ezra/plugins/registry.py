@@ -10,6 +10,7 @@ from __future__ import annotations
 from importlib import import_module
 from typing import Any, cast
 
+from ezra.errors import PluginExecutionError, PluginRegistryError, PluginResolutionError
 from ezra.plugins.interface import OCRPlugin
 
 # Static registry mapping plugin names to "module.path:ClassName" strings
@@ -27,14 +28,14 @@ def _validate_registry_entry_format(path: str, plugin_name: str) -> None:
         plugin_name: Plugin name for error messages.
 
     Raises:
-        TypeError: If path format is invalid (not a string or missing ':').
+        PluginRegistryError: If path format is invalid (not a string or missing ':').
     """
     if not isinstance(path, str):
-        raise TypeError(
+        raise PluginRegistryError(
             f"Registry entry for '{plugin_name}' must be a string, got {type(path).__name__}"
         )
     if path.count(":") != 1:
-        raise TypeError(
+        raise PluginRegistryError(
             f"Registry entry for '{plugin_name}' must contain exactly one ':', got '{path}'"
         )
 
@@ -46,10 +47,10 @@ def _validate_plugin_instance(obj: object) -> None:
         obj: Object to validate.
 
     Raises:
-        TypeError: If object is not an OCRPlugin instance or missing required methods.
+        PluginRegistryError: If object is not an OCRPlugin instance or missing required methods.
     """
     if not isinstance(obj, OCRPlugin):
-        raise TypeError(
+        raise PluginRegistryError(
             f"Plugin instance must be a subclass of OCRPlugin, got {type(obj).__name__}"
         )
 
@@ -57,7 +58,7 @@ def _validate_plugin_instance(obj: object) -> None:
     required_methods = ["load", "infer", "describe_capabilities"]
     for method_name in required_methods:
         if not hasattr(obj, method_name):
-            raise TypeError(f"Plugin instance missing required method: {method_name}")
+            raise PluginRegistryError(f"Plugin instance missing required method: {method_name}")
 
 
 def get_plugin(name: str, **kwargs: Any) -> OCRPlugin:
@@ -71,8 +72,8 @@ def get_plugin(name: str, **kwargs: Any) -> OCRPlugin:
         Plugin instance implementing OCRPlugin interface.
 
     Raises:
-        ValueError: If plugin name is unknown.
-        TypeError: If registry entry is malformed or plugin instance violates contract.
+        PluginResolutionError: If plugin name is unknown.
+        PluginRegistryError: If registry entry is malformed or plugin instance violates contract.
 
     Example:
         >>> plugin = get_plugin("easyocr", device="cpu", languages=["en"])
@@ -82,7 +83,7 @@ def get_plugin(name: str, **kwargs: Any) -> OCRPlugin:
     try:
         path = _PLUGIN_REGISTRY[name]
     except KeyError:
-        raise ValueError(f"Unknown plugin: {name}")
+        raise PluginResolutionError(f"Unknown plugin: {name}")
 
     # Validate registry entry format
     _validate_registry_entry_format(path, name)
@@ -113,8 +114,8 @@ def get_plugin_from_config(config: dict[str, Any]) -> OCRPlugin:
         Plugin instance implementing OCRPlugin interface.
 
     Raises:
-        ValueError: If "name" key is missing or plugin name is unknown.
-        TypeError: If registry entry is malformed or plugin instance violates contract.
+        PluginResolutionError: If "name" key is missing or plugin name is unknown.
+        PluginRegistryError: If registry entry is malformed or plugin instance violates contract.
 
     Example:
         >>> config = {"name": "easyocr", "kwargs": {"device": "cpu", "languages": ["en"]}}
@@ -123,7 +124,7 @@ def get_plugin_from_config(config: dict[str, Any]) -> OCRPlugin:
         >>> result = plugin.infer(image)
     """
     if "name" not in config:
-        raise ValueError("Configuration must contain 'name' key")
+        raise PluginResolutionError("Configuration must contain 'name' key")
 
     name = config["name"]
     kwargs = config.get("kwargs", {})
@@ -157,8 +158,8 @@ def validate_registry() -> None:
     Does NOT instantiate plugins (avoids loading heavy ML models).
 
     Raises:
-        TypeError: If registry entry format is invalid.
-        RuntimeError: If module import fails or class is not a subclass of OCRPlugin.
+        PluginRegistryError: If registry entry format is invalid.
+        PluginExecutionError: If module import fails or class is not a subclass of OCRPlugin.
 
     Example:
         >>> validate_registry()  # Raises if registry is malformed
@@ -172,12 +173,12 @@ def validate_registry() -> None:
             module_path, class_name = path.split(":")
             module = import_module(module_path)
         except ImportError as e:
-            raise RuntimeError(
+            raise PluginExecutionError(
                 f"Failed to import module '{module_path}' for plugin '{plugin_name}': {e}"
             ) from e
 
         if not hasattr(module, class_name):
-            raise RuntimeError(
+            raise PluginExecutionError(
                 f"Class '{class_name}' not found in module '{module_path}' "
                 f"for plugin '{plugin_name}'"
             )
@@ -186,7 +187,7 @@ def validate_registry() -> None:
 
         # Verify it's a subclass of OCRPlugin (without instantiating)
         if not issubclass(plugin_cls, OCRPlugin):
-            raise RuntimeError(
+            raise PluginExecutionError(
                 f"Class '{class_name}' in module '{module_path}' is not a subclass of OCRPlugin "
                 f"for plugin '{plugin_name}'"
             )

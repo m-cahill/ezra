@@ -18,6 +18,8 @@ import json
 import math
 from typing import Any
 
+from ezra.errors import EPBCanonicalError
+
 # EPB v1.0.0 requires 8 decimal places for float precision
 EPB_FLOAT_PRECISION = 8
 
@@ -34,12 +36,12 @@ def canonicalize_float(value: float) -> float:
         Rounded float value.
 
     Raises:
-        ValueError: If value is NaN or Infinity.
+        EPBCanonicalError: If value is NaN or Infinity.
     """
     if math.isnan(value):
-        raise ValueError("NaN values are not permitted in EPB bundles")
+        raise EPBCanonicalError("NaN values are not permitted in EPB bundles")
     if math.isinf(value):
-        raise ValueError("Infinity values are not permitted in EPB bundles")
+        raise EPBCanonicalError("Infinity values are not permitted in EPB bundles")
 
     return round(value, EPB_FLOAT_PRECISION)
 
@@ -84,7 +86,7 @@ def to_canonical_json(obj: Any) -> str:
         Canonical JSON string with sorted keys and rounded floats.
 
     Raises:
-        ValueError: If object contains NaN or Infinity values.
+        EPBCanonicalError: If object contains NaN or Infinity values.
     """
     # Canonicalize the object (round floats, sort dict keys)
     canonicalized = _canonicalize_value(obj)

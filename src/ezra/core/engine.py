@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from ezra.errors import EPBValidationError, PluginExecutionError
+
 if TYPE_CHECKING:
     from ezra.plugins.interface import OCRPlugin
 
@@ -41,8 +43,8 @@ class EzraEngine:
             Dictionary containing detection results from plugin.infer().
 
         Raises:
-            ValueError: If emit_epb=True but epb_output_dir is None.
-            RuntimeError: If plugin inference fails.
+            EPBValidationError: If emit_epb=True but epb_output_dir is None.
+            PluginExecutionError: If plugin inference fails.
         """
         # Run plugin inference
         result = self.plugin.infer(image)
@@ -50,7 +52,7 @@ class EzraEngine:
         # Optionally emit EPB bundle
         if emit_epb:
             if epb_output_dir is None:
-                raise ValueError("epb_output_dir must be provided when emit_epb=True")
+                raise EPBValidationError("epb_output_dir must be provided when emit_epb=True")
 
             # Import here to avoid circular dependencies
             from ezra.epb import build_epb_bundle, write_epb_bundle

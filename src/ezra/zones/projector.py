@@ -14,6 +14,7 @@ import json
 import math
 from typing import Any
 
+from ezra.errors import EPBCanonicalError, ZoneSchemaError
 from ezra.types import OCRResult
 from ezra.zones.registry import ZoneRegistry
 from ezra.zones.schema import ZoneSchema
@@ -53,13 +54,14 @@ def project_state_to_zones(
         Zones are sorted by zone_id. Detections within each zone preserve original order.
 
     Raises:
-        ValueError: If registry is not frozen, or if a detection matches multiple zones.
+        ZoneSchemaError: If registry is not frozen, or image dimensions are invalid.
+        ZoneSchemaError: If a detection matches multiple zones (strict mode violation).
     """
     if not registry.is_frozen:
-        raise ValueError("ZoneRegistry must be frozen before projection")
+        raise ZoneSchemaError("ZoneRegistry must be frozen before projection")
 
     if image_width <= 0 or image_height <= 0:
-        raise ValueError(
+        raise ZoneSchemaError(
             f"Image dimensions must be positive, got width={image_width}, height={image_height}"
         )
 
@@ -97,7 +99,7 @@ def project_state_to_zones(
         # Strict mode: error if multiple zones match
         if len(matching_zones) > 1:
             zone_ids = [z.id for z in matching_zones]
-            raise ValueError(
+            raise ZoneSchemaError(
                 f"Detection overlaps multiple zones: {zone_ids}. "
                 "Strict mode requires unique zone assignment."
             )
@@ -126,7 +128,7 @@ def _canonicalize_projection_value(obj: Any) -> Any:
         Canonicalized value.
 
     Raises:
-        ValueError: If object contains NaN or Infinity values.
+        EPBCanonicalError: If object contains NaN or Infinity values.
     """
     if isinstance(obj, dict):
         # Sort keys alphabetically (case-sensitive) for determinism
@@ -137,9 +139,9 @@ def _canonicalize_projection_value(obj: Any) -> Any:
     elif isinstance(obj, float):
         # Reject NaN and Infinity
         if math.isnan(obj):
-            raise ValueError("NaN values are not permitted in projection output")
+            raise EPBCanonicalError("NaN values are not permitted in projection output")
         if math.isinf(obj):
-            raise ValueError("Infinity values are not permitted in projection output")
+            raise EPBCanonicalError("Infinity values are not permitted in projection output")
         # Round to 6 decimal places (zone contract precision)
         return round(obj, ZONE_FLOAT_PRECISION)
     else:
@@ -193,7 +195,7 @@ def to_projection_canonical_json(
         Canonical JSON string with sorted keys and 6dp rounded floats.
 
     Raises:
-        ValueError: If projection contains NaN or Infinity values.
+        EPBCanonicalError: If projection contains NaN or Infinity values.
     """
     # Convert projection to JSON-serializable dict
     # Sort zones by zone_id for deterministic ordering
