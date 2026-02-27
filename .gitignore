@@ -56,3 +56,13 @@ pip_audit.json
 radon.json
 radon.txt
 
+# Sphinx documentation build
+docs/_build/
+docs/_static/
+
+# Pre-commit cache
+.pre-commit-cache/
+
+# Dependency lockfile (generated artifact)
+requirements-dev.txt
+
