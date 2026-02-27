@@ -23,11 +23,13 @@ def _get_certifier_version() -> str:
     """Certifier version: ezra.__version__, else package metadata, else 'unknown'."""
     try:
         from ezra import __version__
+
         return __version__
     except ImportError:
         pass
     try:
         from importlib.metadata import version
+
         return version("ezra")
     except Exception:
         pass
@@ -85,8 +87,7 @@ def generate_cert_metadata(bundle_path: Path) -> dict[str, Any]:
         "environment": {
             "certifier_version": _get_certifier_version(),
             "python_version": (
-                f"{sys.version_info.major}.{sys.version_info.minor}"
-                f".{sys.version_info.micro}"
+                f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
             ),
         },
         "epb_version": epb_version,
@@ -138,9 +139,7 @@ def main() -> int:
         return 1
 
     envelope = generate_cert_metadata(bundle_dir)
-    out_path = (
-        args.output if args.output is not None else bundle_dir / "bundle.cert.json"
-    )
+    out_path = args.output if args.output is not None else bundle_dir / "bundle.cert.json"
     write_canonical_cert_json(envelope, out_path)
 
     cert_valid = (
