@@ -31,10 +31,7 @@ def _load_schema_canonical() -> dict:
 def _load_snapshot_canonical() -> dict:
     """Load zone_schema_snapshot.json and return canonical dict."""
     snapshot_path = (
-        Path(__file__).parent.parent
-        / "docs"
-        / "baselines"
-        / "zone_schema_snapshot.json"
+        Path(__file__).parent.parent / "docs" / "baselines" / "zone_schema_snapshot.json"
     )
     snapshot_text = snapshot_path.read_text(encoding="utf-8")
     snapshot = json.loads(snapshot_text)
@@ -80,4 +77,3 @@ def test_schema_matches_snapshot():
 
     # If we get here, schemas match
     assert current_canonical == snapshot_canonical
-
