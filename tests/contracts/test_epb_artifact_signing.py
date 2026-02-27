@@ -28,7 +28,7 @@ def test_epb_sign_verify_roundtrip(tmp_path: Path) -> None:
     bundle_dir = _make_bundle_dir(tmp_path, "epb")
     sig_path = bundle_dir / "bundle.sig"
 
-    result = sign_bundle(bundle_dir, sig_path, signing_key=None)
+    result = sign_bundle(bundle_dir, sig_path, signer=None)
     assert sig_path.is_file()
     assert result["algorithm"] == "ed25519"
     assert "bundle_hash" in result
@@ -72,7 +72,7 @@ def test_epb_verify_fails_on_tampered_bundle(tmp_path: Path) -> None:
     """Sign bundle, tamper a file, verify -> FAIL."""
     bundle_dir = _make_bundle_dir(tmp_path, "epb")
     sig_path = bundle_dir / "bundle.sig"
-    sign_bundle(bundle_dir, sig_path, signing_key=None)
+    sign_bundle(bundle_dir, sig_path, signer=None)
 
     # Tamper
     manifest_path = bundle_dir / "manifest.json"
@@ -91,7 +91,7 @@ def test_epb_verify_fails_wrong_public_key(tmp_path: Path) -> None:
     sig_path = bundle_dir / "bundle.sig"
 
     key_a = Ed25519PrivateKey.generate()
-    sign_bundle(bundle_dir, sig_path, signing_key=key_a)
+    sign_bundle(bundle_dir, sig_path, signer=key_a)
 
     sig_obj = json.loads(sig_path.read_text(encoding="utf-8"))
     signature_from_a = sig_obj["signature"]
@@ -133,7 +133,7 @@ def test_epb_sign_with_provided_private_key(tmp_path: Path) -> None:
     )
     key_path.write_bytes(pem)
 
-    sign_bundle(bundle_dir, sig_path, signing_key=key)
+    sign_bundle(bundle_dir, sig_path, signer=key)
     assert sig_path.is_file()
 
     valid, _ = verify_bundle(bundle_dir, sig_path)
@@ -147,4 +147,4 @@ def test_epb_sign_fails_invalid_bundle(tmp_path: Path) -> None:
     not_dir = tmp_path / "missing"
     sig_path = tmp_path / "out.sig"
     with pytest.raises(ValueError, match="Not a directory"):
-        sign_bundle(not_dir, sig_path, signing_key=None)
+        sign_bundle(not_dir, sig_path, signer=None)

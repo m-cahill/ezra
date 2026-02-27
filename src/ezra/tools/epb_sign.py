@@ -37,19 +37,19 @@ def _sign_payload(private_key: Ed25519PrivateKey, payload_hex: str) -> tuple[byt
 def sign_bundle(
     bundle_dir: Path,
     sig_path: Path,
-    signing_key: Ed25519PrivateKey | None = None,
+    signer: Ed25519PrivateKey | None = None,
 ) -> dict[str, str]:
     """Compute bundle hash, sign it, write sig_path. Return sig dict (for tests/stdout).
 
-    If signing_key is None, generates an ephemeral key. Does not persist private key.
+    If signer is None, generates an ephemeral key. Does not persist private key.
     """
     bundle_dir = Path(bundle_dir).resolve()
     bundle_hash = compute_bundle_hash(bundle_dir)
 
-    if signing_key is None:
-        signing_key = Ed25519PrivateKey.generate()
+    if signer is None:
+        signer = Ed25519PrivateKey.generate()
 
-    signature_bytes, public_key_bytes = _sign_payload(signing_key, bundle_hash)
+    signature_bytes, public_key_bytes = _sign_payload(signer, bundle_hash)
 
     sig_obj = {
         "algorithm": SIG_ALGORITHM,
@@ -104,7 +104,7 @@ def main() -> int:
     if sig_path is None:
         sig_path = bundle_dir / DEFAULT_SIG_FILENAME
 
-    signing_key: Ed25519PrivateKey | None = None
+    signer: Ed25519PrivateKey | None = None
     if args.private_key is not None:
         pem = Path(args.private_key).read_text(encoding="utf-8")
         loaded = serialization.load_pem_private_key(
@@ -117,10 +117,10 @@ def main() -> int:
                 file=sys.stderr,
             )
             return 1
-        signing_key = loaded
+        signer = loaded
 
     try:
-        sig_obj = sign_bundle(bundle_dir, sig_path, signing_key=signing_key)
+        sig_obj = sign_bundle(bundle_dir, sig_path, signer=signer)
     except ValueError as e:
         print(json.dumps({"error": str(e)}, sort_keys=True), file=sys.stderr)
         return 1
