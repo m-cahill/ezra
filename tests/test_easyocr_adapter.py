@@ -6,6 +6,12 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from ezra.plugins.easyocr_adapter import EasyOCRAdapter
+from tests.utils.ml_available import has_easyocr
+
+EASYOCR_REQUIRED = pytest.mark.skipif(
+    not has_easyocr(),
+    reason="EasyOCR not installed in CI environment",
+)
 
 
 def test_easyocr_adapter_import_without_easyocr() -> None:
@@ -24,6 +30,7 @@ def test_easyocr_adapter_import_without_easyocr() -> None:
             adapter_module.EasyOCRAdapter()
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_initialization(mock_easyocr: MagicMock) -> None:
     """Test adapter initialization with mocked EasyOCR."""
@@ -33,6 +40,7 @@ def test_easyocr_adapter_initialization(mock_easyocr: MagicMock) -> None:
     assert not adapter._loaded
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_initialization_defaults(mock_easyocr: MagicMock) -> None:
     """Test adapter initialization with default parameters."""
@@ -42,6 +50,7 @@ def test_easyocr_adapter_initialization_defaults(mock_easyocr: MagicMock) -> Non
     assert not adapter._loaded
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_initialization_cuda(mock_easyocr: MagicMock) -> None:
     """Test adapter initialization with CUDA device."""
@@ -51,6 +60,7 @@ def test_easyocr_adapter_initialization_cuda(mock_easyocr: MagicMock) -> None:
     assert not adapter._loaded
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_load(mock_easyocr: MagicMock) -> None:
     """Test adapter load method."""
@@ -69,6 +79,7 @@ def test_easyocr_adapter_load(mock_easyocr: MagicMock) -> None:
     assert adapter._reader is mock_reader
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_load_cuda(mock_easyocr: MagicMock) -> None:
     """Test adapter load method with CUDA device."""
@@ -86,6 +97,7 @@ def test_easyocr_adapter_load_cuda(mock_easyocr: MagicMock) -> None:
     assert adapter._loaded
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_load_idempotent(mock_easyocr: MagicMock) -> None:
     """Test that adapter load is idempotent."""
@@ -100,6 +112,7 @@ def test_easyocr_adapter_load_idempotent(mock_easyocr: MagicMock) -> None:
     assert adapter._loaded
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_load_failure(mock_easyocr: MagicMock) -> None:
     """Test that load raises RuntimeError on failure."""
@@ -111,6 +124,7 @@ def test_easyocr_adapter_load_failure(mock_easyocr: MagicMock) -> None:
         adapter.load()
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_infer(mock_easyocr: MagicMock) -> None:
     """Test adapter infer method returns raw EasyOCR output."""
@@ -142,6 +156,7 @@ def test_easyocr_adapter_infer(mock_easyocr: MagicMock) -> None:
     mock_reader.readtext.assert_called_once_with(mock_image)
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_infer_not_loaded(mock_easyocr: MagicMock) -> None:
     """Test that infer raises RuntimeError if model not loaded."""
@@ -151,6 +166,7 @@ def test_easyocr_adapter_infer_not_loaded(mock_easyocr: MagicMock) -> None:
         adapter.infer(MagicMock())
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_adapter_infer_failure(mock_easyocr: MagicMock) -> None:
     """Test that infer raises RuntimeError on inference failure."""
