@@ -34,7 +34,8 @@ class ZoneRegistry:
             schema: Zone schema to register.
 
         Raises:
-            ZoneSchemaError: If registry is frozen, schema is invalid, or ID/channel conflicts exist.
+            ZoneSchemaError: If registry is frozen, schema is invalid, or
+                ID/channel conflicts exist.
         """
         if self._frozen:
             raise ZoneSchemaError("Cannot register zone: registry is frozen")

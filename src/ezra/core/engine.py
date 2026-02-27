@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from ezra.errors import EPBValidationError, PluginExecutionError
+from ezra.errors import EPBValidationError
 
 if TYPE_CHECKING:
     from ezra.plugins.interface import OCRPlugin
