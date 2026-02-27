@@ -34,3 +34,7 @@
 | 2026-02-27 | ApplyPatch | Create M29 run analysis, audit, and summary docs | docs/milestones/M29/M29_run1.md, M29_audit.md, M29_summary.md | Complete |
 | 2026-02-27 | ApplyPatch | Update ledger with M29 completion | docs/ezra.md | Complete |
 | 2026-02-27 | ReadLints | Verify no new lint issues in edited files | .github/workflows/ci.yml, docs/ezra.md, docs/milestones/M29/* | Complete |
+| 2026-02-27 | Shell | Commit and push governance closeout docs | docs/ezra.md, docs/milestones/M29/* | Complete |
+| 2026-02-27 | Shell | Monitor final PR-head CI run and checks | GitHub Actions run 22504670380 | Complete |
+| 2026-02-27 | Shell | Capture final hermetic comparison logs | Hermetic Reproducibility job logs (run 22504670380) | Complete |
+| 2026-02-27 | ApplyPatch | Update run IDs to final PR-head green run | docs/milestones/M29/M29_run1.md, docs/ezra.md | Complete |
