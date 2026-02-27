@@ -8,6 +8,7 @@ EZRA (Extensible Zone-Based Runtime Architecture) is a modular runtime perceptio
    :caption: Contents:
 
    qa
+   architecture/zones
 
 Quality Assurance & Governance
 ==============================

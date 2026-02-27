@@ -117,6 +117,7 @@
     "ezra.zones.projector",
     "ezra.zones.registry",
     "ezra.zones.schema",
+    "ezra.zones.serialize",
     "ezra.zones.validator"
   ]
 }

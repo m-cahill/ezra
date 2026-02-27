@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/m-cahill/ezra/schemas/zones/schema_v1.json",
+  "title": "EZRA Universal Zone Mapping Schema v1.0.0",
+  "description": "Formal JSON Schema for EZRA zone definitions. Defines the structure for mapping visual zones to tensor channels with persistence semantics.",
+  "type": "object",
+  "required": ["zones"],
+  "properties": {
+    "zones": {
+      "type": "array",
+      "description": "List of zone schemas, sorted by (channel_index, id) for deterministic ordering",
+      "items": {
+        "$ref": "#/definitions/ZoneSchema"
+      },
+      "minItems": 0
+    }
+  },
+  "definitions": {
+    "ZoneSchema": {
+      "type": "object",
+      "description": "Complete zone schema definition mapping a visual zone to a tensor channel",
+      "required": ["id", "kind", "channel_index", "bbox_norm", "persistence"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique zone identifier (non-empty string)",
+          "minLength": 1,
+          "pattern": "^[^\\s]+$"
+        },
+        "kind": {
+          "type": "string",
+          "description": "Zone kind/category (free-form, non-empty string)",
+          "minLength": 1,
+          "pattern": "^[^\\s]+$"
+        },
+        "channel_index": {
+          "type": "integer",
+          "description": "Tensor channel assignment (int >= 0, globally unique across registry)",
+          "minimum": 0
+        },
+        "bbox_norm": {
+          "$ref": "#/definitions/BBoxNorm"
+        },
+        "persistence": {
+          "$ref": "#/definitions/ZonePersistence"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BBoxNorm": {
+      "type": "object",
+      "description": "Normalized bounding box in 0-1 coordinate space. Coordinates are normalized to image dimensions: x_min, y_min (top-left, inclusive), x_max, y_max (bottom-right, exclusive)",
+      "required": ["x_min", "y_min", "x_max", "y_max"],
+      "properties": {
+        "x_min": {
+          "type": "number",
+          "description": "Left edge (inclusive), normalized 0-1",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "y_min": {
+          "type": "number",
+          "description": "Top edge (inclusive), normalized 0-1",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "x_max": {
+          "type": "number",
+          "description": "Right edge (exclusive), normalized 0-1",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "y_max": {
+          "type": "number",
+          "description": "Bottom edge (exclusive), normalized 0-1",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      },
+      "additionalProperties": false
+    },
+    "ZonePersistence": {
+      "type": "object",
+      "description": "Zone persistence semantics controlling whether zone state persists across frames",
+      "required": ["sticky"],
+      "properties": {
+        "sticky": {
+          "type": "boolean",
+          "description": "If true, zone state persists across frames; if false, zone state is ephemeral"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
+
