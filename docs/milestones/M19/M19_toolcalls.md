@@ -21,6 +21,10 @@
 | 2026-02-26 | gh pr checks | Monitor CI run 22470077402 for PR #20 | PR #20 | ✅ Complete |
 | 2026-02-26 | gh run view | Get job-level results for run 22470077402 | Run 22470077402 | ✅ Complete |
 | 2026-02-26 | write | Generate M19_run1.md CI analysis | `docs/milestones/M19/M19_run1.md` | ✅ Complete |
+| 2026-02-26 | gh pr merge | Merge PR #20 to main | PR #20 | ✅ Complete |
+| 2026-02-26 | gh run view | Monitor post-merge CI run 22470215827 | Run 22470215827 | ✅ Complete |
+| 2026-02-26 | gh run view --log-failed | Capture failure logs for SLSA Provenance and Docs Deploy | Run 22470215827 | ✅ Complete |
+| 2026-02-26 | write | Generate M19_run2.md post-merge analysis | `docs/milestones/M19/M19_run2.md` | ✅ Complete |
 
 ---
 
