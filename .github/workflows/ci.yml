@@ -113,6 +113,13 @@ jobs:
           echo "sign_pass=PASS" >> $GITHUB_OUTPUT
           echo "verify_pass=PASS" >> $GITHUB_OUTPUT
           echo "tamper_detection=PASS" >> $GITHUB_OUTPUT
+      - name: EPB Certification Metadata
+        id: epb_cert_metadata
+        run: |
+          pytest tests/contracts/test_epb_cert_metadata.py -v
+          echo "metadata_structure=PASS" >> $GITHUB_OUTPUT
+          echo "metadata_tamper=PASS" >> $GITHUB_OUTPUT
+          echo "metadata_no_sig=PASS" >> $GITHUB_OUTPUT
       - name: Upload zone schema artifact
         uses: actions/upload-artifact@v4
         with:
@@ -161,6 +168,12 @@ jobs:
           echo "- Sign PASS: ${{ steps.epb_signing.outputs.sign_pass || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Verify PASS: ${{ steps.epb_signing.outputs.verify_pass || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Tamper detection PASS: ${{ steps.epb_signing.outputs.tamper_detection || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## EPB Certification Metadata" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Metadata structure: ${{ steps.epb_cert_metadata.outputs.metadata_structure || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Metadata tamper: ${{ steps.epb_cert_metadata.outputs.metadata_tamper || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Metadata no-sig: ${{ steps.epb_cert_metadata.outputs.metadata_no_sig || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
