@@ -9,4 +9,8 @@
 | 2026-02-27 | run_terminal_cmd | Format code with ruff | tests/test_public_surface_freeze.py | ✅ Complete |
 | 2026-02-27 | run_terminal_cmd | Commit changes | git commit | ✅ Complete (commit 0999125) |
 | 2026-02-27 | run_terminal_cmd | Push branch and create PR | git push, gh pr create | ✅ Complete (PR #18) |
+| 2026-02-27 | write | Generate M17_run1.md analysis | docs/milestones/M17/M17_run1.md | ✅ Complete |
+| 2026-02-27 | search_replace | Fix gitleaks CI configuration | .github/workflows/ci.yml | ✅ Complete (full-repo scan) |
+| 2026-02-27 | run_terminal_cmd | Commit and push CI fix | git commit, git push | ✅ Complete (commit c9ad9bf) |
+| 2026-02-27 | run_terminal_cmd | Monitor CI run 2 | gh run view 22468659282 | ⏳ In progress |
 
