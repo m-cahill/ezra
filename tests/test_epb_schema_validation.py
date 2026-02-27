@@ -1,10 +1,34 @@
 """Tests for EPB JSON Schema validation."""
 
+from collections.abc import Mapping
 from pathlib import Path
+from types import MappingProxyType
 
 import pytest
 
 from ezra.epb import build_epb_bundle, validate_bundle, write_epb_bundle
+
+
+def _convert_sealed_to_mutable(obj: Mapping | list | object) -> dict | list | object:
+    """Convert sealed bundle (MappingProxyType) to mutable dict for testing.
+
+    This helper is used in tests that need to mutate bundles to test validation.
+    In production, bundles are sealed and immutable.
+
+    Args:
+        obj: Sealed bundle or nested structure.
+
+    Returns:
+        Mutable dict/list with same structure.
+    """
+    if isinstance(obj, MappingProxyType):
+        return {k: _convert_sealed_to_mutable(v) for k, v in obj.items()}
+    elif isinstance(obj, Mapping):
+        return {k: _convert_sealed_to_mutable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_convert_sealed_to_mutable(item) for item in obj]
+    else:
+        return obj
 
 
 def test_valid_bundle_passes_schema_validation() -> None:
@@ -71,6 +95,9 @@ def test_invalid_manifest_fails_validation() -> None:
         input_metadata={"width": 100, "height": 200, "channels": 3},
     )
 
+    # Convert sealed bundle to mutable dict for testing
+    bundle = _convert_sealed_to_mutable(bundle)
+
     # Remove required field
     del bundle["manifest"]["epb_version"]
 
@@ -86,6 +113,9 @@ def test_invalid_detections_fails_validation() -> None:
         plugin_version="1.0.0",
         input_metadata={"width": 100, "height": 200, "channels": 3},
     )
+
+    # Convert sealed bundle to mutable dict for testing
+    bundle = _convert_sealed_to_mutable(bundle)
 
     # Add invalid detection (missing required field)
     bundle["detections"]["detections"].append({"text": "Invalid"})  # Missing bbox
@@ -133,6 +163,9 @@ def test_schema_validator_raises_on_missing_required_field() -> None:
         input_metadata={"width": 100, "height": 200, "channels": 3},
     )
 
+    # Convert sealed bundle to mutable dict for testing
+    bundle = _convert_sealed_to_mutable(bundle)
+
     # Remove required field from manifest
     del bundle["manifest"]["timestamp"]
 
@@ -148,6 +181,9 @@ def test_write_epb_bundle_validates_before_writing(tmp_path: Path) -> None:
         plugin_version="1.0.0",
         input_metadata={"width": 100, "height": 200, "channels": 3},
     )
+
+    # Convert sealed bundle to mutable dict for testing
+    bundle = _convert_sealed_to_mutable(bundle)
 
     # Corrupt bundle
     bundle["manifest"]["epb_version"] = "invalid-version"

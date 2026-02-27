@@ -292,10 +292,11 @@ def test_zone_projector_no_mutation():
         OCRResult(text="Hello", confidence=0.9, bbox=[10.0, 20.0, 50.0, 40.0]),
     ]
 
-    original_bbox = detections[0].bbox.copy()
+    # Store original bbox (now a tuple, immutable, so no copy needed)
+    original_bbox = detections[0].bbox
     result = project_state_to_zones(detections, registry, image_width=200, image_height=200)
 
-    # Original detection unchanged
+    # Original detection unchanged (bbox is immutable tuple)
     assert detections[0].bbox == original_bbox
     # Result contains same detection object (reference equality)
     assert result["zone1"][0] is detections[0]
