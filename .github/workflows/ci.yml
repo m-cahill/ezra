@@ -48,13 +48,17 @@ jobs:
         run: mypy src/
 
   test:
-    name: Test
+    name: Test (Py ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
           cache: "pip"
       - name: Install dependencies
         run: |
@@ -113,6 +117,37 @@ jobs:
           echo "sign_pass=PASS" >> $GITHUB_OUTPUT
           echo "verify_pass=PASS" >> $GITHUB_OUTPUT
           echo "tamper_detection=PASS" >> $GITHUB_OUTPUT
+      - name: Hermetic Reproducibility Hash
+        id: hermetic_hash
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          from ezra.epb import build_epb_bundle, write_epb_bundle
+
+          out_dir = Path("hermetic_bundle")
+          out_dir.mkdir(parents=True, exist_ok=True)
+          bundle = build_epb_bundle(
+              detections=[{"text": "Hello", "confidence": 0.9, "bbox": [10.0, 20.0, 50.0, 40.0]}],
+              plugin_name="test",
+              plugin_version="1.0.0",
+              input_metadata={"width": 200, "height": 100, "channels": 3},
+              timestamp=datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC),
+          )
+          write_epb_bundle(bundle, out_dir)
+          bundle_hash = json.loads((out_dir / "hashes.json").read_text(encoding="utf-8"))["bundle_hash"]
+          Path("hermetic_hash.txt").write_text(bundle_hash + "\n", encoding="utf-8")
+          print(f"Hermetic bundle hash: {bundle_hash}")
+          PY
+          echo "bundle_hash=$(cat hermetic_hash.txt)" >> $GITHUB_OUTPUT
+      - name: Upload hermetic hash artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hermetic-hash-py${{ matrix.python-version }}
+          path: hermetic_hash.txt
+          retention-days: 30
       - name: Upload zone schema artifact
         uses: actions/upload-artifact@v4
         with:
@@ -161,6 +196,11 @@ jobs:
           echo "- Sign PASS: ${{ steps.epb_signing.outputs.sign_pass || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Verify PASS: ${{ steps.epb_signing.outputs.verify_pass || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Tamper detection PASS: ${{ steps.epb_signing.outputs.tamper_detection || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Hermetic Reproducibility" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Python version: ${{ matrix.python-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Canonical bundle hash: ${{ steps.hermetic_hash.outputs.bundle_hash }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -395,6 +435,53 @@ jobs:
             python scripts/generate_determinism_summary.py >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
+
+  hermetic-reproducibility:
+    name: Hermetic Reproducibility
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download hermetic hash artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: hermetic-hash-py*
+          path: hermetic-hashes
+      - name: Compare matrix bundle hashes
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+
+          root = Path("hermetic-hashes")
+          hash_files = sorted(root.glob("*/hermetic_hash.txt"))
+          if not hash_files:
+              print("No hermetic hash artifacts found.", file=sys.stderr)
+              sys.exit(1)
+
+          records = []
+          for file_path in hash_files:
+              hash_value = file_path.read_text(encoding="utf-8").strip()
+              label = file_path.parent.name
+              records.append((label, hash_value))
+
+          print("Hermetic reproducibility matrix hashes:")
+          for label, hash_value in records:
+              print(f"- {label}: {hash_value}")
+
+          unique_hashes = {hash_value for _, hash_value in records}
+          if len(unique_hashes) != 1:
+              print("Hash divergence detected across Python matrix.", file=sys.stderr)
+              sys.exit(1)
+
+          print("All matrix hashes are identical.")
+          PY
+      - name: Hermetic reproducibility summary
+        if: always()
+        run: |
+          echo "## Hermetic Reproducibility Gate" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Downloaded matrix hash artifacts and compared canonical bundle hashes." >> $GITHUB_STEP_SUMMARY
+          echo "Build fails if any hash differs." >> $GITHUB_STEP_SUMMARY
 
   dependency-review:
     name: Dependency Review
