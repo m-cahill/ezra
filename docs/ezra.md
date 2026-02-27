@@ -121,6 +121,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M23 | Zone Registry Deterministic State & Integrity Hardening | Complete | v0.0.24-m23 | PR#24 | Registry integrity hardening: snapshot baseline (zone_registry_snapshot.json), hash determinism, freeze enforcement, channel ordering invariants, CI registry integrity section. All 252 tests pass (241 baseline + 10 new + 1 existing), coverage maintained, all invariants preserved, zero runtime behavior drift. Registry Integrity section visible in CI. CI Run: 22475261410 |
 | M24 | Consumer Contract Harness & Invariant Hardening | Complete | v0.0.25-m24 | PR#25 | Introduced EPB consumer contract harness with golden snapshot baseline and Python-level determinism invariant enforcement. All 256 tests pass (252 baseline + 4 new), coverage 95.90% (↑ from 95.78%), no public surface drift, no CI weakening. EPB Contract Harness step and summary in CI. CI Run: 22476148423 |
 | M25 | EPB Consumer Certification & Artifact Reproducibility Hardening | Complete | v0.0.26-m25 | PR#26 | Stdlib-only `epb_certify.py` validates EPB bundle structure, hash integrity, and bundle hash without EZRA runtime imports. Subprocess-isolated certification test, reproducibility gate (emit → rmtree → re-emit), and CI “EPB Consumer Certification” step added. All 262 tests pass (256 baseline + 6 new), coverage 95.90% (unchanged), no invariant drift. CI Run: 22477994937 |
+| M26 | EPB Artifact Signing & Verification (Detached Ed25519) | Complete | v0.0.27-m26 | PR#27 | Detached Ed25519 signing (`epb_sign.py`) and verification (`epb_verify.py`) via stdlib + `cryptography==46.0.5`. Ephemeral key by default; optional `--private-key`. `bundle.sig` format (algorithm, bundle_hash, signature, public_key). 6 new contract tests. CI "EPB Artifact Signing" step. All 268 tests pass (262 baseline + 6 new), coverage 95.70%, no invariant drift. CI Run: 22503081806 |
 
 ## 7A. Phase V — Remaining Milestones (Planned)
 
@@ -129,7 +130,6 @@ All remain behavior-preserving unless explicitly justified.
 
 | Milestone | Objective | Status | Notes |
 |-----------|-----------|--------|-------|
-| M26 | EPB Artifact Signing & Verification | Planned | Add detached signature support (Ed25519), `epb_sign.py` and `epb_verify.py`; cryptographic attestability; no schema change |
 | M27 | Detached Certification Metadata Layer | Planned | Separate certification metadata from emission logic; supports archival and compliance workflows |
 | M28 | Artifact-Only Distribution Mode | Planned | Lightweight EPB validation package (`ezra-epb-tools`); enables artifact validation without full runtime install |
 | M29 | Hermetic Reproducibility Gate | Planned | Matrix CI (Python versions / OS) verifying canonical digest equivalence; research-grade reproducibility assurance |
