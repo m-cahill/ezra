@@ -13,6 +13,7 @@ from pathlib import Path
 
 from ezra.epb.hasher import compute_bundle_hash, compute_file_hash
 from ezra.epb.zone_adapter import to_zone_canonical_json
+from ezra.errors import EPBHashError
 
 
 def verify_epb_bundle(bundle_dir: Path) -> None:
@@ -31,7 +32,7 @@ def verify_epb_bundle(bundle_dir: Path) -> None:
         bundle_dir: Path to EPB bundle directory.
 
     Raises:
-        ValueError: If any file hash mismatch, missing file, or bundle_hash mismatch.
+        EPBHashError: If any file hash mismatch, missing file, or bundle_hash mismatch.
         FileNotFoundError: If hashes.json is missing.
         json.JSONDecodeError: If hashes.json is invalid JSON.
     """
@@ -40,19 +41,19 @@ def verify_epb_bundle(bundle_dir: Path) -> None:
     # Load hashes.json
     hashes_path = bundle_dir / "hashes.json"
     if not hashes_path.exists():
-        raise ValueError(f"EPB bundle missing hashes.json: {hashes_path}")
+        raise EPBHashError(f"EPB bundle missing hashes.json: {hashes_path}")
 
     try:
         hashes_content = hashes_path.read_text(encoding="utf-8")
         hashes_dict = json.loads(hashes_content)
     except json.JSONDecodeError as e:
-        raise ValueError(f"EPB bundle hashes.json is invalid JSON: {e}") from e
+        raise EPBHashError(f"EPB bundle hashes.json is invalid JSON: {e}") from e
 
     # Validate hashes.json structure
     if "files" not in hashes_dict:
-        raise ValueError("EPB bundle hashes.json missing 'files' field")
+        raise EPBHashError("EPB bundle hashes.json missing 'files' field")
     if "bundle_hash" not in hashes_dict:
-        raise ValueError("EPB bundle hashes.json missing 'bundle_hash' field")
+        raise EPBHashError("EPB bundle hashes.json missing 'bundle_hash' field")
 
     files_map = hashes_dict["files"]
     declared_bundle_hash = hashes_dict["bundle_hash"]
@@ -70,7 +71,7 @@ def verify_epb_bundle(bundle_dir: Path) -> None:
         # Verify file exists
         file_path = bundle_dir / filename
         if not file_path.exists():
-            raise ValueError(
+            raise EPBHashError(
                 f"EPB bundle file declared in hashes.json but missing on disk: {filename}"
             )
 
@@ -88,11 +89,11 @@ def verify_epb_bundle(bundle_dir: Path) -> None:
                 # Use EPB canonicalization (8dp) for all other files
                 computed_hash = compute_file_hash(file_dict)
         except json.JSONDecodeError as e:
-            raise ValueError(f"EPB bundle file {filename} is invalid JSON: {e}") from e
+            raise EPBHashError(f"EPB bundle file {filename} is invalid JSON: {e}") from e
 
         # Compare hashes
         if computed_hash != declared_hash:
-            raise ValueError(
+            raise EPBHashError(
                 f"EPB bundle file {filename} hash mismatch:\n"
                 f"  Declared: {declared_hash}\n"
                 f"  Computed: {computed_hash}"
@@ -105,7 +106,7 @@ def verify_epb_bundle(bundle_dir: Path) -> None:
     computed_bundle_hash = compute_bundle_hash(verified_file_hashes)
 
     if computed_bundle_hash != declared_bundle_hash:
-        raise ValueError(
+        raise EPBHashError(
             f"EPB bundle bundle_hash mismatch:\n"
             f"  Declared: {declared_bundle_hash}\n"
             f"  Computed: {computed_bundle_hash}"
@@ -113,7 +114,7 @@ def verify_epb_bundle(bundle_dir: Path) -> None:
 
     # Verify hashes.json self-hash (depends on bundle_hash being correct)
     if hashes_json_declared_hash is None:
-        raise ValueError("EPB bundle hashes.json missing self-hash entry in files map")
+        raise EPBHashError("EPB bundle hashes.json missing self-hash entry in files map")
 
     # Reconstruct hashes.json structure without self-entry (same as emission logic)
     # This matches the logic in build_hashes_dict() where self-hash is computed
@@ -126,7 +127,7 @@ def verify_epb_bundle(bundle_dir: Path) -> None:
     computed_hashes_json_hash = compute_file_hash(hashes_dict_without_self)
 
     if computed_hashes_json_hash != hashes_json_declared_hash:
-        raise ValueError(
+        raise EPBHashError(
             f"EPB bundle hashes.json self-hash mismatch:\n"
             f"  Declared: {hashes_json_declared_hash}\n"
             f"  Computed: {computed_hashes_json_hash}"

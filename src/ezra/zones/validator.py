@@ -10,6 +10,7 @@ This module provides validation for zone schemas, ensuring:
 
 from __future__ import annotations
 
+from ezra.errors import ZoneSchemaError
 from ezra.zones.schema import BBoxNorm, ZoneSchema
 
 
@@ -20,15 +21,15 @@ def validate_bbox(bbox: BBoxNorm) -> None:
         bbox: Bounding box to validate.
 
     Raises:
-        ValueError: If bbox is invalid.
+        ZoneSchemaError: If bbox is invalid.
     """
     if not (0 <= bbox.x_min < bbox.x_max <= 1):
-        raise ValueError(
+        raise ZoneSchemaError(
             f"Invalid bbox x coordinates: x_min={bbox.x_min}, x_max={bbox.x_max}. "
             "Must satisfy 0 <= x_min < x_max <= 1"
         )
     if not (0 <= bbox.y_min < bbox.y_max <= 1):
-        raise ValueError(
+        raise ZoneSchemaError(
             f"Invalid bbox y coordinates: y_min={bbox.y_min}, y_max={bbox.y_max}. "
             "Must satisfy 0 <= y_min < y_max <= 1"
         )
@@ -41,19 +42,19 @@ def validate_zone_schema(schema: ZoneSchema) -> None:
         schema: Zone schema to validate.
 
     Raises:
-        ValueError: If schema is invalid.
+        ZoneSchemaError: If schema is invalid.
     """
     # Validate id is non-empty
     if not schema.id or not isinstance(schema.id, str):
-        raise ValueError(f"Zone id must be a non-empty string, got: {schema.id!r}")
+        raise ZoneSchemaError(f"Zone id must be a non-empty string, got: {schema.id!r}")
 
     # Validate kind is non-empty
     if not schema.kind or not isinstance(schema.kind, str):
-        raise ValueError(f"Zone kind must be a non-empty string, got: {schema.kind!r}")
+        raise ZoneSchemaError(f"Zone kind must be a non-empty string, got: {schema.kind!r}")
 
     # Validate channel_index is non-negative integer
     if not isinstance(schema.channel_index, int) or schema.channel_index < 0:
-        raise ValueError(
+        raise ZoneSchemaError(
             f"Channel index must be a non-negative integer, got: {schema.channel_index!r}"
         )
 
@@ -75,7 +76,7 @@ def validate_registry(
         check_unique_channels: If True, ensure all channel indices are unique.
 
     Raises:
-        ValueError: If validation fails.
+        ZoneSchemaError: If validation fails.
     """
     # Validate each schema individually
     for schema in schemas:
@@ -86,7 +87,7 @@ def validate_registry(
         seen_ids: set[str] = set()
         for schema in schemas:
             if schema.id in seen_ids:
-                raise ValueError(f"Duplicate zone id: {schema.id}")
+                raise ZoneSchemaError(f"Duplicate zone id: {schema.id}")
             seen_ids.add(schema.id)
 
     # Check for duplicate channel indices
@@ -95,7 +96,7 @@ def validate_registry(
         for schema in schemas:
             if schema.channel_index in seen_channels:
                 duplicate_ids = [s.id for s in schemas if s.channel_index == schema.channel_index]
-                raise ValueError(
+                raise ZoneSchemaError(
                     f"Duplicate channel index: {schema.channel_index} "
                     f"(used by zones: {duplicate_ids})"
                 )

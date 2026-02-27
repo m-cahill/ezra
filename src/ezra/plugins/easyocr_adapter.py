@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any
 
+from ezra.errors import PluginExecutionError
+
 try:
     import easyocr
 except ImportError:
@@ -51,7 +53,7 @@ class EasyOCRAdapter:
         models on first use.
 
         Raises:
-            RuntimeError: If model loading fails.
+            PluginExecutionError: If model loading fails.
         """
         if self._loaded:
             return
@@ -66,7 +68,7 @@ class EasyOCRAdapter:
             )
             self._loaded = True
         except Exception as e:
-            raise RuntimeError(f"Failed to load EasyOCR model: {e}") from e
+            raise PluginExecutionError(f"Failed to load EasyOCR model: {e}") from e
 
     def infer(self, image: Any) -> list[Any]:
         """Run raw EasyOCR inference on an input image.
@@ -84,10 +86,10 @@ class EasyOCRAdapter:
             Raw EasyOCR output as list of tuples.
 
         Raises:
-            RuntimeError: If model is not loaded or inference fails.
+            PluginExecutionError: If model is not loaded or inference fails.
         """
         if not self._loaded or self._reader is None:
-            raise RuntimeError("Model not loaded. Call load() first.")
+            raise PluginExecutionError("Model not loaded. Call load() first.")
 
         try:
             # EasyOCR returns list of (bbox, text, confidence) tuples
@@ -95,4 +97,4 @@ class EasyOCRAdapter:
             results = self._reader.readtext(image)
             return results  # type: ignore[no-any-return]
         except Exception as e:
-            raise RuntimeError(f"EasyOCR inference failed: {e}") from e
+            raise PluginExecutionError(f"EasyOCR inference failed: {e}") from e

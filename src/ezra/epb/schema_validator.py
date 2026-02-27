@@ -2,7 +2,7 @@
 
 This module validates EPB bundle components against their JSON Schemas
 before hash computation and file writing. Validation failures raise
-ValueError with human-readable error messages.
+EPBValidationError with human-readable error messages.
 """
 
 from __future__ import annotations
@@ -13,6 +13,8 @@ from typing import Any, cast
 
 import jsonschema  # type: ignore[import-untyped]
 from jsonschema import ValidationError
+
+from ezra.errors import EPBValidationError
 
 # Resolve schema directory relative to this file
 # schema_validator.py is at: src/ezra/epb/schema_validator.py
@@ -50,7 +52,7 @@ def _load_schema(schema_name: str) -> dict[str, Any]:
 
     schema_path = SCHEMA_DIR / schema_name
     if not schema_path.exists():
-        raise ValueError(
+        raise EPBValidationError(
             f"EPB schema file not found: {schema_path}. Expected schema directory: {SCHEMA_DIR}"
         )
 
@@ -73,7 +75,7 @@ def _validate_against_schema(
         component_name: Human-readable name for error messages (e.g., "manifest").
 
     Raises:
-        ValueError: If validation fails, with detailed error message.
+        EPBValidationError: If validation fails, with detailed error message.
     """
     try:
         schema = _load_schema(schema_name)
@@ -86,13 +88,13 @@ def _validate_against_schema(
             f"  Path: {error_path}\n"
             f"  Schema: {schema_name}"
         )
-        raise ValueError(error_msg) from e
+        raise EPBValidationError(error_msg) from e
     except FileNotFoundError as e:
-        raise ValueError(
+        raise EPBValidationError(
             f"EPB schema file not found: {schema_name}. Cannot validate {component_name}."
         ) from e
     except json.JSONDecodeError as e:
-        raise ValueError(
+        raise EPBValidationError(
             f"EPB schema file {schema_name} is invalid JSON. Cannot validate {component_name}."
         ) from e
 
@@ -111,22 +113,22 @@ def validate_bundle(bundle: dict[str, Any]) -> None:
         bundle: EPB bundle dictionary from build_epb_bundle().
 
     Raises:
-        ValueError: If any component fails validation, with detailed error message.
+        EPBValidationError: If any component fails validation, with detailed error message.
         KeyError: If required bundle components are missing.
     """
     # Validate manifest.json
     if "manifest" not in bundle:
-        raise ValueError("EPB bundle missing required 'manifest' component")
+        raise EPBValidationError("EPB bundle missing required 'manifest' component")
     _validate_against_schema(bundle["manifest"], MANIFEST_SCHEMA, "manifest")
 
     # Validate detections.json
     if "detections" not in bundle:
-        raise ValueError("EPB bundle missing required 'detections' component")
+        raise EPBValidationError("EPB bundle missing required 'detections' component")
     _validate_against_schema(bundle["detections"], DETECTIONS_SCHEMA, "detections")
 
     # Validate state.json (always present per builder contract)
     if "state" not in bundle:
-        raise ValueError("EPB bundle missing required 'state' component")
+        raise EPBValidationError("EPB bundle missing required 'state' component")
     _validate_against_schema(bundle["state"], STATE_SCHEMA, "state")
 
     # Validate delta.json (optional, only if present)
