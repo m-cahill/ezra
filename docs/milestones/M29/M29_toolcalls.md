@@ -18,3 +18,11 @@
 | 2026-02-27 | Shell | Monitor PR checks and workflow status | GitHub Actions run 22504290359 | Complete |
 | 2026-02-27 | Shell | Inspect failed workflow logs | GitHub Actions run 22504290359 | Complete |
 | 2026-02-27 | ApplyPatch | Fix matrix artifact naming and py3.10 install gate | .github/workflows/ci.yml | Complete |
+| 2026-02-27 | Shell | Commit and push first CI fix set | .github/workflows/ci.yml, docs/milestones/M29/M29_toolcalls.md | Complete |
+| 2026-02-27 | Shell | Track latest CI run IDs and statuses | GitHub Actions runs 22504361016, 22504428388 | Complete |
+| 2026-02-27 | ReadFile | Inspect CI status command background output | terminal run status output | Complete |
+| 2026-02-27 | Shell | Inspect failed logs from follow-up runs | GitHub Actions runs 22504361016, 22504428388 | Complete |
+| 2026-02-27 | ReadFile | Verify workflow sections after patching | .github/workflows/ci.yml | Complete |
+| 2026-02-27 | rg | Find unintended matrix references in workflow | .github/workflows/ci.yml | Complete |
+| 2026-02-27 | ApplyPatch | Re-scope M29 to dedicated hermetic matrix job | .github/workflows/ci.yml | Complete |
+| 2026-02-27 | Shell | Validate hermetic hash module import path | src/ezra/tools/_epb_hash.py | Complete |

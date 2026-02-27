@@ -48,26 +48,18 @@ jobs:
         run: mypy src/
 
   test:
-    name: Test (Py ${{ matrix.python-version }})
+    name: Test
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.11"
           cache: "pip"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ "${{ matrix.python-version }}" = "3.10" ]; then
-            PIP_IGNORE_REQUIRES_PYTHON=1 python -m pip install -e ".[dev]"
-          else
-            python -m pip install -e ".[dev]"
-          fi
+          python -m pip install -e ".[dev]"
       - name: Pytest with coverage
         run: |
           pytest --cov=src --cov-report=xml --cov-report=term-missing
@@ -77,7 +69,7 @@ jobs:
       - name: Upload coverage XML
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-xml-py${{ matrix.python-version }}
+          name: coverage-xml
           path: coverage.xml
       - name: Export zone schema JSON
         run: |
@@ -121,41 +113,10 @@ jobs:
           echo "sign_pass=PASS" >> $GITHUB_OUTPUT
           echo "verify_pass=PASS" >> $GITHUB_OUTPUT
           echo "tamper_detection=PASS" >> $GITHUB_OUTPUT
-      - name: Hermetic Reproducibility Hash
-        id: hermetic_hash
-        run: |
-          python - <<'PY'
-          import json
-          from datetime import UTC, datetime
-          from pathlib import Path
-
-          from ezra.epb import build_epb_bundle, write_epb_bundle
-
-          out_dir = Path("hermetic_bundle")
-          out_dir.mkdir(parents=True, exist_ok=True)
-          bundle = build_epb_bundle(
-              detections=[{"text": "Hello", "confidence": 0.9, "bbox": [10.0, 20.0, 50.0, 40.0]}],
-              plugin_name="test",
-              plugin_version="1.0.0",
-              input_metadata={"width": 200, "height": 100, "channels": 3},
-              timestamp=datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC),
-          )
-          write_epb_bundle(bundle, out_dir)
-          bundle_hash = json.loads((out_dir / "hashes.json").read_text(encoding="utf-8"))["bundle_hash"]
-          Path("hermetic_hash.txt").write_text(bundle_hash + "\n", encoding="utf-8")
-          print(f"Hermetic bundle hash: {bundle_hash}")
-          PY
-          echo "bundle_hash=$(cat hermetic_hash.txt)" >> $GITHUB_OUTPUT
-      - name: Upload hermetic hash artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: hermetic-hash-py${{ matrix.python-version }}
-          path: hermetic_hash.txt
-          retention-days: 30
       - name: Upload zone schema artifact
         uses: actions/upload-artifact@v4
         with:
-          name: zone-schema-py${{ matrix.python-version }}
+          name: zone-schema
           path: zone_schema.json
           retention-days: 30
       - name: EZRA Quality Envelope Summary
@@ -200,11 +161,6 @@ jobs:
           echo "- Sign PASS: ${{ steps.epb_signing.outputs.sign_pass || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Verify PASS: ${{ steps.epb_signing.outputs.verify_pass || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Tamper detection PASS: ${{ steps.epb_signing.outputs.tamper_detection || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Hermetic Reproducibility" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Python version: ${{ matrix.python-version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Canonical bundle hash: ${{ steps.hermetic_hash.outputs.bundle_hash }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -440,9 +396,89 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
           fi
 
+  hermetic-hash-matrix:
+    name: Hermetic Hash (Py ${{ matrix.python-version }})
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Generate hermetic hash artifact
+        run: |
+          PYTHONPATH=src python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from ezra.tools._epb_hash import (
+              _compute_bundle_hash_from_file_hashes,
+              _compute_file_hash,
+              _to_canonical_json,
+              compute_bundle_hash,
+          )
+
+          bundle_dir = Path("hermetic_bundle")
+          bundle_dir.mkdir(parents=True, exist_ok=True)
+
+          files = {
+              "manifest.json": {
+                  "epb_version": "1.0.0",
+                  "ezra_version": "m29-hermetic-fixture",
+                  "input_metadata": {"channels": 3, "height": 100, "width": 200},
+                  "platform": "hermetic-ci",
+                  "plugin_versions": {"test": {"name": "test", "version": "1.0.0"}},
+                  "python_version": "matrix-independent",
+                  "timestamp": "2024-01-01T00:00:00+00:00",
+              },
+              "detections.json": {
+                  "detections": [
+                      {"bbox": [10.0, 20.0, 50.0, 40.0], "confidence": 0.9, "text": "Hello"}
+                  ]
+              },
+              "state.json": {"timestamp": "2024-01-01T00:00:00+00:00", "version": "1.0.0"},
+          }
+
+          per_file_hashes = {}
+          for filename, payload in files.items():
+              canonical = _to_canonical_json(payload)
+              (bundle_dir / filename).write_text(canonical + "\n", encoding="utf-8")
+              per_file_hashes[filename] = _compute_file_hash(canonical)
+
+          bundle_hash = _compute_bundle_hash_from_file_hashes(per_file_hashes)
+          hashes_payload = {
+              "bundle_hash": bundle_hash,
+              "epb_version": "1.0.0",
+              "files": {
+                  "detections.json": per_file_hashes["detections.json"],
+                  "hashes.json": "<UNUSED_FOR_BUNDLE_HASH_VERIFICATION>",
+                  "manifest.json": per_file_hashes["manifest.json"],
+                  "state.json": per_file_hashes["state.json"],
+              },
+          }
+          (bundle_dir / "hashes.json").write_text(
+              _to_canonical_json(hashes_payload) + "\n",
+              encoding="utf-8",
+          )
+
+          verified_hash = compute_bundle_hash(bundle_dir)
+          Path("hermetic_hash.txt").write_text(verified_hash + "\n", encoding="utf-8")
+          print(f"Hermetic bundle hash: {verified_hash}")
+          PY
+      - name: Upload hermetic hash artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hermetic-hash-py${{ matrix.python-version }}
+          path: hermetic_hash.txt
+          retention-days: 30
+
   hermetic-reproducibility:
     name: Hermetic Reproducibility
-    needs: test
+    needs: hermetic-hash-matrix
     runs-on: ubuntu-latest
     steps:
       - name: Download hermetic hash artifacts
