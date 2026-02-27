@@ -70,3 +70,4 @@ M05 hardens the plugin registry introduced in M04 by adding:
 
 Ready for CI verification.
 
+

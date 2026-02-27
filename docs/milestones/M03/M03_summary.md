@@ -343,3 +343,4 @@ M03 provides the clean integration boundaries required for M04. The adapter patt
   * Adapter Tests: `tests/test_easyocr_adapter.py`
   * Plugin Tests: `tests/test_easyocr_plugin.py`
 
+
