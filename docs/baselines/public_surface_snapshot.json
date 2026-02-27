@@ -1,0 +1,122 @@
+{
+  "epb_schemas": {
+    "delta.schema.json": "d2e2f86ac2fd65912ede6705b5c70c8ded3098a37759c6f4f9c2a652f36f9ca9",
+    "detections.schema.json": "9529c3fd791870a1c87df05ba19890f71cb730f8928c2aaf7db86d6dcce2e872",
+    "hashes.schema.json": "25f1835333c72b278b747c4c0f0ea6a46c42b1ea275172a8ac5d86b6551d3db5",
+    "manifest.schema.json": "99ff7efe41b94883f3bc08fbaa392e2b591d575fe328ed6c87f0492ad2e669e1",
+    "state.schema.json": "12424b1ad6b23d4d828f5c247055185ea8c32999be94e8c918cc16124c1029b9"
+  },
+  "epb_version": "1.0.0",
+  "exception_hierarchy": {
+    "DeterminismError": {
+      "bases": [
+        "EzraError",
+        "RuntimeError"
+      ],
+      "module": "ezra.errors"
+    },
+    "EPBCanonicalError": {
+      "bases": [
+        "EPBError",
+        "ValueError"
+      ],
+      "module": "ezra.errors"
+    },
+    "EPBError": {
+      "bases": [
+        "EzraError"
+      ],
+      "module": "ezra.errors"
+    },
+    "EPBHashError": {
+      "bases": [
+        "EPBError",
+        "ValueError"
+      ],
+      "module": "ezra.errors"
+    },
+    "EPBValidationError": {
+      "bases": [
+        "EPBError",
+        "ValueError"
+      ],
+      "module": "ezra.errors"
+    },
+    "EzraError": {
+      "bases": [],
+      "module": "ezra.errors"
+    },
+    "PluginError": {
+      "bases": [
+        "EzraError"
+      ],
+      "module": "ezra.errors"
+    },
+    "PluginExecutionError": {
+      "bases": [
+        "PluginError",
+        "RuntimeError"
+      ],
+      "module": "ezra.errors"
+    },
+    "PluginRegistryError": {
+      "bases": [
+        "PluginError",
+        "TypeError"
+      ],
+      "module": "ezra.errors"
+    },
+    "PluginResolutionError": {
+      "bases": [
+        "PluginError",
+        "ValueError"
+      ],
+      "module": "ezra.errors"
+    },
+    "ZoneSchemaError": {
+      "bases": [
+        "EzraError",
+        "ValueError"
+      ],
+      "module": "ezra.errors"
+    }
+  },
+  "exception_public_attrs": [
+    "DeterminismError",
+    "EPBCanonicalError",
+    "EPBError",
+    "EPBHashError",
+    "EPBValidationError",
+    "EzraError",
+    "PluginError",
+    "PluginExecutionError",
+    "PluginRegistryError",
+    "PluginResolutionError",
+    "ZoneSchemaError"
+  ],
+  "modules": [
+    "ezra.baseline.canonicalize",
+    "ezra.baseline.parity",
+    "ezra.core.engine",
+    "ezra.epb.builder",
+    "ezra.epb.canonical",
+    "ezra.epb.hash_verifier",
+    "ezra.epb.hasher",
+    "ezra.epb.schema_validator",
+    "ezra.epb.writer",
+    "ezra.epb.zone_adapter",
+    "ezra.errors",
+    "ezra.plugins.easyocr_adapter",
+    "ezra.plugins.easyocr_plugin",
+    "ezra.plugins.interface",
+    "ezra.plugins.registry",
+    "ezra.plugins.tesseract_plugin",
+    "ezra.tools.capture_easyocr_baseline",
+    "ezra.types",
+    "ezra.zones.export",
+    "ezra.zones.projector",
+    "ezra.zones.registry",
+    "ezra.zones.schema",
+    "ezra.zones.validator"
+  ]
+}
