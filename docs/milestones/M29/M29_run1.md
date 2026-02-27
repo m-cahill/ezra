@@ -11,8 +11,8 @@
 | Field | Value |
 |------|-------|
 | Workflow | CI (`.github/workflows/ci.yml`) |
-| Run ID | **22504670380** (final green run on PR head) |
-| URL | https://github.com/m-cahill/ezra/actions/runs/22504670380 |
+| Run ID | **22504741873** (final green run on PR head) |
+| URL | https://github.com/m-cahill/ezra/actions/runs/22504741873 |
 | Trigger | pull_request |
 | Branch | `m29-hermetic-reproducibility` |
 | PR | **#28** (m-cahill/ezra#28) |
@@ -104,6 +104,6 @@ Final fix:
 
 **Verdict:** ✅ M29 CI gate is functioning as intended. Canonical bundle hash equivalence is now enforced across Python 3.10/3.11/3.12, with explicit artifact evidence and fail-fast comparison behavior.
 
-**CI run ID:** 22504670380  
+**CI run ID:** 22504741873  
 **PR:** #28  
 **Hermetic hash (all matrix jobs):** `c186777c33b7b7b9d11540bda7398efd0dfb085143506513a4ce87836c6ac7c2`

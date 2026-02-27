@@ -38,3 +38,6 @@
 | 2026-02-27 | Shell | Monitor final PR-head CI run and checks | GitHub Actions run 22504670380 | Complete |
 | 2026-02-27 | Shell | Capture final hermetic comparison logs | Hermetic Reproducibility job logs (run 22504670380) | Complete |
 | 2026-02-27 | ApplyPatch | Update run IDs to final PR-head green run | docs/milestones/M29/M29_run1.md, docs/ezra.md | Complete |
+| 2026-02-27 | Shell | Wait for latest PR-head CI run completion | GitHub Actions run 22504741873 | Complete |
+| 2026-02-27 | Shell | Verify final check statuses | gh pr checks #28 | Complete |
+| 2026-02-27 | ApplyPatch | Align all M29 artifacts to final run ID | docs/milestones/M29/M29_run1.md, M29_audit.md, M29_summary.md, docs/ezra.md | Complete |

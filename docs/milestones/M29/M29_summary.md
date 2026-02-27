@@ -28,8 +28,8 @@ M29 extended EPB reproducibility assurance from single-environment determinism t
 
 ## 3. CI evidence
 
-- **Final green run:** 22504550465  
-  https://github.com/m-cahill/ezra/actions/runs/22504550465
+- **Final green run:** 22504741873  
+  https://github.com/m-cahill/ezra/actions/runs/22504741873
 - **PR:** #28  
   https://github.com/m-cahill/ezra/pull/28
 

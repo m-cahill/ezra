@@ -51,7 +51,7 @@ M29 successfully introduces a required hermetic reproducibility gate that enforc
 
 ## 4. CI evidence snapshot
 
-- **Run ID:** 22504550465
+- **Run ID:** 22504741873
 - **Hermetic matrix hashes:**
   - py3.10: `c186777c33b7b7b9d11540bda7398efd0dfb085143506513a4ce87836c6ac7c2`
   - py3.11: `c186777c33b7b7b9d11540bda7398efd0dfb085143506513a4ce87836c6ac7c2`
