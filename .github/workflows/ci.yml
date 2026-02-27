@@ -77,6 +77,12 @@ jobs:
       - name: Validate zone schema against JSON Schema
         run: |
           python -c "from ezra.zones.registry import ZoneRegistry; from ezra.zones.serialize import validate_zone_data_against_schema; import json; r = ZoneRegistry(); r.freeze(); data = r.export_to_dict(); validate_zone_data_against_schema(data); print('Zone schema validation: PASS')"
+      - name: Validate schema snapshot unchanged
+        id: schema_governance
+        run: |
+          pytest tests/test_zone_schema_diff.py tests/test_zone_schema_version_enforcement.py -v
+          echo "snapshot_match=PASS" >> $GITHUB_OUTPUT
+          echo "version_coupling=PASS" >> $GITHUB_OUTPUT
       - name: Upload zone schema artifact
         uses: actions/upload-artifact@v4
         with:
@@ -93,6 +99,11 @@ jobs:
           python -c "from ezra.zones.serialize import SCHEMA_VERSION; print(f'- Schema version: {SCHEMA_VERSION}')" >> $GITHUB_STEP_SUMMARY
           echo "- Deterministic snapshot: PASS" >> $GITHUB_STEP_SUMMARY
           echo "- Schema validation: PASS" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Schema Governance" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Snapshot match: ${{ steps.schema_governance.outputs.snapshot_match || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Version coupling: ${{ steps.schema_governance.outputs.version_coupling || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

@@ -190,3 +190,103 @@ Any change to the schema structure, version, or serialization rules requires:
 - Explicit audit justification
 - Updated snapshot (if applicable)
 
+---
+
+## Schema Evolution Policy
+
+**Enforcement:** M22+ (CI-enforced schema governance)
+
+The zone schema evolution is governed by strict rules to prevent silent drift and ensure explicit versioning.
+
+### Version-Schema Coupling
+
+**Rule:** Schema changes and version bumps are **bidirectionally coupled**:
+
+- If `schema_v1.json` changes → `SCHEMA_VERSION` must change
+- If `SCHEMA_VERSION` changes → `schema_v1.json` must change
+
+**Enforcement:**
+- `tests/test_zone_schema_version_enforcement.py` validates coupling
+- CI fails if coupling is violated
+
+### Snapshot Baseline
+
+**Rule:** `schema_v1.json` must match the committed snapshot baseline.
+
+**Baseline file:** `docs/baselines/zone_schema_snapshot.json`
+
+**Enforcement:**
+- `tests/test_zone_schema_diff.py` compares current schema against snapshot
+- CI fails if schema drifts from snapshot without explicit update
+
+**Snapshot update workflow:**
+1. Schema change is made in `schema_v1.json`
+2. Schema is canonically re-serialized (sorted keys, stable formatting)
+3. Snapshot is updated to match new schema
+4. Both changes committed in same milestone
+
+### Version Bump Rules
+
+**Semantic versioning:** Follow `MAJOR.MINOR.PATCH` semantics:
+
+- **MAJOR** (`1.0.0` → `2.0.0`): Breaking changes
+  - Field removal
+  - Constraint tightening (e.g., `minLength: 1` → `minLength: 5`)
+  - Type changes (e.g., `string` → `integer`)
+  - Required field additions
+
+- **MINOR** (`1.0.0` → `1.1.0`): Backward-compatible additions
+  - New optional fields
+  - New enum values
+  - Constraint relaxation (e.g., `minLength: 5` → `minLength: 1`)
+
+- **PATCH** (`1.0.0` → `1.0.1`): Documentation/description-only changes
+  - Description text updates
+  - Example updates
+  - No structural changes
+
+### Prohibited Changes
+
+The following changes are **prohibited** without explicit milestone justification:
+
+- **Silent field removal** (must bump MAJOR version)
+- **Constraint tightening without version bump** (must bump MAJOR version)
+- **Schema drift without snapshot update** (must update snapshot)
+- **Version bump without schema change** (must change schema)
+- **Schema change without version bump** (must bump version)
+
+### Required Milestone Posture
+
+Any schema change milestone must:
+
+1. **Declare intent** in milestone plan
+2. **Document rationale** for change
+3. **Update snapshot** if schema structure changes
+4. **Bump version** if schema structure changes
+5. **Update tests** if contract changes
+6. **Pass audit** with explicit justification
+
+### Backward Compatibility
+
+**Policy:** Prefer backward-compatible changes (MINOR bumps) over breaking changes (MAJOR bumps).
+
+**Guidelines:**
+- Add optional fields rather than required fields
+- Relax constraints rather than tighten them
+- Extend enums rather than restrict them
+- Deprecate fields before removing them (future: deprecation support)
+
+### Deprecation Rules
+
+**Current status:** Deprecation support is not yet implemented (future milestone).
+
+**Future deprecation workflow:**
+1. Mark field as deprecated in schema (metadata)
+2. Bump MINOR version
+3. Document deprecation timeline
+4. Remove in next MAJOR version
+
+---
+
+## Related Documentation
+
