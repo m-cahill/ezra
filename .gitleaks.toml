@@ -1,0 +1,17 @@
+# Gitleaks configuration — allowlist for false positives
+# M26: Variable/parameter names in signing utility are flagged as generic-api-key
+
+[allowlist]
+  description = "False positives: Python variable names in epb_sign.py and documentation"
+
+  # Fingerprints from PR commits (gitleaks scans full commit range)
+  commits = [
+    "17e7b77dc29dbd930cd919c6c13b53e0557f42af",
+    "3567d30e9081d28bcaa8c45adaa114720e07e315",
+    "9b3e568977eaa70a926b735ba42987a591529354",
+  ]
+
+  # Path patterns to ignore for generic-api-key rule
+  paths = [
+    '''docs/milestones/M26/.*''',
+  ]
