@@ -132,7 +132,7 @@ def _validate_against_schema(
         ) from e
 
 
-def validate_bundle(bundle: dict[str, Any]) -> None:
+def validate_bundle(bundle: dict[str, Any] | MappingProxyType[str, Any]) -> None:
     """Validate EPB bundle against JSON Schemas.
 
     Validates all bundle components:
@@ -143,7 +143,7 @@ def validate_bundle(bundle: dict[str, Any]) -> None:
     - hashes.json (not validated here, validated after writing)
 
     Args:
-        bundle: EPB bundle dictionary from build_epb_bundle().
+        bundle: EPB bundle dictionary from build_epb_bundle() (may be MappingProxyType).
 
     Raises:
         EPBValidationError: If any component fails validation, with detailed error message.
