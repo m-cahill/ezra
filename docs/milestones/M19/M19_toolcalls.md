@@ -18,6 +18,9 @@
 | 2026-02-26 | search_replace | Fix CI-002: fix docs-deploy permissions, add environment, remove rebuild | `.github/workflows/ci.yml` | ✅ Complete |
 | 2026-02-26 | grep | Verify no `continue-on-error` on provenance/docs-deploy jobs | `.github/workflows/ci.yml` | ✅ Complete |
 | 2026-02-26 | git | Commit, push, create PR to main | `m19-ci-integrity` branch | ✅ Complete |
+| 2026-02-26 | gh pr checks | Monitor CI run 22470077402 for PR #20 | PR #20 | ✅ Complete |
+| 2026-02-26 | gh run view | Get job-level results for run 22470077402 | Run 22470077402 | ✅ Complete |
+| 2026-02-26 | write | Generate M19_run1.md CI analysis | `docs/milestones/M19/M19_run1.md` | ✅ Complete |
 
 ---
 
