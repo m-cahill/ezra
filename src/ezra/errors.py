@@ -18,6 +18,7 @@ class EzraError(Exception):
 
 class PluginError(EzraError):
     """Base class for plugin-level failures."""
+
     pass
 
 
@@ -27,6 +28,7 @@ class PluginRegistryError(PluginError, TypeError):
     Raised when plugin registry entries are malformed or invalid.
     Dual-inherits from TypeError to preserve stdlib compatibility.
     """
+
     pass
 
 
@@ -36,6 +38,7 @@ class PluginResolutionError(PluginError, ValueError):
     Raised when a plugin cannot be resolved (e.g., unknown plugin name).
     Dual-inherits from ValueError to preserve stdlib compatibility.
     """
+
     pass
 
 
@@ -45,11 +48,13 @@ class PluginExecutionError(PluginError, RuntimeError):
     Raised when plugin inference or model loading fails.
     Dual-inherits from RuntimeError to preserve stdlib compatibility.
     """
+
     pass
 
 
 class EPBError(EzraError):
     """Base class for EPB bundle construction failures."""
+
     pass
 
 
@@ -59,6 +64,7 @@ class EPBValidationError(EPBError, ValueError):
     Raised when EPB bundle components fail JSON Schema validation.
     Dual-inherits from ValueError to preserve stdlib compatibility.
     """
+
     pass
 
 
@@ -68,6 +74,7 @@ class EPBHashError(EPBError, ValueError):
     Raised when EPB bundle hash verification fails or hashes are missing.
     Dual-inherits from ValueError to preserve stdlib compatibility.
     """
+
     pass
 
 
@@ -77,6 +84,7 @@ class EPBCanonicalError(EPBError, ValueError):
     Raised when EPB bundle contains non-canonical values (NaN, Infinity).
     Dual-inherits from ValueError to preserve stdlib compatibility.
     """
+
     pass
 
 
@@ -86,6 +94,7 @@ class ZoneSchemaError(EzraError, ValueError):
     Raised when zone schemas are invalid, duplicate, or violate registry constraints.
     Dual-inherits from ValueError to preserve stdlib compatibility.
     """
+
     pass
 
 
@@ -95,5 +104,5 @@ class DeterminismError(EzraError, RuntimeError):
     Raised when determinism checks fail (e.g., non-deterministic outputs).
     Dual-inherits from RuntimeError to preserve stdlib compatibility.
     """
-    pass
 
+    pass

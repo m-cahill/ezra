@@ -122,4 +122,3 @@ def test_exception_messages_preserved() -> None:
 
     exc = ZoneSchemaError(msg)
     assert str(exc) == msg
-
