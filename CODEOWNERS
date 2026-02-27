@@ -1,0 +1,27 @@
+# CODEOWNERS file for EZRA
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owners (fallback)
+* @m-cahill
+
+# Core architecture
+/src/ezra/core/ @m-cahill
+/src/ezra/plugins/ @m-cahill
+/src/ezra/epb/ @m-cahill
+
+# Zone system
+/src/ezra/zones/ @m-cahill
+
+# Governance and CI
+/.github/ @m-cahill
+/docs/milestones/ @m-cahill
+/docs/qa.md @m-cahill
+/SECURITY.md @m-cahill
+/CODEOWNERS @m-cahill
+
+# Configuration
+/pyproject.toml @m-cahill
+/.pre-commit-config.yaml @m-cahill
+/requirements-dev.in @m-cahill
+/requirements-dev.txt @m-cahill
+

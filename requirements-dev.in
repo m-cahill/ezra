@@ -1,0 +1,31 @@
+# Development dependencies for EZRA
+# This file is the source of truth for dev dependencies.
+# The actual pinned versions are in requirements-dev.txt (generated via pip-compile).
+#
+# To update: edit this file, then run: pip-compile requirements-dev.in
+
+# Linting and formatting
+ruff>=0.1.0
+mypy>=1.7.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+coverage[toml]>=7.3.0
+
+# Image processing (for tests)
+pillow>=10.0.0
+
+# Code quality
+radon>=6.0.0
+bandit>=1.7.0
+pip-audit>=2.6.0
+pydocstyle>=6.3.0
+
+# Supply chain
+cyclonedx-py>=1.0.0
+
+# Development tooling
+pre-commit>=3.5.0
+pip-tools>=7.4.0
+

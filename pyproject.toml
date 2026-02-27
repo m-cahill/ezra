@@ -36,6 +36,9 @@ dev = [
     "bandit>=1.7.0",
     "pip-audit>=2.6.0",
     "cyclonedx-py>=1.0.0",
+    "pydocstyle>=6.3.0",
+    "pre-commit>=3.5.0",
+    "pip-tools>=7.4.0",
 ]
 easyocr = [
     "easyocr==1.7.2",
@@ -95,4 +98,13 @@ fail_under = 85
 precision = 2
 show_missing = true
 skip_covered = false
+
+[tool.pydocstyle]
+convention = "google"
+match = "(?!test_).*\\.py"
+match-dir = "(?!tests|test_).*"
+add-ignore = [
+    "D100",  # Missing docstring in public module (allow for __init__.py)
+    "D104",  # Missing docstring in public package (allow for __init__.py)
+]
 
