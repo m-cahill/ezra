@@ -14,4 +14,10 @@
 | 2026-02-27 | search_replace | Add Dependency Review job (PR-only) | .github/workflows/ci.yml | ✅ Complete |
 | 2026-02-27 | search_replace | Add OpenSSF Scorecard job (warn-first, SARIF) | .github/workflows/ci.yml | ✅ Complete |
 | 2026-02-27 | search_replace | Add SLSA Provenance job (job-level id-token) | .github/workflows/ci.yml | ✅ Complete |
+| 2026-02-27 | write | Create SECURITY.md with SSDF mapping | SECURITY.md | ✅ Complete |
+| 2026-02-27 | write | Create Sphinx documentation bootstrap | docs/conf.py, docs/index.rst, docs/qa.rst | ✅ Complete |
+| 2026-02-27 | search_replace | Update docs/qa.md with new gates | docs/qa.md | ✅ Complete |
+| 2026-02-27 | search_replace | Add Sphinx build and Pages deploy jobs | .github/workflows/ci.yml | ✅ Complete |
+| 2026-02-27 | run_terminal_cmd | Verify local checks (ruff, pydocstyle) | local verification | ✅ Complete |
+| 2026-02-27 | run_terminal_cmd | Push branch and create PR | git push, gh pr create | ✅ Complete |
 
