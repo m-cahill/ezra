@@ -90,6 +90,14 @@ jobs:
           echo "snapshot_match=PASS" >> $GITHUB_OUTPUT
           echo "hash_determinism=PASS" >> $GITHUB_OUTPUT
           echo "freeze_enforcement=PASS" >> $GITHUB_OUTPUT
+      - name: EPB Contract Harness
+        id: epb_contract
+        run: |
+          pytest tests/contracts/test_epb_contract.py -v
+          echo "structure_validation=PASS" >> $GITHUB_OUTPUT
+          echo "snapshot_match=PASS" >> $GITHUB_OUTPUT
+          echo "determinism=PASS" >> $GITHUB_OUTPUT
+          echo "schema_version=PASS" >> $GITHUB_OUTPUT
       - name: Upload zone schema artifact
         uses: actions/upload-artifact@v4
         with:
@@ -117,6 +125,14 @@ jobs:
           echo "- Snapshot match: ${{ steps.registry_integrity.outputs.snapshot_match || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Hash determinism: ${{ steps.registry_integrity.outputs.hash_determinism || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Freeze enforcement: ${{ steps.registry_integrity.outputs.freeze_enforcement || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## EPB Contract Harness" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          python -c "from ezra.epb.builder import EPB_VERSION; print(f'- EPB version: {EPB_VERSION}')" >> $GITHUB_STEP_SUMMARY
+          echo "- Structure validation: ${{ steps.epb_contract.outputs.structure_validation || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Snapshot match: ${{ steps.epb_contract.outputs.snapshot_match || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Determinism: ${{ steps.epb_contract.outputs.determinism || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Schema version: ${{ steps.epb_contract.outputs.schema_version || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

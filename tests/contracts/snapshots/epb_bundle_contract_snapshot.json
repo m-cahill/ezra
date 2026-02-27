@@ -1,0 +1,48 @@
+{
+  "detections.json": {
+    "detections": [
+      {
+        "bbox": [
+          10.0,
+          20.0,
+          50.0,
+          40.0
+        ],
+        "confidence": 0.9,
+        "text": "Hello"
+      }
+    ]
+  },
+  "hashes.json": {
+    "bundle_hash": "<BUNDLE_HASH>",
+    "epb_version": "1.0.0",
+    "files": {
+      "detections.json": "<HASH>",
+      "hashes.json": "<HASH>",
+      "manifest.json": "<HASH>",
+      "state.json": "<HASH>"
+    }
+  },
+  "manifest.json": {
+    "epb_version": "1.0.0",
+    "ezra_version": "<EZRA_VERSION>",
+    "input_metadata": {
+      "channels": 3,
+      "height": 100,
+      "width": 200
+    },
+    "platform": "<PLATFORM>",
+    "plugin_versions": {
+      "test": {
+        "name": "test",
+        "version": "1.0.0"
+      }
+    },
+    "python_version": "<PYTHON_VERSION>",
+    "timestamp": "<TIMESTAMP>"
+  },
+  "state.json": {
+    "timestamp": "<TIMESTAMP>",
+    "version": "1.0.0"
+  }
+}
