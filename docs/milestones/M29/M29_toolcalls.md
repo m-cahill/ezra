@@ -11,3 +11,4 @@
 | 2026-02-27 | ApplyPatch | Add Python matrix and hermetic reproducibility gate | .github/workflows/ci.yml | Complete |
 | 2026-02-27 | Shell | Run focused EPB contract tests | tests/contracts/test_epb_consumer_certification.py, tests/contracts/test_epb_artifact_signing.py | Complete |
 | 2026-02-27 | Shell | Inspect branch status and current diff | .github/workflows/ci.yml, docs/milestones/M29/M29_toolcalls.md | Complete |
+| 2026-02-27 | Shell | Commit CI matrix and hermetic gate changes | .github/workflows/ci.yml, docs/milestones/M29/M29_toolcalls.md | Complete |
