@@ -33,7 +33,12 @@ def _load_schema_canonical() -> dict:
 
 def _load_snapshot_canonical() -> dict:
     """Load zone_schema_snapshot.json and return canonical dict."""
-    snapshot_path = Path(__file__).parent.parent / "docs" / "baselines" / "zone_schema_snapshot.json"
+    snapshot_path = (
+        Path(__file__).parent.parent
+        / "docs"
+        / "baselines"
+        / "zone_schema_snapshot.json"
+    )
     snapshot_text = snapshot_path.read_text(encoding="utf-8")
     snapshot = json.loads(snapshot_text)
     return snapshot
@@ -86,11 +91,11 @@ def test_version_schema_coupling():
     violations = []
 
     # Baseline version (hardcoded - this is the initial version from M21)
-    BASELINE_VERSION = "1.0.0"
+    baseline_version = "1.0.0"
 
     # Rule 1: Schema changed but version unchanged
     # If schema changed from snapshot, version must have changed from baseline
-    if schema_changed and SCHEMA_VERSION == BASELINE_VERSION:
+    if schema_changed and SCHEMA_VERSION == baseline_version:
         violations.append(
             "Schema changed but SCHEMA_VERSION is still '1.0.0'. "
             "Version must be bumped when schema changes."
@@ -108,7 +113,7 @@ def test_version_schema_coupling():
                     "Version bumps must accompany schema changes."
                 )
         # Also check if SCHEMA_VERSION constant changed but schema didn't
-        if SCHEMA_VERSION != BASELINE_VERSION:
+        if SCHEMA_VERSION != baseline_version:
             violations.append(
                 f"SCHEMA_VERSION changed to '{SCHEMA_VERSION}' but schema content unchanged. "
                 "Version bumps must accompany schema changes."
