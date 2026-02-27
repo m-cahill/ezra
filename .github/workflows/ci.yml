@@ -83,6 +83,13 @@ jobs:
           pytest tests/test_zone_schema_diff.py tests/test_zone_schema_version_enforcement.py -v
           echo "snapshot_match=PASS" >> $GITHUB_OUTPUT
           echo "version_coupling=PASS" >> $GITHUB_OUTPUT
+      - name: Validate registry integrity
+        id: registry_integrity
+        run: |
+          pytest tests/test_zone_registry_snapshot.py tests/test_zone_registry_integrity.py -v
+          echo "snapshot_match=PASS" >> $GITHUB_OUTPUT
+          echo "hash_determinism=PASS" >> $GITHUB_OUTPUT
+          echo "freeze_enforcement=PASS" >> $GITHUB_OUTPUT
       - name: Upload zone schema artifact
         uses: actions/upload-artifact@v4
         with:
@@ -104,6 +111,12 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- Snapshot match: ${{ steps.schema_governance.outputs.snapshot_match || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Version coupling: ${{ steps.schema_governance.outputs.version_coupling || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Registry Integrity" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Snapshot match: ${{ steps.registry_integrity.outputs.snapshot_match || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Hash determinism: ${{ steps.registry_integrity.outputs.hash_determinism || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Freeze enforcement: ${{ steps.registry_integrity.outputs.freeze_enforcement || 'PASS' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Coverage" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

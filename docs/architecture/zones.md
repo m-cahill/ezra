@@ -288,5 +288,106 @@ Any schema change milestone must:
 
 ---
 
+## Zone Registry Integrity Model
+
+**Enforcement:** M23+ (CI-enforced registry integrity)
+
+The zone registry runtime state is governed by deterministic snapshot and hash verification to ensure registry integrity across runs.
+
+### Deterministic Registry Contract
+
+**Rule:** Given identical zone definitions, registry snapshot must be byte-identical across runs.
+
+**Enforcement:**
+- `tests/test_zone_registry_snapshot.py` validates snapshot matching
+- `docs/baselines/zone_registry_snapshot.json` provides committed baseline
+- CI fails if registry state drifts from snapshot
+
+**Snapshot baseline:**
+- Generated from test fixture with 5 zones registered out-of-order
+- Validates ordering determinism (zones sorted by `channel_index`, then `id`)
+- Committed as golden file for drift detection
+
+### Freeze Lifecycle
+
+**Rule:** After `freeze()`, registry becomes immutable:
+
+- No new zones may be registered
+- No channel reassignment allowed
+- Freeze is idempotent (multiple freezes are no-ops)
+
+**Enforcement:**
+- `tests/test_zone_registry_integrity.py` validates freeze enforcement
+- Post-freeze registration attempts raise `ZoneSchemaError`
+- Hash remains stable after freeze
+
+### Snapshot Workflow
+
+**Baseline generation:**
+1. Test fixture creates registry with zones registered out-of-order
+2. Registry is frozen
+3. Canonical JSON is generated via `canonical_registry_json()`
+4. Snapshot is written to `docs/baselines/zone_registry_snapshot.json`
+
+**Snapshot validation:**
+1. Test fixture recreates registry (same zones, same order)
+2. Canonical JSON is generated
+3. JSON is compared byte-identical to committed snapshot
+4. Test fails if mismatch (requires explicit baseline update)
+
+### Hash Semantics
+
+**Rule:** Registry hash is deterministic and stable:
+
+- Identical registries produce identical hashes
+- Hash is independent of insertion order
+- Hash remains stable after freeze
+- Hash is computed over canonical JSON (SHA256)
+
+**Functions:**
+- `canonical_registry_json(registry) -> str`: Canonical JSON string
+- `registry_hash(registry) -> str`: SHA256 hash (64-char hex)
+
+**Enforcement:**
+- `tests/test_zone_registry_snapshot.py` validates hash determinism
+- Hash stability verified across multiple calls
+- Hash independence from insertion order verified
+
+### Channel Stability
+
+**Rule:** Channel indices must be:
+
+- Unique (no duplicate channel indices)
+- Deterministic (same zones → same channel assignments)
+- Ordered (zones sorted by `channel_index`, then `id`)
+
+**Enforcement:**
+- `tests/test_zone_registry_integrity.py` validates channel uniqueness
+- Registration ordering determinism verified
+- Channel index ordering preserved regardless of insertion order
+
+### Registry Integrity CI Gate
+
+**CI step:** "Validate registry integrity"
+
+**Tests run:**
+- `tests/test_zone_registry_snapshot.py` (snapshot match, hash determinism)
+- `tests/test_zone_registry_integrity.py` (freeze enforcement, channel uniqueness, ordering)
+
+**CI summary section:**
+```
+## Registry Integrity
+- Snapshot match: PASS
+- Hash determinism: PASS
+- Freeze enforcement: PASS
+```
+
+**Failure modes:**
+- Snapshot mismatch → requires explicit baseline update
+- Hash non-determinism → indicates serialization bug
+- Freeze violation → indicates registry mutation bug
+
+---
+
 ## Related Documentation
 

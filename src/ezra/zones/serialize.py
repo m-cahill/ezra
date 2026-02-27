@@ -10,6 +10,7 @@ and handles file I/O concerns separately.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from typing import Any
 
@@ -102,3 +103,43 @@ def validate_zone_data_against_schema(data: dict[str, Any]) -> None:
 
     # Validate data against schema
     jsonschema.validate(instance=data, schema=schema)
+
+
+def canonical_registry_json(registry: ZoneRegistry) -> str:
+    """Serialize zone registry to canonical JSON string.
+
+    This is an alias for serialize_zone_registry() for clarity when
+    emphasizing canonical form for hashing/snapshot purposes.
+
+    Args:
+        registry: Zone registry to serialize.
+
+    Returns:
+        Canonical JSON string (byte-identical for identical registries).
+
+    Note:
+        This function produces byte-identical output for identical registries.
+        Use this for snapshot baselines and hash computation.
+    """
+    return serialize_zone_registry(registry)
+
+
+def registry_hash(registry: ZoneRegistry) -> str:
+    """Compute SHA256 hash of canonical registry JSON.
+
+    Args:
+        registry: Zone registry to hash.
+
+    Returns:
+        SHA256 hash as hexadecimal string (64 characters).
+
+    Note:
+        This function computes a deterministic hash over the canonical
+        JSON representation of the registry. Identical registries produce
+        identical hashes. The hash is computed over UTF-8 encoded bytes
+        of the canonical JSON string.
+    """
+    canonical_json = canonical_registry_json(registry)
+    json_bytes = canonical_json.encode("utf-8")
+    hash_obj = hashlib.sha256(json_bytes)
+    return hash_obj.hexdigest()
