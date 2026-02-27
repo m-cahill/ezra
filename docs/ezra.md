@@ -113,6 +113,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M14 | Zone-Scoped State Projection (Runtime Extension) | Complete | v0.0.15-m14 | PR#15 | Zone-scoped state projection as pure functional runtime utility, deterministic, opt-in only. Architecture boundaries preserved. Determinism verified with projection.json. CI Run: 22464039455 |
 | M15 | CI Evidence & Deterministic Quality Envelope Hardening | Complete | v0.0.16-m15 | PR#16 | Structured CI evidence, security/complexity/SBOM gates, audit-ready governance. All 7 jobs pass, all invariants preserved, zero runtime changes. CI Run: 22466225248 |
 | M16 | Runtime Exception Contract & Failure Surface Hardening | Complete | v0.0.17-m16 | PR#17 | Typed exception hierarchy with dual inheritance, zero generic exception leakage, backward compatibility preserved. All 213 tests pass (205 original + 8 new), all invariants preserved, zero runtime behavior changes. CI Run: 22467380030 |
+| M17 | Release Lock Program (Phase V Initiation) | Complete | v0.0.18-m17 | PR#18 | Public surface freeze test and snapshot baseline, exception taxonomy frozen, EPB v1.0.0 contract frozen, CI enforcement strengthened (gitleaks full-repo scan). All 214 tests pass (213 original + 1 new), all invariants preserved, zero runtime behavior changes. Release-candidate ready. CI Run: 22468659282 |
 
 ## 8. Local Dev Quickstart
 
