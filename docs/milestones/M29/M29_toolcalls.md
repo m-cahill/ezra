@@ -12,3 +12,9 @@
 | 2026-02-27 | Shell | Run focused EPB contract tests | tests/contracts/test_epb_consumer_certification.py, tests/contracts/test_epb_artifact_signing.py | Complete |
 | 2026-02-27 | Shell | Inspect branch status and current diff | .github/workflows/ci.yml, docs/milestones/M29/M29_toolcalls.md | Complete |
 | 2026-02-27 | Shell | Commit CI matrix and hermetic gate changes | .github/workflows/ci.yml, docs/milestones/M29/M29_toolcalls.md | Complete |
+| 2026-02-27 | Shell | Commit toolcalls update entry | docs/milestones/M29/M29_toolcalls.md | Complete |
+| 2026-02-27 | Shell | Push branch to origin | m29-hermetic-reproducibility | Complete |
+| 2026-02-27 | Shell | Create M29 pull request | PR #28 | Complete |
+| 2026-02-27 | Shell | Monitor PR checks and workflow status | GitHub Actions run 22504290359 | Complete |
+| 2026-02-27 | Shell | Inspect failed workflow logs | GitHub Actions run 22504290359 | Complete |
+| 2026-02-27 | ApplyPatch | Fix matrix artifact naming and py3.10 install gate | .github/workflows/ci.yml | Complete |
