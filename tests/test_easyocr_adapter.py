@@ -163,3 +163,4 @@ def test_easyocr_adapter_infer_failure(mock_easyocr: MagicMock) -> None:
 
     with pytest.raises(RuntimeError, match="EasyOCR inference failed"):
         adapter.infer(MagicMock())
+

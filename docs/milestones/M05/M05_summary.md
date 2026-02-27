@@ -332,3 +332,4 @@ M05 provides the registry hardening required for additional OCR backends and plu
   * Registry: `src/ezra/plugins/registry.py`
   * Registry Tests: `tests/test_plugin_registry.py`
 
+

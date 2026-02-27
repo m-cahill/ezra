@@ -300,3 +300,4 @@ def test_verify_missing_files_field_fails(tmp_path: Path) -> None:
     # Verification should fail
     with pytest.raises(ValueError, match="missing 'files' field"):
         verify_epb_bundle(output_dir)
+

@@ -221,3 +221,4 @@ All CI checks pass. The refactor successfully extracted EasyOCR integration into
 
 **Analysis Complete** — Ready for merge approval.
 
+

@@ -37,3 +37,4 @@ After M03, all third-party ML framework calls are isolated in adapter modules, n
 
 **Parity Gate:** All parity tests pass without baseline update, proving no behavioral drift.
 
+
