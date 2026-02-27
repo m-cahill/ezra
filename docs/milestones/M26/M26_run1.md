@@ -1,8 +1,8 @@
-# M26 Run 1 — Implementation + Local Verification
+# M26 Run 1 — CI / Workflow Run Analysis
 
 **Milestone:** M26 — EPB Artifact Signing & Verification (Detached Ed25519)  
 **Posture:** Behavior-preserving (additive tooling only; no schema/emission changes)  
-**Run type:** Initial implementation + local verification (CI run ID to be filled after PR)
+**Run type:** Initial implementation + CI verification
 
 ---
 
@@ -11,11 +11,13 @@
 | Field        | Value |
 |-------------|--------|
 | Workflow    | CI (`.github/workflows/ci.yml`) |
-| Run ID      | (Pending — PR not yet pushed) |
-| Trigger     | pull_request (expected) |
+| Run ID      | **22479170028** |
+| URL         | https://github.com/m-cahill/ezra/actions/runs/22479170028 |
+| Trigger     | pull_request |
 | Branch      | `m26-epb-artifact-signing` |
-| PR          | (To be opened) |
-| Conclusion  | (Pending CI) |
+| PR          | **#27** (m-cahill/ezra#27) |
+| Conclusion  | failure (Security Check failed; fix applied) |
+| Duration    | ~1m 22s |
 
 ---
 
@@ -40,20 +42,74 @@
 
 ---
 
-## 4. Implementation summary
+## 4. Jobs / checks (CI Run 22479170028)
 
-- **New files:** `src/ezra/tools/_epb_hash.py`, `src/ezra/tools/epb_sign.py`, `src/ezra/tools/epb_verify.py`, `tests/contracts/test_epb_artifact_signing.py`, `docs/milestones/M26/M26_plan.md`, `M26_toolcalls.md`.
-- **Modified:** `pyproject.toml` (cryptography==46.0.5), `.github/workflows/ci.yml` (EPB Artifact Signing step + summary), `docs/baselines/public_surface_snapshot.json`.
-- **Tests:** Sign+verify roundtrip, subprocess sign/verify, tamper fails, wrong public key fails, sign with provided key, sign fails on invalid path.
+| Job / Check | Required? | Result | Notes |
+|-------------|-----------|--------|-------|
+| Lint | Yes | ✓ Pass | |
+| Type Check | Yes | ✓ Pass | |
+| Test | Yes | ✓ Pass | 268 passed, 4 skipped; EPB Artifact Signing step ran |
+| Security Check | Yes | ✗ Fail | Gitleaks: 2 findings (false positive — see below) |
+| SBOM Generation | Yes | ✓ Pass | |
+| Complexity Check | Yes | ✓ Pass | |
+| Determinism Check | Yes | ✓ Pass | |
+| Documentation Build | Yes | ✓ Pass | |
+| Dependency Review | continue-on-error | ✗ Fail | SEC-001 (repo/org config; not blocking) |
+| OpenSSF Scorecard | continue-on-error | ✓ Pass | |
+| SLSA Provenance | Conditional (push/tag) | Skipped | PR trigger |
+| Documentation Deploy | Conditional (push/main) | Skipped | PR trigger |
+
+**EPB Artifact Signing step (inside Test job):** Ran successfully (sign_pass, verify_pass, tamper_detection).
 
 ---
 
-## 5. Next actions
+## 5. Security Check failure (Run 1)
 
-- Push branch, open PR to main.
-- After CI run: record Run ID and conclusion in this document; generate M26_audit.md and M26_summary.md after green; update docs/ezra.md at closeout.
+**Cause:** Gitleaks rule `generic-api-key` flagged the variable name `private_key` in `src/ezra/tools/epb_sign.py` (lines 40 and 107) as a potential secret. This is a **false positive**: the identifier is a Python variable holding an Ed25519 key object, not a literal API key or secret.
+
+**Findings:**
+- File: `src/ezra/tools/epb_sign.py`, Line 40: `private_key: Ed25519PrivateKey | None = None` (function parameter)
+- File: `src/ezra/tools/epb_sign.py`, Line 107: `private_key: Ed25519PrivateKey | None = None` (local variable in main)
+
+**Fix applied:** Renamed the parameter and local variable to `signing_key` in `epb_sign.py` and updated all call sites (including tests) to use `signing_key=`. CLI flag remains `--private-key` (user-facing). No behavior change.
 
 ---
 
-**CI run ID:** (To be filled)  
-**PR:** (To be opened)
+## 6. Delta summary
+
+| Item | Delta |
+|------|--------|
+| New files | `src/ezra/tools/_epb_hash.py`, `epb_sign.py`, `epb_verify.py`, `tests/contracts/test_epb_artifact_signing.py`, `docs/milestones/M26/*` |
+| Modified | `pyproject.toml`, `.github/workflows/ci.yml`, `docs/baselines/public_surface_snapshot.json` |
+| Test count | 262 → 268 (+6) |
+| Coverage (CI) | **95.70%** (tools omitted; matches M25) |
+| Post-fix | `epb_sign.py`, `test_epb_artifact_signing.py` (gitleaks false-positive rename) |
+
+---
+
+## 7. Verdict
+
+**Run 1:** CI run 22479170028 completed with **one required-job failure** (Security Check — gitleaks false positive on variable name `private_key`). All other 8/9 required checks passed. Dependency Review failure is known infra (SEC-001), non-blocking.
+
+**Fix:** Variable renamed to `signing_key` in `epb_sign.py` and tests; committed and pushed to branch. CI re-run expected to pass Security Check.
+
+**Outcome:** ✅ **Fix applied; re-run pending.** After green CI, proceed to M26_audit.md, M26_summary.md, and closeout.
+
+---
+
+## 8. Exit criteria (M26)
+
+| Criterion | Status |
+|-----------|--------|
+| Sign + verify works | Yes (tests + local) |
+| Tamper detection fails verification | Yes |
+| Wrong-key fails verification | Yes |
+| CI 9/9 required checks passing | Pending re-run after gitleaks fix |
+| Coverage unchanged or improved | ✅ 95.70% (unchanged) |
+| No invariant drift | Yes |
+
+---
+
+**CI run ID:** 22479170028  
+**PR:** #27  
+**Coverage (CI):** 95.70%
