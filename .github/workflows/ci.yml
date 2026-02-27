@@ -111,7 +111,7 @@ jobs:
           echo "- \`radon.json\` (Complexity analysis)" >> $GITHUB_STEP_SUMMARY
           echo "- \`bandit.json\` (Security scan)" >> $GITHUB_STEP_SUMMARY
           echo "- \`pip_audit.json\` (Dependency vulnerabilities)" >> $GITHUB_STEP_SUMMARY
-          echo "- \`gitleaks.json\` (Secret detection)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`gitleaks-results.sarif\` (Secret detection)" >> $GITHUB_STEP_SUMMARY
           echo "- \`sbom.cdx.json\` (Software Bill of Materials)" >> $GITHUB_STEP_SUMMARY
 
   security:
@@ -144,10 +144,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          report-format: json
-          report-path: gitleaks.json
-          no-git: false
-          verbose: true
+          args: detect --source . --report-format sarif --report-path gitleaks-results.sarif
         continue-on-error: false
       - name: Upload security artifacts
         if: always()
@@ -157,7 +154,7 @@ jobs:
           path: |
             bandit.json
             pip_audit.json
-            gitleaks.json
+            gitleaks-results.sarif
           retention-days: 30
       - name: Security Summary
         if: always()
@@ -185,13 +182,10 @@ jobs:
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Gitleaks" >> $GITHUB_STEP_SUMMARY
-          if [ -f gitleaks.json ]; then
-            LEAK_COUNT=$(python -c "import json; data=json.load(open('gitleaks.json')); print(len(data))" 2>/dev/null || echo "0")
-            if [ "${LEAK_COUNT}" = "0" ]; then
-              echo "- **Status:** ✅ Clean (no secrets detected)" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "- **Status:** ⚠️ Found ${LEAK_COUNT} potential secret(s)" >> $GITHUB_STEP_SUMMARY
-            fi
+          if [ -f gitleaks-results.sarif ]; then
+            echo "- **Status:** ✅ Scan completed (full repository scan)" >> $GITHUB_STEP_SUMMARY
+            echo "- **Format:** SARIF" >> $GITHUB_STEP_SUMMARY
+            echo "- **Note:** Full repository scan (not diff-based) for Release Lock posture" >> $GITHUB_STEP_SUMMARY
           else
             echo "- Status: No report generated" >> $GITHUB_STEP_SUMMARY
           fi
