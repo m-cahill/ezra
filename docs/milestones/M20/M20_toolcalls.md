@@ -22,6 +22,8 @@
 | 2026-02-27 | run_terminal_cmd | Run full test suite | pytest tests/ | ✅ Complete (228 passed, 4 skipped) |
 | 2026-02-27 | run_terminal_cmd | Commit changes | git commit | ✅ Complete (commit a546493) |
 | 2026-02-27 | run_terminal_cmd | Push branch and create PR | git push, gh pr create | ✅ Complete (PR #21) |
+| 2026-02-27 | run_terminal_cmd | Fix CI issues | git commit, git push | ✅ Complete (commits 17959fc, d07f23f) |
+| 2026-02-27 | write | Generate M20 run analysis | docs/milestones/M20/M20_run1.md | ✅ Complete |
 
 ---
 
