@@ -114,6 +114,7 @@
     "ezra.tools._epb_hash",
     "ezra.tools.capture_easyocr_baseline",
     "ezra.tools.epb_certify",
+    "ezra.tools.epb_generate_cert_metadata",
     "ezra.tools.epb_sign",
     "ezra.tools.epb_verify",
     "ezra.types",
