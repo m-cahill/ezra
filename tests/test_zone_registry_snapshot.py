@@ -95,7 +95,9 @@ def _create_snapshot_fixture_registry() -> ZoneRegistry:
 
 def test_registry_snapshot_matches():
     """Test that registry state snapshot matches committed baseline."""
-    snapshot_path = Path(__file__).parent.parent / "docs" / "baselines" / "zone_registry_snapshot.json"
+    snapshot_path = (
+        Path(__file__).parent.parent / "docs" / "baselines" / "zone_registry_snapshot.json"
+    )
     registry = _create_snapshot_fixture_registry()
 
     # Generate canonical JSON
