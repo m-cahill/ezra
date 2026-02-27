@@ -1,0 +1,50 @@
+## M17 — Release Lock Program (Phase V Initiation)
+
+This milestone formally freezes EZRA's public runtime surfaces, EPB contract, and exception taxonomy, introducing structural guardrails that prevent accidental drift.
+
+### Changes
+
+- **New test**: `tests/test_public_surface_freeze.py` — snapshot test that captures:
+  - All importable modules under `ezra` package
+  - Exception hierarchy tree (all `EzraError` subclasses + inheritance structure)
+  - Public attributes from `errors.py` module
+  - EPB version constant (`1.0.0`)
+  - EPB schema file checksums (SHA256 per file)
+
+- **New snapshot**: `docs/baselines/public_surface_snapshot.json` — canonical baseline for public surface
+
+### Behavior
+
+- **NO runtime behavior changes**
+- **NO schema changes**
+- **NO feature expansion**
+- **NO new dependencies**
+
+### Test Results
+
+- All 214 tests pass (213 original + 1 new)
+- 4 skipped tests remain skipped
+- Snapshot test passes
+
+### Exit Criteria
+
+- ✅ Snapshot test implemented
+- ✅ Initial snapshot generated
+- ⏳ All 7 CI jobs pass
+- ⏳ No behavior drift
+- ⏳ No schema drift
+- ⏳ No exception taxonomy drift
+- ⏳ Determinism preserved
+
+### Strategic Outcome
+
+After M17, EZRA becomes:
+- Public-surface frozen
+- EPB contract frozen
+- Exception taxonomy frozen
+- Deterministic
+- CI-evidence producing
+- **Release-candidate ready**
+
+M17 transitions EZRA into **v1.0.0-rc posture**.
+
