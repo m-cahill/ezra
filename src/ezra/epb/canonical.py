@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import math
+from collections.abc import Mapping
 from typing import Any
 
 from ezra.errors import EPBCanonicalError
@@ -50,12 +51,13 @@ def _canonicalize_value(obj: Any) -> Any:
     """Recursively canonicalize a value for EPB serialization.
 
     Args:
-        obj: Value to canonicalize (dict, list, float, or primitive).
+        obj: Value to canonicalize (dict, MappingProxyType, list, float, or primitive).
 
     Returns:
         Canonicalized value.
     """
-    if isinstance(obj, dict):
+    if isinstance(obj, Mapping):
+        # Handle dict and MappingProxyType (sealed dicts)
         # Sort keys alphabetically (case-sensitive) per EPB spec
         return {k: _canonicalize_value(v) for k, v in sorted(obj.items())}
     elif isinstance(obj, list):

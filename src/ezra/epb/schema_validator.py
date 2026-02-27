@@ -8,7 +8,9 @@ EPBValidationError with human-readable error messages.
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, cast
 
 import jsonschema  # type: ignore[import-untyped]
@@ -64,22 +66,53 @@ def _load_schema(schema_name: str) -> dict[str, Any]:
     return schema_dict
 
 
+def _convert_mapping_to_dict(obj: Any) -> Any:
+    """Recursively convert MappingProxyType to dict for JSON Schema validation.
+
+    JSON Schema validators expect plain dict types, not MappingProxyType.
+    This function converts MappingProxyType instances to dict while preserving
+    the structure.
+
+    Args:
+        obj: Object to convert (dict, MappingProxyType, list, or primitive).
+
+    Returns:
+        Converted object with MappingProxyType replaced by dict.
+    """
+    if isinstance(obj, MappingProxyType):
+        # Convert MappingProxyType to dict
+        return {k: _convert_mapping_to_dict(v) for k, v in obj.items()}
+    elif isinstance(obj, Mapping):
+        # Handle other Mapping types (shouldn't happen, but be safe)
+        return {k: _convert_mapping_to_dict(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        # Preserve array order
+        return [_convert_mapping_to_dict(item) for item in obj]
+    else:
+        # Primitive types pass through unchanged
+        return obj
+
+
 def _validate_against_schema(
-    instance: dict[str, Any], schema_name: str, component_name: str
+    instance: dict[str, Any] | MappingProxyType, schema_name: str, component_name: str
 ) -> None:
     """Validate instance against a JSON Schema.
 
     Args:
-        instance: Dictionary to validate.
+        instance: Dictionary to validate (may be MappingProxyType).
         schema_name: Name of schema file (e.g., "manifest.schema.json").
         component_name: Human-readable name for error messages (e.g., "manifest").
 
     Raises:
         EPBValidationError: If validation fails, with detailed error message.
     """
+    # Convert MappingProxyType to dict for JSON Schema validation
+    # (jsonschema doesn't recognize MappingProxyType as a valid dict type)
+    instance_dict = _convert_mapping_to_dict(instance)
+
     try:
         schema = _load_schema(schema_name)
-        jsonschema.validate(instance=instance, schema=schema)
+        jsonschema.validate(instance=instance_dict, schema=schema)
     except ValidationError as e:
         # Format validation error for human readability
         error_path = ".".join(str(p) for p in e.absolute_path) if e.absolute_path else "root"

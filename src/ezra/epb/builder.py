@@ -9,6 +9,7 @@ from __future__ import annotations
 import platform
 import sys
 from datetime import UTC, datetime
+from types import MappingProxyType
 from typing import Any
 
 # EPB v1.0.0 version string (immutable per spec)
@@ -80,9 +81,20 @@ def build_epb_bundle(
     # Build delta.json structure (if provided)
     delta_dict: dict[str, Any] | None = delta
 
-    return {
-        "manifest": manifest,
-        "detections": detections_dict,
-        "state": state_dict,  # Always present (minimal if None provided)
-        "delta": delta_dict,  # Optional (None if not provided)
+    # Seal all nested dicts with MappingProxyType for immutability
+    # (top-level only, not recursive)
+    sealed_manifest = MappingProxyType(manifest)
+    sealed_detections = MappingProxyType(detections_dict)
+    sealed_state = MappingProxyType(state_dict)
+    sealed_delta = MappingProxyType(delta_dict) if delta_dict is not None else None
+
+    # Build bundle dict and seal it
+    bundle: dict[str, Any] = {
+        "manifest": sealed_manifest,
+        "detections": sealed_detections,
+        "state": sealed_state,  # Always present (minimal if None provided)
+        "delta": sealed_delta,  # Optional (None if not provided)
     }
+
+    # Return sealed bundle (top-level dict sealed, nested dicts also sealed)
+    return MappingProxyType(bundle)

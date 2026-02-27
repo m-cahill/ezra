@@ -3,6 +3,7 @@
 This module computes deterministic SHA256 hashes per EPB spec:
 - Per-file hashes of canonical JSON strings
 - Bundle hash from sorted file hash concatenation (excluding hashes.json)
+- Structural hash assertion for immutability verification (internal use)
 """
 
 from __future__ import annotations
@@ -118,3 +119,34 @@ def build_hashes_dict(
     hashes_dict["files"]["hashes.json"] = hashes_json_hash
 
     return hashes_dict
+
+
+def assert_structural_hash(obj: Any) -> str:
+    """Compute structural hash of an object for immutability verification.
+
+    This function canonicalizes, serializes, and hashes the object structure.
+    Used only in tests to verify that object structures remain deterministic
+    and immutable across multiple constructions.
+
+    The object is canonicalized using EPB canonicalization rules (sorted keys,
+    8 decimal place float precision) before hashing.
+
+    Args:
+        obj: Object to hash (typically a dict or dataclass instance).
+
+    Returns:
+        SHA256 hash (lowercase hexadecimal, 64 characters).
+
+    Example:
+        >>> bundle1 = build_epb_bundle(...)
+        >>> hash1 = assert_structural_hash(bundle1)
+        >>> bundle2 = build_epb_bundle(...)  # Same inputs
+        >>> hash2 = assert_structural_hash(bundle2)
+        >>> assert hash1 == hash2  # Structures are identical
+    """
+    # Canonicalize the object using EPB rules
+    canonical_json = to_canonical_json(obj)
+
+    # Compute SHA256 hash
+    sha256 = hashlib.sha256(canonical_json.encode("utf-8"))
+    return sha256.hexdigest()
