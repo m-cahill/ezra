@@ -10,7 +10,6 @@ from pathlib import Path
 
 from ezra.epb import build_epb_bundle, write_epb_bundle
 
-
 # Fixed timestamp for determinism
 FIXED_TIMESTAMP = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
 
@@ -20,9 +19,11 @@ def _normalize_epb_bundle_for_snapshot(bundle_dir: Path) -> dict:
 
     Strips non-deterministic fields:
     - Timestamps (manifest.timestamp, state.timestamp) → "<TIMESTAMP>"
-    - Platform-specific fields (manifest.platform → "<PLATFORM>", manifest.python_version → "<PYTHON_VERSION>")
+    - Platform-specific fields:
+      - manifest.platform → "<PLATFORM>"
+      - manifest.python_version → "<PYTHON_VERSION>"
     - EZRA version (manifest.ezra_version → "<EZRA_VERSION>") - may change with releases
-    - Hash values (replaced with placeholders since they depend on timestamps)
+    - Hash values (replaced with placeholders since they depend on platform/timestamps)
 
     Preserves:
     - Structure (required keys, schema version)
@@ -66,12 +67,14 @@ def _normalize_epb_bundle_for_snapshot(bundle_dir: Path) -> dict:
     }
 
     # Normalize hashes (preserve structure, replace hash values with placeholders)
-    # Hash values depend on timestamps, so we normalize them for contract comparison
+    # Hash values depend on timestamps and platform-specific fields, so we normalize them
     normalized_hashes = {
         "epb_version": hashes["epb_version"],
-        "bundle_hash": hashes["bundle_hash"],  # Keep actual hash for structure validation
+        "bundle_hash": "<BUNDLE_HASH>",  # Placeholder since hash depends on platform/timestamps
         "files": {
-            filename: hashes["files"][filename]  # Keep actual hashes for structure validation
+            filename: (
+                "<HASH>" if len(hashes["files"][filename]) == 64 else hashes["files"][filename]
+            )
             for filename in sorted(hashes["files"].keys())
         },
     }
