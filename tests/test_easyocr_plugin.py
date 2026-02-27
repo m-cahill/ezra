@@ -6,6 +6,12 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from ezra.plugins.easyocr_plugin import EasyOCRPlugin
+from tests.utils.ml_available import has_easyocr
+
+EASYOCR_REQUIRED = pytest.mark.skipif(
+    not has_easyocr(),
+    reason="EasyOCR not installed in CI environment",
+)
 
 
 def test_easyocr_plugin_import_without_easyocr() -> None:
@@ -29,6 +35,7 @@ def test_easyocr_plugin_import_without_easyocr() -> None:
             plugin_module.EasyOCRPlugin()
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_initialization(mock_easyocr: MagicMock) -> None:
     """Test plugin initialization with mocked EasyOCR."""
@@ -38,6 +45,7 @@ def test_easyocr_plugin_initialization(mock_easyocr: MagicMock) -> None:
     assert not plugin._adapter._loaded
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_load(mock_easyocr: MagicMock) -> None:
     """Test plugin load method."""
@@ -56,6 +64,7 @@ def test_easyocr_plugin_load(mock_easyocr: MagicMock) -> None:
     assert plugin._adapter._reader is mock_reader
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_infer(mock_easyocr: MagicMock) -> None:
     """Test plugin infer method."""
@@ -96,6 +105,7 @@ def test_easyocr_plugin_infer(mock_easyocr: MagicMock) -> None:
     mock_reader.readtext.assert_called_once_with(mock_image)
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_infer_not_loaded(mock_easyocr: MagicMock) -> None:
     """Test that infer raises RuntimeError if model not loaded."""
@@ -105,6 +115,7 @@ def test_easyocr_plugin_infer_not_loaded(mock_easyocr: MagicMock) -> None:
         plugin.infer(MagicMock())
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_describe_capabilities(mock_easyocr: MagicMock) -> None:
     """Test plugin describe_capabilities method."""
@@ -120,6 +131,7 @@ def test_easyocr_plugin_describe_capabilities(mock_easyocr: MagicMock) -> None:
     assert "output_schema" in caps
 
 
+@EASYOCR_REQUIRED
 @patch("ezra.plugins.easyocr_adapter.easyocr")
 def test_easyocr_plugin_load_failure(mock_easyocr: MagicMock) -> None:
     """Test that load raises RuntimeError on failure."""

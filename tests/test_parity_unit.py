@@ -151,11 +151,13 @@ def test_validate_manifest_environment_torch_mismatch() -> None:
         "torch_version": "99.99.99",
     }
 
-    # Mock torch to return different version
-    with patch("ezra.baseline.parity.torch") as mock_torch:
-        mock_torch.__version__ = "1.0.0"
-        with pytest.raises(ValueError, match="torch version mismatch"):
-            validate_manifest_environment(manifest)
+    # Mock easyocr as available so this test isolates torch mismatch behavior.
+    with patch("ezra.baseline.parity.easyocr", object()):
+        # Mock torch to return different version
+        with patch("ezra.baseline.parity.torch") as mock_torch:
+            mock_torch.__version__ = "1.0.0"
+            with pytest.raises(ValueError, match="torch version mismatch"):
+                validate_manifest_environment(manifest)
 
 
 def test_validate_manifest_environment_torchvision_mismatch() -> None:
@@ -165,11 +167,13 @@ def test_validate_manifest_environment_torchvision_mismatch() -> None:
         "torchvision_version": "99.99.99",
     }
 
-    # Mock torchvision to return different version
-    with patch("ezra.baseline.parity.torchvision") as mock_torchvision:
-        mock_torchvision.__version__ = "1.0.0"
-        with pytest.raises(ValueError, match="torchvision version mismatch"):
-            validate_manifest_environment(manifest)
+    # Mock easyocr as available so this test isolates torchvision mismatch behavior.
+    with patch("ezra.baseline.parity.easyocr", object()):
+        # Mock torchvision to return different version
+        with patch("ezra.baseline.parity.torchvision") as mock_torchvision:
+            mock_torchvision.__version__ = "1.0.0"
+            with pytest.raises(ValueError, match="torchvision version mismatch"):
+                validate_manifest_environment(manifest)
 
 
 def test_validate_manifest_environment_torch_not_installed() -> None:
@@ -179,7 +183,9 @@ def test_validate_manifest_environment_torch_not_installed() -> None:
         "torch_version": "2.0.0",
     }
 
-    # Mock torch as None (not installed)
-    with patch("ezra.baseline.parity.torch", None):
-        with pytest.raises(ValueError, match="torch is not installed"):
-            validate_manifest_environment(manifest)
+    # Mock easyocr as available so this test isolates torch-not-installed behavior.
+    with patch("ezra.baseline.parity.easyocr", object()):
+        # Mock torch as None (not installed)
+        with patch("ezra.baseline.parity.torch", None):
+            with pytest.raises(ValueError, match="torch is not installed"):
+                validate_manifest_environment(manifest)

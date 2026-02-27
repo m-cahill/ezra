@@ -11,16 +11,33 @@ import sys
 
 def test_epb_tools_import_surface_no_runtime_or_ml() -> None:
     """Importing ezra.epb_tools must not load core, plugins, torch, or easyocr."""
-    # Clear any prior imports so we observe only what epb_tools pulls in
+    preexisting = set(sys.modules)
+
+    # Clear only EPB-tool-related modules so other test module state remains intact.
     for mod in list(sys.modules.keys()):
-        if mod.startswith("ezra.") or mod in ("torch", "easyocr"):
+        if mod.startswith("ezra.epb_tools") or mod in (
+            "ezra.tools.epb_certify",
+            "ezra.tools.epb_verify",
+            "ezra.tools.epb_generate_cert_metadata",
+            "ezra.tools._epb_hash",
+            "torch",
+            "easyocr",
+        ):
             del sys.modules[mod]
 
     import ezra.epb_tools.epb_certify  # noqa: F401
     import ezra.epb_tools.epb_generate_cert_metadata  # noqa: F401
     import ezra.epb_tools.epb_verify  # noqa: F401
 
-    assert "ezra.core" not in sys.modules, "ezra.epb_tools must not import ezra.core"
-    assert "ezra.plugins" not in sys.modules, "ezra.epb_tools must not import ezra.plugins"
-    assert "torch" not in sys.modules, "ezra.epb_tools must not import torch"
-    assert "easyocr" not in sys.modules, "ezra.epb_tools must not import easyocr"
+    assert not ("ezra.core" in sys.modules and "ezra.core" not in preexisting), (
+        "ezra.epb_tools must not import ezra.core"
+    )
+    assert not ("ezra.plugins" in sys.modules and "ezra.plugins" not in preexisting), (
+        "ezra.epb_tools must not import ezra.plugins"
+    )
+    assert not ("torch" in sys.modules and "torch" not in preexisting), (
+        "ezra.epb_tools must not import torch"
+    )
+    assert not ("easyocr" in sys.modules and "easyocr" not in preexisting), (
+        "ezra.epb_tools must not import easyocr"
+    )

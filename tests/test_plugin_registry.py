@@ -13,6 +13,12 @@ from ezra.plugins.registry import (
     list_plugins,
     validate_registry,
 )
+from tests.utils.ml_available import has_easyocr
+
+EASYOCR_REQUIRED = pytest.mark.skipif(
+    not has_easyocr(),
+    reason="EasyOCR not installed in CI environment",
+)
 
 
 def test_list_plugins() -> None:
@@ -26,6 +32,7 @@ def test_list_plugins() -> None:
     assert plugins == ["easyocr", "tesseract"]
 
 
+@EASYOCR_REQUIRED
 def test_get_plugin_success() -> None:
     """Test successful plugin resolution."""
     with patch("ezra.plugins.easyocr_adapter.easyocr"):
@@ -48,6 +55,7 @@ def test_get_plugin_unknown_exact_message() -> None:
     assert str(exc_info.value) == "Unknown plugin: unknown_plugin"
 
 
+@EASYOCR_REQUIRED
 def test_registry_does_not_import_easyocr_on_import() -> None:
     """Test that importing registry does not import easyocr module.
 
@@ -80,6 +88,7 @@ def test_registry_does_not_import_easyocr_on_import() -> None:
     # trigger it prematurely.
 
 
+@EASYOCR_REQUIRED
 def test_get_plugin_passes_kwargs() -> None:
     """Test that get_plugin correctly passes kwargs to plugin constructor."""
     with patch("ezra.plugins.easyocr_adapter.easyocr"):
@@ -88,6 +97,7 @@ def test_get_plugin_passes_kwargs() -> None:
         assert plugin.languages == ["en", "fr"]
 
 
+@EASYOCR_REQUIRED
 def test_get_plugin_returns_ocrplugin_instance() -> None:
     """Test that get_plugin returns instance implementing OCRPlugin interface."""
     with patch("ezra.plugins.easyocr_adapter.easyocr"):
@@ -99,6 +109,7 @@ def test_get_plugin_returns_ocrplugin_instance() -> None:
         assert hasattr(plugin, "describe_capabilities")
 
 
+@EASYOCR_REQUIRED
 def test_get_plugin_from_config_success() -> None:
     """Test successful plugin resolution from configuration dictionary."""
     with patch("ezra.plugins.easyocr_adapter.easyocr"):
@@ -123,6 +134,7 @@ def test_get_plugin_from_config_unknown() -> None:
         get_plugin_from_config(config)
 
 
+@EASYOCR_REQUIRED
 def test_registry_validation_success() -> None:
     """Test that validate_registry passes for valid registry."""
     with patch("ezra.plugins.easyocr_adapter.easyocr"):
@@ -250,6 +262,7 @@ def test_plugin_instance_type_violation() -> None:
         _validate_plugin_instance(incomplete_mock)
 
 
+@EASYOCR_REQUIRED
 def test_kwargs_forwarding_behavior() -> None:
     """Test that kwargs are forwarded correctly through get_plugin_from_config."""
     with patch("ezra.plugins.easyocr_adapter.easyocr"):
@@ -335,6 +348,7 @@ def test_tesseract_does_not_import_easyocr() -> None:
     assert "ezra.plugins.easyocr_adapter" not in sys.modules
 
 
+@EASYOCR_REQUIRED
 def test_registry_validation_includes_tesseract() -> None:
     """Test that validate_registry passes with tesseract plugin registered."""
     with patch("ezra.plugins.easyocr_adapter.easyocr"):
