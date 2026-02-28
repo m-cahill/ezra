@@ -20,3 +20,5 @@ Milestone: M31 — v1.0.0 Release Gate
 | 2026-02-28 | write | Create RELEASE_NOTES.md for GitHub Release | RELEASE_NOTES.md | Done |
 | 2026-02-28 | run (gh release create) | Publish GitHub Release v1.0.0 | GitHub | Done |
 | 2026-02-28 | search_replace | Update docs/ezra.md: M31 complete, tag v1.0.0, PR#32, CI Run 22509645140 | docs/ezra.md | Done |
+| 2026-02-28 | write | Create M31_summary.md (canonical milestone summary) | docs/milestones/M31/M31_summary.md | Done |
+| 2026-02-28 | write | Create M31_audit.md (delta audit) | docs/milestones/M31/M31_audit.md | Done |
