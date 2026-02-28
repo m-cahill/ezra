@@ -21,11 +21,15 @@ dmypy.json
 # Virtual environments
 .env
 .venv
+.venv_minimal/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# CI log artifacts (local runs)
+ci_test_run_*.log
 
 # IDEs
 .vscode/
