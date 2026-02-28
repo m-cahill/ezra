@@ -126,15 +126,15 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M27 | Detached Certification Metadata Layer | Complete | v0.0.29-m27 | PR#29 | `epb_generate_cert_metadata.py` produces `bundle.cert.json` envelope (nested certification/signature/environment). Certifier version from ezra.__version__ or package metadata. No hard-fail on missing signature. 8 new contract tests; CI step "EPB Certification Metadata". 276 tests pass, coverage 95.70%, no schema/canonicalization/hashing drift. CI Run: 22506873541 |
 | M28 | Artifact-Only Distribution Mode | Complete | v0.0.30-m28 | PR#30 | Physical isolation of EPB tools into `ezra.epb_tools` namespace. Runtime-independent validation surface. Legacy wrappers with DeprecationWarning. Import isolation test + required CI job `EPB Tools Minimal Environment`. 253 tests pass, 28 skipped (ML-dependent), coverage 85.69%, no schema/canonicalization/hashing drift. CI Run: 22508322567 |
 | M30 | Phase V Completion Declaration | Complete | v0.0.31-m30 | PR#31 | Formal declaration doc, consolidated invariant registry, release readiness matrix. No code/CI/schema changes. Phase V closed; EPB contract frozen at governance level. See `docs/phase_v_completion_declaration.md`. CI Run: 22508810817 |
+| M31 | v1.0.0 Release Gate | Complete | v1.0.0 | PR#32 | Version freeze to 1.0.0; Phase V declaration updated to reference certified release tag. No EPB/CI/behavioral changes. Enterprise-certified release. CI Run: 22509645140 |
 
 ## 7A. Phase V — Remaining Milestones (Planned)
 
-Phase V is closed. The following milestones define the path to v1.0.0 and beyond.
+Phase V is closed. v1.0.0 certified release achieved (M31). The following milestones define the path beyond v1.0.0.
 
 | Milestone | Objective | Status | Notes |
 |-----------|-----------|--------|-------|
-| M30 | Phase V Completion Declaration | Complete | Formal declaration; invariant registry; release readiness matrix; tag v0.0.31-m30 |
-| M31 | v1.0.0 Release Gate | Future | Confirm zero open structural work; freeze versioning; prepare PyPI metadata (if desired); tag v1.0.0 |
+| M31 | v1.0.0 Release Gate | Complete | Tag v1.0.0; PR#32; CI Run 22509645140 |
 | M32 | Phase VI Planning (Supply Chain & Distribution) | Future | Supply chain and distribution roadmap; optional packaging split, EPB tools distribution |
 
 ## 8. Local Dev Quickstart

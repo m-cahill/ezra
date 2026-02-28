@@ -15,3 +15,8 @@ Milestone: M31 — v1.0.0 Release Gate
 | 2026-02-27 | write | Create M31_plan.md, M31_toolcalls.md | docs/milestones/M31/ | Done |
 | 2026-02-28 | run (gh pr view, gh run list, gh run view) | Check CI status for PR #32; get run 22509645140 | GitHub API | Done |
 | 2026-02-28 | write | Generate M31_run1.md (workflow analysis per RefactorWorkflowPrompt) | docs/milestones/M31/M31_run1.md | Done |
+| 2026-02-28 | run (gh pr merge) | Merge PR #32 with merge commit | GitHub | Done |
+| 2026-02-28 | run (git tag, git push) | Create annotated tag v1.0.0, push to origin | repo | Done |
+| 2026-02-28 | write | Create RELEASE_NOTES.md for GitHub Release | RELEASE_NOTES.md | Done |
+| 2026-02-28 | run (gh release create) | Publish GitHub Release v1.0.0 | GitHub | Done |
+| 2026-02-28 | search_replace | Update docs/ezra.md: M31 complete, tag v1.0.0, PR#32, CI Run 22509645140 | docs/ezra.md | Done |
