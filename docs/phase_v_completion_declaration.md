@@ -161,6 +161,7 @@ No other deferred issues are carried into Phase V completion. SEC-001 is documen
 ## 12. Canonical References
 
 - **Baseline tag:** v0.0.30-m28  
+- **Certified release tag:** v1.0.0 (established by M31 — v1.0.0 Release Gate)  
 - **Ledger:** `docs/ezra.md`  
 - **Phase V milestones:** M25 (v0.0.26-m25), M26 (v0.0.27-m26), M27 (v0.0.29-m27), M28 (v0.0.30-m28), M29 (v0.0.28-m29)  
 - **CI evidence (pre-M30):** Run 22508322567  
