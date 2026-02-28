@@ -13,3 +13,5 @@ Milestone: M31 — v1.0.0 Release Gate
 | 2026-02-27 | run (git push) | Push m31-release-gate to origin | origin | Done |
 | 2026-02-27 | run (gh pr create) | Open PR #32 M31: v1.0.0 Release Gate | GitHub | Done |
 | 2026-02-27 | write | Create M31_plan.md, M31_toolcalls.md | docs/milestones/M31/ | Done |
+| 2026-02-28 | run (gh pr view, gh run list, gh run view) | Check CI status for PR #32; get run 22509645140 | GitHub API | Done |
+| 2026-02-28 | write | Generate M31_run1.md (workflow analysis per RefactorWorkflowPrompt) | docs/milestones/M31/M31_run1.md | Done |
