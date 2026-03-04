@@ -17,8 +17,8 @@ from pathlib import Path
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
+from ezra.epb_tools.epb_verify import verify_bundle
 from ezra.tools.epb_sign import sign_bundle
-from ezra.tools.epb_verify import verify_bundle
 
 from .test_epb_consumer_certification import _make_bundle_dir
 
@@ -41,7 +41,7 @@ def test_epb_sign_verify_roundtrip(tmp_path: Path) -> None:
 
 
 def test_epb_sign_verify_subprocess(tmp_path: Path) -> None:
-    """Sign and verify via python -m ezra.tools.epb_sign / epb_verify; exit 0."""
+    """Sign and verify via python -m ezra.tools.epb_sign / ezra.epb_tools.epb_verify; exit 0."""
     bundle_dir = _make_bundle_dir(tmp_path, "epb")
 
     sign_proc = subprocess.run(
@@ -58,7 +58,7 @@ def test_epb_sign_verify_subprocess(tmp_path: Path) -> None:
     assert "bundle_hash" in sign_out
 
     verify_proc = subprocess.run(
-        [sys.executable, "-m", "ezra.tools.epb_verify", str(bundle_dir)],
+        [sys.executable, "-m", "ezra.epb_tools.epb_verify", str(bundle_dir)],
         capture_output=True,
         text=True,
         timeout=10,

@@ -71,3 +71,6 @@ docs/_static/
 # Dependency lockfile (generated artifact)
 requirements-dev.txt
 
+.cursorrules
+
+/docs/prompts/
