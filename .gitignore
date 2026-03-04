@@ -52,6 +52,7 @@ Thumbs.db
 determinism_output/
 determinism_test/
 determinism_final/
+hermetic_bundle/
 
 # CI quality artifacts
 sbom.cdx.json
