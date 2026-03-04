@@ -129,7 +129,7 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M31 | v1.0.0 Release Gate | Complete | v1.0.0 | PR#32 | Version freeze to 1.0.0; Phase V declaration updated to reference certified release tag. No EPB/CI/behavioral changes. Enterprise-certified release. CI Run: 22509645140 |
 | M32 | Reproducible Distribution Baseline | Complete | — | PR#33 | Phase XVIII. Lockfile (requirements.txt), all critical actions pinned to full SHA, doc §8 env-var sentence. No runtime or EPB changes. CI Run: 22654378419 |
 | M33 | Reproducible Distribution Artifacts & Trusted Publishing | Complete | v1.0.1-m33 | PR#34 | Phase XVIII. Tag-triggered release workflow, sdist/wheel, hashes, SBOM, provenance, PyPI Trusted Publishing (OIDC). Smoke job, CI doc, README. No runtime or EPB changes. CI Run: 22656517507 |
-| M34 | Distribution Verification | In progress | — | — | Phase XVIII. Verification script and CI job for reproducible releases: artifact hash validation, local rebuild comparison, SBOM and provenance validation. Non-required CI job. No runtime or EPB changes. |
+| M34 | Distribution Verification | Complete | v1.0.2-m34 | PR#35 | Phase XVIII. Verification script and CI job for reproducible releases: artifact hash validation, local rebuild comparison, SBOM and provenance validation. Release workflow now uploads ezra-provenance. No runtime or EPB changes. CI Run: 22657381655 (Run 1); distribution-verification passes after tag release. |
 
 ## 7A. Phase V — Remaining Milestones (Planned)
 
@@ -140,9 +140,9 @@ Phase V is closed. v1.0.0 certified release achieved (M31). Phase XVIII — EZRA
 | M31 | v1.0.0 Release Gate | Complete | Tag v1.0.0; PR#32; CI Run 22509645140 |
 | M32 | Reproducible Distribution Baseline | Complete | PR#33; CI Run 22654378419; Phase XVIII |
 | M33 | Reproducible Distribution Artifacts & Trusted Publishing | Complete | v1.0.1-m33; PR#34; CI Run 22656517507; Phase XVIII |
-| M34 | Distribution Verification | In progress | Phase XVIII; verification tooling for reproducible releases |
+| M34 | Distribution Verification | Complete | v1.0.2-m34; PR#35; CI Run 22657381655; Phase XVIII |
 
-M33 introduced the tag-triggered release workflow with reproducible sdist/wheel builds, artifact hashes, SBOM generation, SLSA provenance, and PyPI Trusted Publishing using OIDC. No runtime behavior or EPB interfaces were modified.
+M33 introduced the tag-triggered release workflow with reproducible sdist/wheel builds, artifact hashes, SBOM generation, SLSA provenance, and PyPI Trusted Publishing using OIDC. M34 added distribution verification tooling that validates reproducible release artifacts, artifact hashes, SBOM integrity, and provenance metadata (script, CI job, release workflow ezra-provenance artifact). No runtime, EPB schema, hashing logic, or plugin interfaces were modified.
 
 ## 8. Local Dev Quickstart
 
