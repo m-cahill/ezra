@@ -1,0 +1,38 @@
+# M20 Tool Calls Log
+
+**Milestone:** M20  
+**Status:** In Progress
+
+---
+
+## Tool Calls
+
+| Timestamp | Tool | Purpose | Files/Target | Status |
+|-----------|------|---------|--------------|--------|
+| 2026-02-27 | write | Populate M20 plan document | docs/milestones/M20/M20_plan.md | ✅ Complete |
+| 2026-02-27 | run_terminal_cmd | Create working branch | git checkout -b m20-runtime-contract-seal | ✅ Complete |
+| 2026-02-27 | search_replace | Convert ImageInput, OCRResult, ModelArtifactMetadata to frozen dataclasses | src/ezra/types.py | ✅ Complete |
+| 2026-02-27 | search_replace | Seal EPB bundle dict with MappingProxyType | src/ezra/epb/builder.py | ✅ Complete |
+| 2026-02-27 | search_replace | Add structural hash assertion utility | src/ezra/epb/hasher.py | ✅ Complete |
+| 2026-02-27 | search_replace | Update canonicalization to handle MappingProxyType | src/ezra/epb/canonical.py, src/ezra/epb/zone_adapter.py, src/ezra/zones/projector.py | ✅ Complete |
+| 2026-02-27 | search_replace | Update schema validator to handle MappingProxyType | src/ezra/epb/schema_validator.py | ✅ Complete |
+| 2026-02-27 | search_replace | Fix test that uses .bbox.copy() | tests/test_zone_projector.py | ✅ Complete |
+| 2026-02-27 | write | Create immutability test suite | tests/test_runtime_immutability.py | ✅ Complete |
+| 2026-02-27 | search_replace | Update schema validation tests to handle sealed bundles | tests/test_epb_schema_validation.py | ✅ Complete |
+| 2026-02-27 | run_terminal_cmd | Run full test suite | pytest tests/ | ✅ Complete (228 passed, 4 skipped) |
+| 2026-02-27 | run_terminal_cmd | Commit changes | git commit | ✅ Complete (commit a546493) |
+| 2026-02-27 | run_terminal_cmd | Push branch and create PR | git push, gh pr create | ✅ Complete (PR #21) |
+| 2026-02-27 | run_terminal_cmd | Fix CI issues | git commit, git push | ✅ Complete (commits 17959fc, d07f23f) |
+| 2026-02-27 | write | Generate M20 run analysis | docs/milestones/M20/M20_run1.md | ✅ Complete |
+| 2026-02-27 | run_terminal_cmd | Merge PR #21 | gh pr merge 21 | ✅ Complete |
+| 2026-02-27 | write | Generate post-merge run analysis | docs/milestones/M20/M20_run2.md | ✅ Complete |
+| 2026-02-27 | write | Generate milestone audit | docs/milestones/M20/M20_audit.md | ✅ Complete |
+| 2026-02-27 | write | Generate milestone summary | docs/milestones/M20/M20_summary.md | ✅ Complete |
+| 2026-02-27 | search_replace | Update governance ledger | docs/ezra.md | ✅ Complete |
+| 2026-02-27 | run_terminal_cmd | Tag v0.0.21-m20 | git tag, git push | ✅ Complete |
+| 2026-02-27 | run_terminal_cmd | Seed M21 folder | mkdir, create files | ✅ Complete |
+
+---
+
+**End of M20 Tool Calls Log**
+
