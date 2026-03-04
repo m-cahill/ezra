@@ -58,6 +58,39 @@ jobs:
         with:
           subject-path: dist/*
 
+      - name: Write provenance metadata
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_WORKFLOW: ${{ github.workflow }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          python3 << 'EOF'
+          import json, os
+          hashes = {}
+          with open("dist/SHA256SUMS.txt") as f:
+              for line in f:
+                  line = line.strip()
+                  if not line:
+                      continue
+                  parts = line.split(None, 1)
+                  if len(parts) == 2:
+                      hashes[parts[1]] = parts[0]
+          with open("provenance.json", "w") as out:
+              json.dump({
+                  "commit": os.environ["GITHUB_SHA"],
+                  "builder": "github-actions",
+                  "workflow": os.environ["GITHUB_WORKFLOW"],
+                  "run_id": int(os.environ["GITHUB_RUN_ID"]),
+                  "artifact_hashes": hashes,
+              }, out, sort_keys=True, indent=2)
+          EOF
+
+      - name: Upload provenance
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ezra-provenance
+          path: provenance.json
+
   publish-pypi:
     name: Publish to PyPI
     runs-on: ubuntu-latest
