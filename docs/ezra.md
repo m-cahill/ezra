@@ -130,12 +130,12 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 
 ## 7A. Phase V — Remaining Milestones (Planned)
 
-Phase V is closed. v1.0.0 certified release achieved (M31). The following milestones define the path beyond v1.0.0.
+Phase V is closed. v1.0.0 certified release achieved (M31). Phase XVIII — EZRA Distribution Hardening follows.
 
 | Milestone | Objective | Status | Notes |
 |-----------|-----------|--------|-------|
 | M31 | v1.0.0 Release Gate | Complete | Tag v1.0.0; PR#32; CI Run 22509645140 |
-| M32 | Phase VI Planning (Supply Chain & Distribution) | Future | Supply chain and distribution roadmap; optional packaging split, EPB tools distribution |
+| M32 | Reproducible Distribution Baseline | Planned | Lockfile, action SHA pinning, doc env-var clarity; Phase XVIII |
 
 ## 8. Local Dev Quickstart
 
