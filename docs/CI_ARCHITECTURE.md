@@ -23,6 +23,18 @@ Executed on pull_request:
 
 These checks must pass before merge.
 
+#### Coverage Guardrail
+
+The coverage threshold is currently:
+
+- `fail_under = 85`
+
+A safety margin of ≥2% above the threshold is recommended.
+
+If the baseline coverage rises above ~87%, the threshold may be raised in a future milestone.
+
+Coverage thresholds are **not raised within an active milestone** to avoid CI instability.
+
 ---
 
 ### Tier 2 — Supply Chain Integrity

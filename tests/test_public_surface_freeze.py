@@ -13,16 +13,18 @@ import warnings
 from pathlib import Path
 from typing import Any
 
-# Legacy EPB tool wrappers (ezra.tools.epb_*) emit DeprecationWarning; suppress
-# when we import-all for surface snapshot so test run stays warning-clean.
-_DEPRECATED_EPB_TOOL_MODULES = frozenset({
-    "ezra.tools.epb_certify",
-    "ezra.tools.epb_generate_cert_metadata",
-    "ezra.tools.epb_verify",
-})
-
 import ezra
 from ezra.epb.builder import EPB_VERSION
+
+# Legacy EPB tool wrappers (ezra.tools.epb_*) emit DeprecationWarning; suppress
+# when we import-all for surface snapshot so test run stays warning-clean.
+_DEPRECATED_EPB_TOOL_MODULES = frozenset(
+    {
+        "ezra.tools.epb_certify",
+        "ezra.tools.epb_generate_cert_metadata",
+        "ezra.tools.epb_verify",
+    }
+)
 
 
 def _discover_all_modules() -> list[str]:
