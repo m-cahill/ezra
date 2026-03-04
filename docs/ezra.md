@@ -150,6 +150,12 @@ Optional (M01+):
 - Install EasyOCR extras: `pip install -e ".[easyocr]"`
 - Run baseline capture tool: `python -m ezra.tools.capture_easyocr_baseline`
 
+### Release Process
+
+EZRA releases use GitHub tag-triggered workflows and PyPI Trusted Publishing.
+
+See: [docs/release/PYPI_TRUSTED_PUBLISHING.md](release/PYPI_TRUSTED_PUBLISHING.md).
+
 ## 9. Plugin Registration Policy
 
 After M05:

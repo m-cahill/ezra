@@ -14,7 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from ezra.tools.epb_generate_cert_metadata import generate_cert_metadata
+from ezra.epb_tools.epb_generate_cert_metadata import generate_cert_metadata
 from ezra.tools.epb_sign import sign_bundle
 
 from .test_epb_consumer_certification import _make_bundle_dir
@@ -118,13 +118,13 @@ def test_metadata_signature_present_but_invalid(tmp_path: Path) -> None:
 
 
 def test_metadata_subprocess_exit_zero_when_valid(tmp_path: Path) -> None:
-    """python -m ezra.tools.epb_generate_cert_metadata exits 0 for valid bundle."""
+    """python -m ezra.epb_tools.epb_generate_cert_metadata exits 0 for valid bundle."""
     bundle_dir = _make_bundle_dir(tmp_path, "epb")
     proc = subprocess.run(
         [
             sys.executable,
             "-m",
-            "ezra.tools.epb_generate_cert_metadata",
+            "ezra.epb_tools.epb_generate_cert_metadata",
             str(bundle_dir),
         ],
         capture_output=True,
@@ -139,7 +139,7 @@ def test_metadata_subprocess_exit_zero_when_valid(tmp_path: Path) -> None:
 
 
 def test_metadata_subprocess_exit_one_when_tampered(tmp_path: Path) -> None:
-    """python -m ezra.tools.epb_generate_cert_metadata exits 1 when cert invalid."""
+    """python -m ezra.epb_tools.epb_generate_cert_metadata exits 1 when cert invalid."""
     bundle_dir = _make_bundle_dir(tmp_path, "epb")
     (bundle_dir / "state.json").write_text('{"x": 1}', encoding="utf-8")
 
@@ -147,7 +147,7 @@ def test_metadata_subprocess_exit_one_when_tampered(tmp_path: Path) -> None:
         [
             sys.executable,
             "-m",
-            "ezra.tools.epb_generate_cert_metadata",
+            "ezra.epb_tools.epb_generate_cert_metadata",
             str(bundle_dir),
         ],
         capture_output=True,
