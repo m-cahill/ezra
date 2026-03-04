@@ -143,6 +143,8 @@ Phase V is closed. v1.0.0 certified release achieved (M31). Phase XVIII — EZRA
 - Install dev deps: `pip install -e ".[dev]"`
 - Run checks: `ruff check . && ruff format --check . && mypy src && pytest`
 
+Parity and integration tests are skipped unless `EZRA_RUN_PARITY=1` or `EZRA_RUN_INTEGRATION=1` is set.
+
 Optional (M01+):
 - Install EasyOCR extras: `pip install -e ".[easyocr]"`
 - Run baseline capture tool: `python -m ezra.tools.capture_easyocr_baseline`
