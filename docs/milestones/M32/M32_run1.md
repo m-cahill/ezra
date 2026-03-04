@@ -2,10 +2,10 @@
 
 **Milestone:** M32 — Reproducible Distribution Baseline  
 **Workflow:** CI  
-**Run ID:** *Pending — PR #33*  
+**Run ID:** 22654032205  
 **Trigger:** pull_request (PR #33)  
 **Branch:** m32-reproducible-distribution  
-**Commit:** 6bcc84f (M32: Reproducible distribution baseline — lockfile, action SHA pinning, doc env-var)
+**Commit:** 8b7dee3 (docs(M32): add M32_run1, M32_audit, M32_summary, toolcalls)
 
 ---
 
@@ -14,12 +14,12 @@
 | Field | Value |
 |-------|--------|
 | Workflow name | CI |
-| Run ID | *To be filled after first workflow run* |
+| Run ID | 22654032205 |
 | Trigger | pull_request |
 | Branch | m32-reproducible-distribution |
 | PR | #33 |
-| Run URL | *To be filled* |
-| Head SHA | 6bcc84f |
+| Run URL | https://github.com/m-cahill/ezra/actions/runs/22654032205 |
+| Head SHA | 8b7dee3f8a7264bb55a8048e469837f9c3d7f571 |
 
 ---
 
@@ -43,27 +43,29 @@
 
 ---
 
-## Step 1 — Workflow Inventory (Expected)
+## Step 1 — Workflow Inventory
 
 | Job / Check | Required? | Purpose | Pass/Fail | Notes |
 |-------------|------------|---------|-----------|-------|
-| Lint | Yes | Ruff + Pydocstyle; install from requirements.txt | *Pending* | Install step changed |
-| Type Check | Yes | Mypy; install from requirements.txt | *Pending* | Install step changed |
-| EPB Tools Minimal Environment | Yes | Install from requirements.txt + pip install -e . | *Pending* | Install step changed |
-| Test | Yes | Pytest, coverage ≥85%, zone/EPB contract steps | *Pending* | Install step changed |
-| Security Check | Yes | Bandit, pip-audit, gitleaks | *Pending* | Install step changed |
-| SBOM Generation | Yes | CycloneDX; install from requirements.txt | *Pending* | Install step changed |
-| Complexity Check | Yes | Radon; install from requirements.txt | *Pending* | Install step changed |
-| Determinism Check | Yes | Triple-run byte-identical bundles | *Pending* | Install step changed |
-| Hermetic Hash (Py 3.10/3.11/3.12) | Yes | Per-version canonical bundle hash | *Pending* | No install change in matrix; hash must match baseline |
-| Hermetic Reproducibility | Yes | Cross-matrix hash comparison | *Pending* | Must pass |
-| Documentation Build | Yes | Sphinx; install from requirements.txt | *Pending* | Install step changed |
-| Dependency Review | continue-on-error | SEC-001; infra | *Pending* | Non-blocking |
-| OpenSSF Scorecard | continue-on-error | Informational | *Pending* | Non-blocking |
-| SLSA Provenance | Conditional | push main/tags | Skipped on PR | — |
-| Documentation Deploy | Conditional | push main | Skipped on PR | — |
+| Lint | Yes | Ruff + Pydocstyle; install from requirements.txt | Pass | 27s |
+| Type Check | Yes | Mypy; install from requirements.txt | Pass | 30s |
+| EPB Tools Minimal Environment | Yes | Install from requirements.txt + pip install -e . | Pass | 23s |
+| Test | Yes | Pytest, coverage ≥85%, zone/EPB contract steps | Pass | 49s |
+| Security Check | Yes | Bandit, pip-audit, gitleaks | Pass | 32s |
+| SBOM Generation | Yes | CycloneDX; install from requirements.txt | Pass | 37s |
+| Complexity Check | Yes | Radon; install from requirements.txt | Pass | 28s |
+| Determinism Check | Yes | Triple-run byte-identical bundles | Pass | 31s |
+| Hermetic Hash (Py 3.10) | Yes | Per-version canonical bundle hash | Pass | 8s |
+| Hermetic Hash (Py 3.11) | Yes | Per-version canonical bundle hash | Pass | 6s |
+| Hermetic Hash (Py 3.12) | Yes | Per-version canonical bundle hash | Pass | 8s |
+| Hermetic Reproducibility | Yes | Cross-matrix hash comparison | Pass | 5s |
+| Documentation Build | Yes | Sphinx; install from requirements.txt | Pass | 33s |
+| Dependency Review | continue-on-error | SEC-001; infra (GHAS) | Fail | Non-blocking; "Dependency graph / Advanced Security" not enabled |
+| OpenSSF Scorecard | continue-on-error | Informational | Pass | 9s |
+| SLSA Provenance | Conditional | push main/tags | Skipped | PR trigger |
+| Documentation Deploy | Conditional | push main | Skipped | PR trigger |
 
-All actions in CI now use full SHA (checkout, setup-python, upload-artifact, download-artifact, attest-build-provenance, upload-pages-artifact, deploy-pages, dependency-review-action, gitleaks-action, scorecard-action).
+All required (merge-blocking) checks passed. No new checks added or removed. No silent weakening. All actions use full SHA.
 
 ---
 
@@ -98,36 +100,37 @@ All actions in CI now use full SHA (checkout, setup-python, upload-artifact, dow
 - `.github/workflows/ci.yml` — all jobs that install: use `pip install -r requirements.txt` + `pip install -e .`; all action refs changed from tags to full SHA
 - `docs/ezra.md` — §8: one sentence added (parity/integration skip unless env vars set)
 
-**Expected vs observed (after run):**
+**Expected vs observed:**
 - Expected: CI green; hermetic hash unchanged; determinism unchanged; coverage unchanged; no EPB/schema drift.
-- Observed: *To be filled after Run 1 completes.*
+- Observed: All required jobs passed. Hermetic Reproducibility passed (all three Python versions produced identical canonical bundle hash). Determinism Check passed. Lockfile install path used successfully in every job that installs the project. No signal drift.
 
 ---
 
 ## Step 4 — Failure Analysis
 
-*To be filled if any job fails.*
+**Dependency Review:** Failed with "Dependency review is not supported on this repository. Please ensure that Dependency graph is enabled along with GitHub Advanced Security." This is infrastructure/settings (SEC-001); the job has `continue-on-error: true` and is documented as non-blocking. Not in scope for M32; no code or workflow fix required for merge.
 
 ---
 
 ## Step 5 — Invariants & Guardrails Check
 
-| Guardrail | Status (pre-run) |
-|-----------|------------------|
-| Required checks enforced | No threshold or check removed |
-| No scope expansion | Packaging + doc + workflow only |
-| Public surfaces / EPB / schema | No code change |
-| Determinism / hermetic | Logic unchanged; hash must match M31 baseline |
-| No green-but-misleading | No new skips or continue-on-error on required checks |
+| Guardrail | Status |
+|-----------|--------|
+| Required checks enforced | Yes; all required jobs passed |
+| No scope expansion | Yes; packaging + doc + workflow only |
+| Public surfaces / EPB / schema | Yes; no code change |
+| Determinism / hermetic | Yes; Determinism Check passed; Hermetic Reproducibility passed (hash unchanged) |
+| No green-but-misleading | Yes; no new skips or continue-on-error on required checks |
 
-*Final status after Run 1: to be confirmed.*
+All invariants held. No violation.
 
 ---
 
 ## Step 6 — Verdict
 
-*To be set after CI Run 1.*  
-**Interim:** Local ruff, mypy, pytest (253 passed, 28 skipped), coverage 85.54%; hermetic hash `c186777c33b7b7b9d11540bda7398efd0dfb085143506513a4ce87836c6ac7c2` (unchanged).
+**Verdict:** Safe to merge. Run 22654032205 confirms M32 is behavior-preserving: lockfile and action SHA pinning in place; all required checks passed; determinism and hermetic reproducibility passed; no coverage or contract drift. Dependency Review failure is known infra (GHAS); non-blocking.
+
+**Recommended outcome:** ✅ Merge approved (subject to express permission per .cursorrules).
 
 ---
 
@@ -135,21 +138,21 @@ All actions in CI now use full SHA (checkout, setup-python, upload-artifact, dow
 
 | Owner | Action | Scope | Milestone |
 |-------|--------|-------|-----------|
-| Human/Cursor | Update this document with Run ID, URL, and per-job Pass/Fail after workflow completes | M32_run1.md | M32 |
-| Human | Merge PR #33 after CI green (with permission) | main | M31 closeout rules |
-| Cursor/Human | Finalize M32_audit.md, M32_summary.md; update M32_toolcalls.md | docs/milestones/M32/ | M32 closeout |
+| Human | Merge PR #33 after express permission (merge commit per preference) | main | M32 closeout |
+| Human/Cursor | Update docs/ezra.md §7 milestone table when M32 is closed | docs/ezra.md | M32 closeout |
 
 ---
 
-## CI Run Reference (To Be Filled)
+## CI Run Reference
 
-- **Run ID:** —
-- **URL:** —
-- **Conclusion:** —
-- **Status:** —
+- **Run ID:** 22654032205  
+- **URL:** https://github.com/m-cahill/ezra/actions/runs/22654032205  
+- **Conclusion:** success  
+- **Status:** completed  
 
 ---
 
 ## Hermetic Reproducibility (M32)
 
-- No code affecting `_to_canonical_json`, `_compute_file_hash`, or `_compute_bundle_hash_from_file_hashes` was changed. Hermetic matrix job does not use the lockfile (it uses PYTHONPATH=src and the same inline script). Expected hash: `c186777c33b7b7b9d11540bda7398efd0dfb085143506513a4ce87836c6ac7c2`. CI Hermetic Reproducibility job must pass (all three Python versions identical).
+- Hermetic Hash (Py 3.10, 3.11, 3.12): all three jobs passed; Hermetic Reproducibility job passed (all matrix hashes identical).
+- No code affecting `_to_canonical_json`, `_compute_file_hash`, or `_compute_bundle_hash_from_file_hashes` was changed in M32; canonical bundle hash for the fixed fixture remains `c186777c33b7b7b9d11540bda7398efd0dfb085143506513a4ce87836c6ac7c2`. Drift would have caused the comparison job to fail.
