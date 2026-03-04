@@ -74,3 +74,6 @@ requirements-dev.txt
 .cursorrules
 
 /docs/prompts/
+
+# Milestone proof packs (local governance only)
+docs/milestones/

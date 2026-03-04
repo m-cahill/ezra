@@ -71,3 +71,19 @@ Tagging `v*` triggers the release pipeline which produces:
 
 See [docs/release/PYPI_TRUSTED_PUBLISHING.md](docs/release/PYPI_TRUSTED_PUBLISHING.md).
 
+## Distribution Verification
+
+To validate that release artifacts are reproducible (same hashes as the release workflow):
+
+```bash
+python scripts/verify_distribution.py --tag latest
+```
+
+Or for a specific tag (e.g. `v1.0.1-m33`):
+
+```bash
+python scripts/verify_distribution.py --tag v1.0.1-m33
+```
+
+Requires `GITHUB_TOKEN` and `GITHUB_REPOSITORY` (or `--repo owner/name`). See [docs/release/DISTRIBUTION_VERIFICATION.md](docs/release/DISTRIBUTION_VERIFICATION.md).
+
