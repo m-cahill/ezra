@@ -127,15 +127,16 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M28 | Artifact-Only Distribution Mode | Complete | v0.0.30-m28 | PR#30 | Physical isolation of EPB tools into `ezra.epb_tools` namespace. Runtime-independent validation surface. Legacy wrappers with DeprecationWarning. Import isolation test + required CI job `EPB Tools Minimal Environment`. 253 tests pass, 28 skipped (ML-dependent), coverage 85.69%, no schema/canonicalization/hashing drift. CI Run: 22508322567 |
 | M30 | Phase V Completion Declaration | Complete | v0.0.31-m30 | PR#31 | Formal declaration doc, consolidated invariant registry, release readiness matrix. No code/CI/schema changes. Phase V closed; EPB contract frozen at governance level. See `docs/phase_v_completion_declaration.md`. CI Run: 22508810817 |
 | M31 | v1.0.0 Release Gate | Complete | v1.0.0 | PR#32 | Version freeze to 1.0.0; Phase V declaration updated to reference certified release tag. No EPB/CI/behavioral changes. Enterprise-certified release. CI Run: 22509645140 |
+| M32 | Reproducible Distribution Baseline | Complete | — | PR#33 | Phase XVIII. Lockfile (requirements.txt), all critical actions pinned to full SHA, doc §8 env-var sentence. No runtime or EPB changes. CI Run: 22654378419 |
 
 ## 7A. Phase V — Remaining Milestones (Planned)
 
-Phase V is closed. v1.0.0 certified release achieved (M31). Phase XVIII — EZRA Distribution Hardening follows.
+Phase V is closed. v1.0.0 certified release achieved (M31). Phase XVIII — EZRA Distribution Hardening in progress.
 
 | Milestone | Objective | Status | Notes |
 |-----------|-----------|--------|-------|
 | M31 | v1.0.0 Release Gate | Complete | Tag v1.0.0; PR#32; CI Run 22509645140 |
-| M32 | Reproducible Distribution Baseline | Planned | Lockfile, action SHA pinning, doc env-var clarity; Phase XVIII |
+| M32 | Reproducible Distribution Baseline | Complete | PR#33; CI Run 22654378419; Phase XVIII |
 
 ## 8. Local Dev Quickstart
 
