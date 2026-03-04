@@ -3,7 +3,7 @@
 Validates that:
 - EPB bundle hash integrity is verified by the stdlib-only certifier.
 - Certification runs in isolation via subprocess
-  (python -m ezra.tools.epb_certify).
+  (python -m ezra.epb_tools.epb_certify).
 - Reproducibility: emit → rmtree → re-emit produces identical bundle hash.
 """
 
@@ -17,7 +17,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from ezra.epb import build_epb_bundle, write_epb_bundle
-from ezra.tools.epb_certify import certify
+from ezra.epb_tools.epb_certify import certify
 
 FIXED_TIMESTAMP = datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC)
 
@@ -48,10 +48,10 @@ def test_epb_hash_integrity(tmp_path: Path) -> None:
 
 
 def test_epb_consumer_certification_subprocess(tmp_path: Path) -> None:
-    """Certification runs via python -m ezra.tools.epb_certify; exit 0 and JSON."""
+    """Certification runs via python -m ezra.epb_tools.epb_certify; exit 0 and JSON."""
     bundle_dir = _make_bundle_dir(tmp_path)
     proc = subprocess.run(
-        [sys.executable, "-m", "ezra.tools.epb_certify", str(bundle_dir)],
+        [sys.executable, "-m", "ezra.epb_tools.epb_certify", str(bundle_dir)],
         capture_output=True,
         text=True,
         timeout=10,

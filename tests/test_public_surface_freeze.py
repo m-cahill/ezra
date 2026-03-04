@@ -9,11 +9,22 @@ import importlib
 import inspect
 import json
 import pkgutil
+import warnings
 from pathlib import Path
 from typing import Any
 
 import ezra
 from ezra.epb.builder import EPB_VERSION
+
+# Legacy EPB tool wrappers (ezra.tools.epb_*) emit DeprecationWarning; suppress
+# when we import-all for surface snapshot so test run stays warning-clean.
+_DEPRECATED_EPB_TOOL_MODULES = frozenset(
+    {
+        "ezra.tools.epb_certify",
+        "ezra.tools.epb_generate_cert_metadata",
+        "ezra.tools.epb_verify",
+    }
+)
 
 
 def _discover_all_modules() -> list[str]:
@@ -33,7 +44,10 @@ def _import_all_modules(module_names: list[str]) -> None:
     """Import all modules to ensure exception subclasses are registered."""
     for modname in module_names:
         try:
-            importlib.import_module(modname)
+            with warnings.catch_warnings():
+                if modname in _DEPRECATED_EPB_TOOL_MODULES:
+                    warnings.simplefilter("ignore", DeprecationWarning)
+                importlib.import_module(modname)
         except (ImportError, AttributeError):
             # Skip modules that can't be imported (e.g., optional dependencies)
             pass
