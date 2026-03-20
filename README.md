@@ -44,7 +44,7 @@ EZRA follows a strict separation of concerns:
 
 The core runtime is intentionally **ML-free**; models remain external artifacts.
 
-See: [docs/VISION.md](docs/VISION.md) · [docs/ezra.md](docs/ezra.md)
+See: [docs/VISION.md](docs/VISION.md) · [docs/ezra.md](docs/ezra.md) · [docs/ezra_operating_manual_v1.md](docs/ezra_operating_manual_v1.md)
 
 ## Development Workflow
 

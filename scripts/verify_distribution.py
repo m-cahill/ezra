@@ -144,7 +144,11 @@ def _get_run_id_for_tag(
     if not isinstance(data, dict):
         return None
     for run in data.get("workflow_runs", []):
-        if isinstance(run, dict) and run.get("head_sha") == tag_sha and run.get("status") == "completed":
+        if (
+            isinstance(run, dict)
+            and run.get("head_sha") == tag_sha
+            and run.get("status") == "completed"
+        ):
             rid = run.get("id")
             return int(rid) if isinstance(rid, int) else None
     return None
@@ -185,7 +189,11 @@ def _download_artifacts(
     )
     if not isinstance(data, dict):
         raise RuntimeError("Failed to list artifacts")
-    artifacts = {a["name"]: a for a in data.get("artifacts", []) if isinstance(a, dict) and "name" in a and "id" in a}
+    artifacts = {
+        a["name"]: a
+        for a in data.get("artifacts", [])
+        if isinstance(a, dict) and "name" in a and "id" in a
+    }
     result: dict[str, Path] = {}
     for name in REQUIRED_ARTIFACTS:
         if name not in artifacts:
