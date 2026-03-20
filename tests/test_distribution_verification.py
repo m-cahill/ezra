@@ -19,9 +19,7 @@ def test_parse_sha256sums(tmp_path: Path) -> None:
     """Parse SHA256SUMS.txt returns filename -> hash."""
     sums = tmp_path / "SHA256SUMS.txt"
     sums.write_text(
-        "a1b2c3  ezra-1.0.0.tar.gz\n"
-        "d4e5f6  ezra-1.0.0-py3-none-any.whl\n"
-        "000000  SHA256SUMS.txt\n"
+        "a1b2c3  ezra-1.0.0.tar.gz\nd4e5f6  ezra-1.0.0-py3-none-any.whl\n000000  SHA256SUMS.txt\n"
     )
     result = verify_distribution._parse_sha256sums(sums)
     assert result["ezra-1.0.0.tar.gz"] == "a1b2c3"
@@ -45,6 +43,7 @@ def test_verify_artifact_hashes_match(tmp_path: Path) -> None:
     h2 = "6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a"
     # Use actual hashes of the content
     import hashlib
+
     h1 = hashlib.sha256(b"content1").hexdigest().lower()
     h2 = hashlib.sha256(b"content2").hexdigest().lower()
     (tmp_path / "SHA256SUMS.txt").write_text(
@@ -98,12 +97,14 @@ def test_validate_provenance_valid(tmp_path: Path) -> None:
     """Provenance with required keys passes."""
     prov = tmp_path / "provenance.json"
     prov.write_text(
-        json.dumps({
-            "commit": "abc123",
-            "builder": "github-actions",
-            "workflow": "Release",
-            "artifact_hashes": {"ezra-1.0.0.whl": "deadbeef"},
-        })
+        json.dumps(
+            {
+                "commit": "abc123",
+                "builder": "github-actions",
+                "workflow": "Release",
+                "artifact_hashes": {"ezra-1.0.0.whl": "deadbeef"},
+            }
+        )
     )
     assert verify_distribution._validate_provenance(prov) is True
 
