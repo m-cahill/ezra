@@ -15,3 +15,8 @@
 | 2026-03-20T21:15 | Shell | Monitor PR #36 CI; fetch run metadata and failed logs | gh run 23362721199 | Complete |
 | 2026-03-20T21:20 | Write | Create M35_run1.md CI analysis | docs/milestones/M35/M35_run1.md | Complete |
 | 2026-03-20T21:21 | StrReplace | Fix Ruff E501 in verify_distribution.py | scripts/verify_distribution.py | Complete |
+| 2026-03-20T21:22 | Shell | Ruff format test_distribution_verification.py | tests/test_distribution_verification.py | Complete |
+| 2026-03-20T21:25 | Shell | Poll CI Run 23362922215 | gh run view | Complete |
+| 2026-03-20T21:26 | Shell | Squash merge PR #36 to main | gh pr merge 36 | Complete |
+| 2026-03-20T21:27 | Shell | Pull origin main | git pull | Complete |
+| 2026-03-20T21:28 | Write | M35_run2.md; finalize summary/audit; ledger; M36 scaffold | docs/milestones/M35, docs/ezra.md, docs/milestones/M36 | Complete |

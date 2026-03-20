@@ -1,164 +1,84 @@
-# Milestone Summary — M35
+# Milestone Summary — M35 (FINAL)
 
-**Project:** EZRA
-**Phase:** Post-Phase XVIII (Documentation Hardening)
-**Milestone:** M35 — EZRA Operating Manual (AI-Agent Ready)
-**Timeframe:** 2026-03-04
-**Status:** Complete
-**Baseline:** main after M34 (v1.0.2-m34)
-**Refactor Posture:** Behavior-Preserving (documentation only)
+**Project:** EZRA  
+**Phase:** Post-Phase XVIII (Documentation Hardening)  
+**Milestone:** M35 — EZRA Operating Manual (AI-Agent Ready, Verified)  
+**Timeframe:** 2026-03-04 — 2026-03-20  
+**Status:** **CLOSED**  
+**Baseline:** main after M34 (v1.0.2-m34)  
+**Refactor Posture:** Behavior-Preserving (documentation + mechanical CI hygiene only)
 
 ---
 
 ## 1. Milestone Objective
 
-Create a single authoritative EZRA operating manual (`docs/ezra_operating_manual_v1.md`) that is sufficient for a GPT/Cursor agent to correctly operate EZRA without external context. Document the actual implemented runtime surface honestly, without overstating unimplemented capabilities.
+Create a single authoritative EZRA operating manual (`docs/ezra_operating_manual_v1.md`) sufficient for a GPT/Cursor agent to operate EZRA without external context, documenting the **implemented** runtime surface honestly and aligning with `VISION.md` (intent) and EPB spec (artifact contract).
 
 ---
 
-## 2. Scope Definition
+## 2. Deliverables (Shipped)
 
-### In Scope
+| Artifact | Purpose |
+|----------|---------|
+| `docs/ezra_operating_manual_v1.md` | Runtime operating manual: mental model, execution flow, plugins, EPB, determinism, usage, debugging, extension, v1 guarantees |
+| `docs/certification/README.md` | Certification posture index (links to spec, ezra.md, phase V declaration) |
+| `docs/ezra.md` | Governance ledger: source-of-truth hierarchy includes operating manual; M35 milestone row |
+| `README.md` | Link to operating manual |
+| `docs/milestones/M35/M35_plan.md` | Milestone plan |
+| `docs/milestones/M35/M35_toolcalls.md` | Tool call log |
+| `docs/milestones/M35/M35_run1.md` | CI analysis — Run 23362721199 |
+| `docs/milestones/M35/M35_run2.md` | CI analysis — Runs 23362812040, 23362922215 |
+| `docs/milestones/M35/M35_audit.md` | Milestone audit |
+| `docs/milestones/M35/M35_summary.md` | This document (final) |
 
-- **Operating manual:** `docs/ezra_operating_manual_v1.md` — 13 sections + 2 appendices covering: system overview, mental model, core concepts, execution flow, plugin system, EPB bundle construction, external system relationships, determinism rules, usage guide, debugging guide, extension guide, v1 guarantees, repo structure, and quick reference commands.
-- **Linking:** Updated `docs/ezra.md` source-of-truth hierarchy (added operating manual as item 3), added M35 to milestone table. Updated `README.md` with link to manual.
-- **Milestone artifacts:** M35_plan.md, M35_toolcalls.md, M35_summary.md, M35_audit.md.
+**Mechanical CI follow-ups (non-behavioral):**
 
-### Out of Scope
+- `scripts/verify_distribution.py` — Ruff E501 line wraps only  
+- `tests/test_distribution_verification.py` — `ruff format` alignment  
 
-- No runtime code changes
-- No EPB spec changes
-- No CI changes
-- No CLI or API surface additions
-- No `.cursorrules` changes (remains local-only)
-- No doc site redesign
-
----
-
-## 3. Refactor Classification
-
-**Change type:** Documentation + governance hardening.
-**Observability:** None for runtime/EPB; only documentation and linking.
+No EPB emission, schema, hashing, or plugin contract changes.
 
 ---
 
-## 4. Work Executed
+## 3. Merge & CI Closeout
 
-- Read all runtime source files (`src/ezra/**/*.py`) to establish code-traceable claims.
-- Read `VISION.md`, `EPB_V1_SPEC.md`, `docs/ezra.md`, and DARIA operating manual (style reference only).
-- Created `docs/ezra_operating_manual_v1.md` with honest implementation status markers (Implemented / Not Yet Implemented / UNKNOWN).
-- Updated `docs/ezra.md` source-of-truth hierarchy to include the new manual.
-- Added M35 to the milestone table in `docs/ezra.md`.
-- Added operating manual link to `README.md`.
-- Created M35 milestone folder and artifacts.
-- Ran blind verification: all behavioral claims traced to code, no contradictions found with `docs/ezra.md` or EPB spec.
+| Field | Value |
+|-------|--------|
+| **PR** | #36 |
+| **Merge** | Squash merge to `main` |
+| **Merge commit** | `457afb8` |
+| **Final PR head** | `2d483ab` (included in squash) |
 
----
-
-## 5. Invariants & Compatibility
-
-**Declared invariants (all preserved):**
-
-1. Runtime behavior unchanged — no code modified
-2. EPB contract unchanged — no spec or schema changes
-3. Existing public repo structure unchanged except for docs/linking
-4. No new CLI/API/runtime claims beyond what code/specs prove
-
-**Compatibility:** Backward compatible. No breaking changes. No deprecations.
+**CI:** Runs 23362721199 → 23362812040 → 23362922215. Required gates (lint, typecheck, tests, determinism, hermetic, docs) **green** on final run. **Distribution Verification** consistently **401** (artifact API auth) — classified as **infra**, not M35 failure. **Dependency Review** fails with GHAS unavailable — **continue-on-error** (SEC-001).
 
 ---
 
-## 6. Validation & Evidence
+## 4. Invariants (Confirmed at Close)
 
-### Document Verification
-
-- Every behavioral claim traceable to actual source code
-- All import paths verified correct
-- All method signatures verified against code
-- All examples use existing APIs
-- Terminology is internally consistent
-
-### Drift Verification
-
-- Manual does not contradict `docs/ezra.md`
-- Manual does not contradict EPB spec (`EPB_V1_SPEC.md`)
-- Manual does not overstate `VISION.md` as implemented runtime truth
-- Explicit honesty markers used for unimplemented features
-
-### Repo Verification
-
-- No runtime files changed
-- No broken relative links introduced
-
-### Minor Notes from Verification
-
-Three pre-existing codebase issues identified (not manual errors):
-
-1. `list_plugins()` docstring example shows `['easyocr']` but actual returns `['easyocr', 'tesseract']` (codebase docstring issue)
-2. `builder.py` hardcodes `ezra_version: "v0.0.8-m07"` instead of using `__version__` (pre-existing TODO)
-3. EPB tools `verify_bundle` and `generate_cert_metadata` function names not documented in manual (documentation gap, not error)
-
-None of these affect manual correctness.
+1. Runtime behavior unchanged (no semantic code changes to perception/EPB pipeline).  
+2. EPB contract unchanged (no spec/schema/canonicalization/hashing changes).  
+3. Plugin `OCRPlugin` contract unchanged.  
+4. Operating manual claims remain traceable to code + EPB spec.  
+5. No contradictions introduced vs. `docs/ezra.md` or EPB spec.
 
 ---
 
-## 7. CI / Automation Impact
+## 5. Final Verdict
 
-- No workflows affected
-- No checks added, removed, or reclassified
-- No enforcement changes
+**M35 closed** — EZRA Operating Manual v1.0.0 established. System remains behavior-preserving and CI-validated on all **required** quality gates. Distribution Verification 401 deferred to infrastructure / future workflow policy.
 
 ---
 
-## 8. Issues, Exceptions, and Guardrails
+## 6. Authorized Next Step
 
-No new issues introduced. `.cursorrules` remains local-only per locked decision (not modified in this milestone).
-
----
-
-## 9. Deferred Work
-
-- CLI entry point (documented as "Not Yet Implemented")
-- Core-level preprocessing pipeline (documented as "Not Yet Implemented")
-- Multi-plugin aggregation (documented as "Not Yet Implemented")
-- Domain-specific state reconstruction (documented as "Not Yet Implemented")
-- EPB tools detailed programmatic documentation (gap, not error)
-- `builder.py` `ezra_version` hardcode fix (pre-existing, separate milestone)
+- **M36** — scaffold created under `docs/milestones/M36/` (placeholder only). Scope TBD (e.g. CLI surface or multi-plugin aggregation).
 
 ---
 
-## 10. Governance Outcomes
+## 7. Canonical References
 
-- EZRA now has a single authoritative, AI-agent-usable operating manual
-- Source-of-truth hierarchy updated to include the manual
-- Manual is honest about implemented vs. planned capabilities
-- External users and AI agents can operate EZRA using only this document
-
----
-
-## 11. Exit Criteria Evaluation
-
-| Criterion | Status | Evidence |
-|-----------|--------|----------|
-| Operating manual created | Met | `docs/ezra_operating_manual_v1.md` |
-| All behavioral claims traceable to code | Met | Blind verification passed |
-| No runtime behavior changed | Met | No code modified |
-| No EPB contract changed | Met | No spec/schema changes |
-| Links added to ezra.md and README.md | Met | Source-of-truth hierarchy updated, README linked |
-| M35 in milestone table | Met | Row added to §7 |
-| Milestone artifacts generated | Met | plan, toolcalls, summary, audit |
-| No contradictions with existing docs | Met | Verified against ezra.md and EPB spec |
-
----
-
-## 12. Final Verdict
-
-The EZRA operating manual now provides an accurate, AI-agent-usable description of the current runtime surface and artifact contract, without changing runtime behavior or overstating unimplemented capabilities.
-
----
-
-## 13. Canonical References
-
-- **Manual:** `docs/ezra_operating_manual_v1.md`
-- **Plan:** `docs/milestones/M35/M35_plan.md`
+- **Operating manual:** `docs/ezra_operating_manual_v1.md`  
+- **Merge:** `457afb8`  
+- **PR:** https://github.com/m-cahill/ezra/pull/36  
+- **Plan:** `docs/milestones/M35/M35_plan.md`  
 - **Audit:** `docs/milestones/M35/M35_audit.md`
