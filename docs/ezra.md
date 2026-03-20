@@ -9,10 +9,11 @@ EZRA (Extensible Zone-Based Runtime Architecture) is a modular **runtime percept
 ## 1. Source of Truth Hierarchy
 
 1. **VISION:** `docs/VISION.md` — architectural boundaries, non-goals, guiding principles.
-2. **Operating Manual (this doc):** `docs/ezra.md` — canonical project ledger: phases, invariants, policies, project layout, milestone index.
-3. **Proof Artifacts:** `docs/milestones/MNN/*` — plan/run/summary/audit for each milestone.
+2. **Governance Ledger (this doc):** `docs/ezra.md` — canonical project ledger: phases, invariants, policies, project layout, milestone index.
+3. **Runtime Operating Manual:** `docs/ezra_operating_manual_v1.md` — AI-agent-usable runtime guide, mental model, execution flow, plugin contracts, EPB construction, debugging, extension.
+4. **Proof Artifacts:** `docs/milestones/MNN/*` — plan/run/summary/audit for each milestone.
 
-If this doc and a milestone artifact disagree, the milestone artifact wins for the specific milestone; VISION wins for architecture and boundaries.
+If this doc and a milestone artifact disagree, the milestone artifact wins for the specific milestone; VISION wins for architecture and boundaries. If this doc and the operating manual disagree on runtime behavior, the operating manual wins (it is derived from code).
 
 ## 2. Boundary Contracts (Non-Negotiable)
 
@@ -87,7 +88,7 @@ Baseline updates require:
 * Updated manifest
 * Explicit audit justification
 
-Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity`, and skip by default unless `EZRA_RUN_PARITY=1` is set. They are **not** run in CI by default (local refactor guard only).
+Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity`, and skip by default unless `EZRA_RUN_PARITY=1` or `EZRA_RUN_INTEGRATION=1` is set. They are **not** run in CI by default (local refactor guard only).
 
 ---
 
@@ -130,10 +131,11 @@ Parity tests are marked with `@pytest.mark.integration` and `@pytest.mark.parity
 | M32 | Reproducible Distribution Baseline | Complete | — | PR#33 | Phase XVIII. Lockfile (requirements.txt), all critical actions pinned to full SHA, doc §8 env-var sentence. No runtime or EPB changes. CI Run: 22654378419 |
 | M33 | Reproducible Distribution Artifacts & Trusted Publishing | Complete | v1.0.1-m33 | PR#34 | Phase XVIII. Tag-triggered release workflow, sdist/wheel, hashes, SBOM, provenance, PyPI Trusted Publishing (OIDC). Smoke job, CI doc, README. No runtime or EPB changes. CI Run: 22656517507 |
 | M34 | Distribution Verification | Complete | v1.0.2-m34 | PR#35 | Phase XVIII. Verification script and CI job for reproducible releases: artifact hash validation, local rebuild comparison, SBOM and provenance validation. Release workflow now uploads ezra-provenance. No runtime or EPB changes. CI Run: 22657381655 (Run 1); distribution-verification passes after tag release. |
+| M35 | EZRA Operating Manual (AI-Agent Ready) | Complete | — | — | Documentation hardening. AI-agent-usable operating manual (`docs/ezra_operating_manual_v1.md`): runtime mental model, execution flow, plugin contracts, EPB construction, debugging, extension guide. No runtime or EPB changes. Behavior-preserving. |
 
-## 7A. Phase V — Remaining Milestones (Planned)
+## 7A. Phase V & Phase XVIII — Summary
 
-Phase V is closed. v1.0.0 certified release achieved (M31). Phase XVIII — EZRA Distribution Hardening in progress.
+Phase V is closed. v1.0.0 certified release achieved (M31). Phase XVIII — EZRA Distribution Hardening — is complete through M34.
 
 | Milestone | Objective | Status | Notes |
 |-----------|-----------|--------|-------|
