@@ -12,3 +12,6 @@
 | 2026-03-04T00:08 | StrReplace | Add operating manual link to README.md | README.md | Complete |
 | 2026-03-04T00:09 | Write | Create M35_summary.md | docs/milestones/M35/M35_summary.md | Complete |
 | 2026-03-04T00:10 | Write | Create M35_audit.md | docs/milestones/M35/M35_audit.md | Complete |
+| 2026-03-20T21:15 | Shell | Monitor PR #36 CI; fetch run metadata and failed logs | gh run 23362721199 | Complete |
+| 2026-03-20T21:20 | Write | Create M35_run1.md CI analysis | docs/milestones/M35/M35_run1.md | Complete |
+| 2026-03-20T21:21 | StrReplace | Fix Ruff E501 in verify_distribution.py | scripts/verify_distribution.py | Complete |
