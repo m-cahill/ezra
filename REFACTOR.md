@@ -57,7 +57,7 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 
 ## M37A — Required Gate Recovery for Public Release
 
-**Status:** Closed — planning complete (PR #38)
+**Status:** Closed — merged to `main` via PR #38 (planning complete)
 
 M37A closed as a planning-only milestone. It identified required gate recovery work for public release and preserved all runtime, schema, workflow, dependency, `.gitignore`, and secret-boundary invariants. M37B is authorized for planning as the implementation milestone. M37 public-release boundary cleanup remains deferred until gate recovery is resolved or explicitly accepted.
 
@@ -65,15 +65,25 @@ M37A closed as a planning-only milestone. It identified required gate recovery w
 
 **Scope (honored):** Planning only — no runtime, dependency, workflow, schema, `.gitignore`, or secret-cleanup changes.
 
-**Artifacts:** `docs/milestones/M37A/M37A_plan.md`, `docs/milestones/M37A/M37A_run1.md`, `docs/milestones/M37A/M37A_toolcalls.md`, `docs/milestones/M37A/M37A_summary.md`, `docs/milestones/M37A/M37A_audit.md`.
+**Artifacts:** `docs/milestones/M37A/M37A_plan.md`, `docs/milestones/M37A/M37A_run1.md`, `docs/milestones/M37A/M37A_toolcalls.md`, `docs/milestones/M37A/M37A_summary.md`, `docs/milestones/M37A/M37A_audit.md`, `docs/milestones/M37A/M37A_merge.md`.
 
 **PR:** https://github.com/m-cahill/ezra/pull/38
+
+**Record (merge to `main`):** `docs/milestones/M37A/M37A_merge.md`
+
+### M37A Merge to `main`
+
+M37A was merged via PR #38. It closed the planning-only required-gate recovery milestone and seeded M37B. Remaining red checks are known pre-existing gate-recovery targets and are routed to M37B.
+
+M37 remains deferred until M37B resolves or explicitly defers required gate recovery.
+
+Ensure all documentation is updated as necessary.
 
 ---
 
 ## M37B — Required Gate Recovery Implementation
 
-**Status:** Planned — implementation authorized after M37A closeout; **no M37B implementation** in this documentation-only commit (stubs + governance only).
+**Status:** Planned — branch `fix/m37b-required-gate-recovery` ready for implementation work per `M37B_plan.md` (not started in merge-record commit).
 
 **Objective:** Implement Track 1–4 in `docs/milestones/M37B/M37B_plan.md` (`pip-audit` / lockfile, Distribution Verification truthfulness, SLSA honesty, Pages/deploy alignment). Dependency Review remains documented as settings-dependent unless a code-only fix is identified.
 
