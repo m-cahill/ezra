@@ -16,7 +16,7 @@ M36 reconciled the M33/Post-M32 full audit (`docs/M33fullaudit.md`, commit `2378
 
 **Secret-boundary inventory** (command `git ls-files .cursorrules docs/enhancements docs/prompts` at M36 closeout): only `docs/enhancements/` files were listed as tracked; `.cursorrules` and `docs/prompts/` had **no** tracked paths at that moment. **Historical note:** `git diff 23789314..HEAD` shows `.cursorrules` and former `docs/prompts/**` paths as removed in that interval—i.e. the repo already moved those out of Git in later work; M36 performed **no** cleanup. M37 remains authorized to add ignore/guardrails for all three user-approved paths.
 
-**Evidence artifacts:** `docs/release/AUDIT_RECONCILIATION_M33_M35.md`, `docs/milestones/M36/M36_plan.md`, `docs/milestones/M36/M36_run1.md`, `docs/milestones/M36/M36_summary.md`, `docs/milestones/M36/M36_audit.md`.
+**Evidence artifacts:** `docs/release/AUDIT_RECONCILIATION_M33_M35.md`, `docs/milestones/M36/M36_plan.md`, `docs/milestones/M36/M36_run1.md`, `docs/milestones/M36/M36_summary.md`, `docs/milestones/M36/M36_audit.md`, `docs/milestones/M36/M36_pr1_ci_triage.md`, `docs/milestones/M36/M36_merge.md`.
 
 **M36 constraints honored:** No changes under `src/ezra/`, no EPB schema/spec edits, no `.github/workflows/**` edits, no dependency or `.gitignore` edits, no secret untracking in M36.
 
@@ -34,6 +34,20 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 
 **Artifact:** `docs/milestones/M36/M36_pr1_ci_triage.md`
 
-**Next authorized milestone:**
+### Merge to `main`
 
-**M37 — Public Release Boundary Cleanup** — Remove only the user-approved company-secret paths from Git tracking (where still applicable), add ignore rules, and guardrails against reintroduction. Do not begin M37 until M36 is accepted on `main`.
+| Field | Value |
+| --- | --- |
+| **PR** | https://github.com/m-cahill/ezra/pull/37 |
+| **Merged** | Yes — squash merge, 2026-05-06 |
+| **Merge commit (`main`)** | `969471060c0ad9b528836209531a023c098e5a4e` |
+| **Branch protection (API)** | `GET /repos/.../branches/main/protection` returned **404 — Branch not protected** at merge time; PR was **MERGEABLE** despite **UNSTABLE** checks. |
+| **Post-merge CI (`main`)** | https://github.com/m-cahill/ezra/actions/runs/25466391573 — **failure** (same non-M36: Dependency Review, Distribution Verification, Security/`pip-audit`; plus SLSA Provenance attestation limitation for private user-owned repo per workflow logs). |
+
+**Record:** `docs/milestones/M36/M36_merge.md`
+
+**Next authorized milestone**
+
+**M37 — Public Release Boundary Cleanup** — Remove only the user-approved company-secret paths from Git tracking (where still applicable), add ignore rules, and guardrails against reintroduction.
+
+**Gate recovery (recommended before public-release CI is “green”):** A narrow milestone (e.g. **M37A — Required Gate Recovery for Public Release**) should address merge-blocking or release-blocking checks: lockfile/`pip-audit`, Distribution Verification HTTP 401, Dependency Review/GHAS posture—without weakening checks unless documented and approved. **Do not** conflate M37 secret cleanup with supply-chain CI recovery.
