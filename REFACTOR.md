@@ -20,6 +20,20 @@ M36 reconciled the M33/Post-M32 full audit (`docs/M33fullaudit.md`, commit `2378
 
 **M36 constraints honored:** No changes under `src/ezra/`, no EPB schema/spec edits, no `.github/workflows/**` edits, no dependency or `.gitignore` edits, no secret untracking in M36.
 
+### PR #37 CI triage
+
+PR #37 CI run `25465492721` failed on pre-existing or infrastructure-related checks, not on M36 documentation changes. Type Check passed on Linux CI, so the local Windows `mypy` errors recorded in `M36_run1.md` are treated as local tooling drift unless reproduced later.
+
+**Failing gates:**
+
+- **Dependency Review:** unavailable / repo configuration issue (GitHub Advanced Security / dependency graph).
+- **Distribution Verification:** HTTP 401 artifact-download issue, known class from M35 (token/permissions).
+- **Security Check:** existing `pip-audit` vulnerabilities in the lockfile; not introduced by M36.
+
+M36 remains behavior-preserving and **ready for merge in substance** if branch policy permits; **mergeStateStatus** on the PR may show **UNSTABLE** until those gates pass or are not required. **Public release** remains blocked until supply-chain and infrastructure gate issues are resolved or explicitly documented—route to a dedicated supply-chain / CI recovery milestone, not M36.
+
+**Artifact:** `docs/milestones/M36/M36_pr1_ci_triage.md`
+
 **Next authorized milestone:**
 
 **M37 — Public Release Boundary Cleanup** — Remove only the user-approved company-secret paths from Git tracking (where still applicable), add ignore rules, and guardrails against reintroduction. Do not begin M37 until M36 is accepted on `main`.
