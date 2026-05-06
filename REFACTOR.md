@@ -51,3 +51,25 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 **M37 — Public Release Boundary Cleanup** — Remove only the user-approved company-secret paths from Git tracking (where still applicable), add ignore rules, and guardrails against reintroduction.
 
 **Gate recovery (recommended before public-release CI is “green”):** A narrow milestone (e.g. **M37A — Required Gate Recovery for Public Release**) should address merge-blocking or release-blocking checks: lockfile/`pip-audit`, Distribution Verification HTTP 401, Dependency Review/GHAS posture—without weakening checks unless documented and approved. **Do not** conflate M37 secret cleanup with supply-chain CI recovery.
+
+---
+
+## M37A — Required Gate Recovery for Public Release
+
+**Status:** Planning
+
+**Purpose:**
+
+M37A plans recovery for red default-branch gates remaining after M36 merge: Security / `pip-audit`, Distribution Verification HTTP 401, Dependency Review availability, and SLSA provenance limitations (plus supplemental Documentation Deploy / Pages on the same CI run).
+
+**Scope:**
+
+Planning only. No runtime, dependency, workflow, schema, `.gitignore`, or secret-cleanup changes.
+
+**Artifacts:**
+
+`docs/milestones/M37A/M37A_plan.md`, `docs/milestones/M37A/M37A_run1.md`, `docs/milestones/M37A/M37A_toolcalls.md`.
+
+**Relationship to M37:**
+
+M37 secret-boundary cleanup remains authorized but should not be treated as public-release complete until required gate recovery is resolved or explicitly deferred.
