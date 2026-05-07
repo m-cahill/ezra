@@ -83,7 +83,11 @@ Ensure all documentation is updated as necessary.
 
 ## M37B — Required Gate Recovery Implementation
 
-**Status:** In progress — Pending CI
+**Status:** Implementation complete — Pending merge review (PR #39)
+
+M37B resolved the actionable default-branch gate recovery issues identified in M37A: `pip-audit` now passes without advisory ignores; Distribution Verification has PR/main `ci-local` behavior and release-artifact verification for release contexts; SLSA and Pages deploy are conditionally honest for the current private user-owned repository; Dependency Review remains a documented infrastructure limitation.
+
+ensure all documentation is updated as necessary
 
 **Purpose:**  
 Resolve or honestly defer the red default-branch gates identified by M37A before M37 secret-boundary cleanup.
@@ -93,15 +97,16 @@ Minimal dependency lockfile recovery, truthful Distribution Verification behavio
 
 **Dependency Review:** PR-only and depends on GitHub Advanced Security / dependency graph availability. Not treated as a primary M37B code fix; workflow keeps **warn-first** behavior unless settings are changed and the check is proven stable on this repo.
 
-Ensure all documentation is updated as necessary.
-
 **Implementation notes (this milestone):**
 
-- **Track 1:** `pyproject.toml` / `requirements.txt` bumped to clear `pip-audit` without ignores.
+- **Track 1:** `pyproject.toml` / `requirements.txt` bumped to clear `pip-audit` without ignores; dev **`types-jsonschema`** for Linux `mypy` parity.
 - **Track 2:** PR/main uses `verify_distribution.py --mode ci-local`; full artifact verification uses `workflow_dispatch` input `verify_tag` with `--mode release` and `actions: read`.
 - **Track 3:** `actions/attest-build-provenance` runs only when `github.repository_visibility == 'public'`; private repos get a non-failing step summary (CI + Release workflows).
 - **Track 4:** `docs-deploy` gated on `vars.EZRA_ENABLE_PAGES_DEPLOY == 'true'`.
 
-**Artifacts:** `docs/milestones/M37B/M37B_plan.md` (if present from planning), `docs/milestones/M37B/M37B_run1.md`, `docs/milestones/M37B/M37B_toolcalls.md`; closeout `M37B_summary.md`, `M37B_audit.md` after CI review.
+**PR:** https://github.com/m-cahill/ezra/pull/39  
+**Tip CI (authoritative for merge review):** run `25468576713`, head `e9079b6558d65eb667ab82882a7c9237c27a1a02` — workflow **success**; only **Dependency Review** fails (settings/GHAS).
 
-**Relationship to M37:** M37 (secret-boundary cleanup) **not** started in M37B; remains deferred until gate recovery is done or explicitly accepted.
+**Artifacts:** `docs/milestones/M37B/M37B_plan.md`, `M37B_run1.md`, `M37B_toolcalls.md`, `M37B_summary.md`, `M37B_audit.md`.
+
+**Relationship to M37:** M37 (secret-boundary cleanup) **not** started in M37B; after PR #39 merges, M37 may proceed per sequencing.

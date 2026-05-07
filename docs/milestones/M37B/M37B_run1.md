@@ -1,7 +1,8 @@
 # M37B — Run 1 (implementation evidence)
 
 Branch: `fix/m37b-required-gate-recovery`  
-Recorded: 2026-05-06
+PR: https://github.com/m-cahill/ezra/pull/39  
+Recorded: 2026-05-06 (initial); **tip refresh 2026-05-07**
 
 ## Note on Git tracking
 
@@ -16,86 +17,105 @@ The following paths from the milestone closeout instructions were **not** presen
 
 Use the established M36/M37A summary/audit structure for `M37B_summary.md` and `M37B_audit.md` when closing the milestone after CI review.
 
-## `git status --short` (before commit)
+---
 
-```
- M .github/workflows/ci.yml
- M .github/workflows/release.yml
- M REFACTOR.md
- M docs/ezra.md
- M docs/release/DISTRIBUTION_VERIFICATION.md
- M pyproject.toml
- M requirements.txt
- M scripts/verify_distribution.py
- M tests/test_distribution_verification.py
-... (plus type-ignore removals in src after mypy verification)
+## PR #39 Tip CI Refresh
+
+| Field | Value |
+| --- | --- |
+| PR head SHA | `e9079b6558d65eb667ab82882a7c9237c27a1a02` |
+| CI run ID | `25468576713` |
+| CI run URL | https://github.com/m-cahill/ezra/actions/runs/25468576713 |
+| Conclusion | `success` (`headSha` matches tip, `event`: `pull_request`, `workflowName`: `CI`) |
+| Remaining red checks | **Dependency Review** only (`actions/dependency-review-action`: dependency graph / GHAS not enabled for repo) |
+| M37B-introduced failures? | **No** — docs-only commit after `24c7cb4` did not break lint/type/test/security/distribution/docs build |
+
+### Failed / skipped jobs (expected)
+
+- **Failed:** Dependency Review — `##[error]Dependency review is not supported on this repository...` (settings).
+- **Skipped (by design):** Distribution Verification (release artifacts), Documentation Deploy, SLSA Provenance — event/visibility/variable gating per M37B design.
+
+### `gh pr view 39` (snapshot)
+
+- `headRefOid`: `e9079b6558d65eb667ab82882a7c9237c27a1a02`
+- `mergeable`: `MERGEABLE`
+- `mergeStateStatus`: `UNSTABLE` (rollup includes failing Dependency Review)
+
+### Historical run (superseded for merge decision)
+
+Run `25468502386` at `24c7cb4` validated implementation before the evidence-only tip commit; **authoritative evidence for merge review is run `25468576713` at `e9079b6`.**
+
+---
+
+### `ci-local` verification at tip
+
+Command: `python scripts/verify_distribution.py --mode ci-local`
+
+```text
+exit code: 0
+distribution_verified: true
+artifact_hashes_match: true
+sbom_valid: true
+(no reproducible_build_match in ci-local output — expected)
 ```
 
-## `git rev-parse HEAD` (recording start)
+---
+
+## Task 7 — Local verification before closeout commit (2026-05-07)
+
+| Command | Result |
+| --- | --- |
+| `pip-audit -r requirements.txt` | No known vulnerabilities found |
+| `python scripts/verify_distribution.py --mode ci-local` | Exit 0; JSON as above |
+| `pytest -q` | 269 passed, 28 skipped |
+| `ruff format --check .` | 88 files already formatted |
+| `ruff check .` | All checks passed |
+| `mypy src` | Success: no issues found in 40 source files |
+
+---
+
+## Decision
+
+- [x] Ready for closeout / merge review *(M37B code gates green at tip; Dependency Review documented as infra)*  
+- [ ] Not ready — fix required
+
+---
+
+## Earlier implementation record (archive)
+
+### `git rev-parse HEAD` (session start from `main` merge record)
 
 ```
 822f87ff7fe94daf2209f27f2ed8ae7d9c0ef01c
 ```
 
-*(Update this section after committing M37B work to the final squashed/merge commit SHA.)*
-
-## `pip-audit -r requirements.txt`
-
-```
-No known vulnerabilities found
-```
-
-## `pip-compile --version`
+### `pip-compile --version`
 
 ```
 pip-compile, version 7.5.3
 ```
 
-## `pytest -q`
+### `pytest -q` (during implementation)
 
 ```
 269 passed, 28 skipped (full suite)
-16 passed (tests/test_distribution_verification.py only, spot-check after edits)
 ```
 
-## `ruff format --check .` / `ruff check .`
-
-```
-88 files already formatted
-All checks passed!
-```
-
-## `mypy src`
-
-Local run with `types-jsonschema` from the dev lockfile:
+### `mypy src`
 
 ```
 Success: no issues found in 40 source files
 ```
+(with `types-jsonschema` from dev lockfile)
 
-## GitHub CLI (post-PR)
-
-```text
-gh pr checks 39 (after head 24c7cb4):
-  Dependency Review — fail (GitHub: dependency graph / GHAS not enabled for repo)
-  All other reported checks — pass; jobs skipped: Distribution Verification (release artifacts), Documentation Deploy, SLSA Provenance (event/condition as designed)
-
-gh run view 25468502386 --json conclusion,headSha,event,workflowName,url:
-  conclusion: success
-  headSha: 24c7cb49e3e004b3db87c2f92e8dd30b83a6a6e0
-  event: pull_request
-  workflowName: CI
-  url: https://github.com/m-cahill/ezra/actions/runs/25468502386
-
-Prior run 25468412095 (head 5e5c2a5): Type Check failed — missing types-jsonschema on Linux; resolved in 24c7cb4.
-```
+---
 
 ## Summary of implementation (Tracks 1–4)
 
-1. **pip-audit:** Direct/transitive floors in `pyproject.toml`; dev **`types-jsonschema`** added so Linux CI and local `mypy` agree on `jsonschema` typing; `requirements.txt` regenerated via `pip-compile --extra=dev --output-file=requirements.txt pyproject.toml`.
-2. **Distribution verification:** `ci-local` on PR/main; `workflow_dispatch` + `verify_tag` for `--mode release`; docs updated in `docs/release/DISTRIBUTION_VERIFICATION.md`.
-3. **SLSA:** `actions/attest-build-provenance` only if `github.repository_visibility == 'public'`; otherwise job summary + notice (CI + Release workflows).
+1. **pip-audit:** Direct/transitive floors in `pyproject.toml`; dev **`types-jsonschema`** for Linux `mypy`; `requirements.txt` via `pip-compile --extra=dev --output-file=requirements.txt pyproject.toml`.
+2. **Distribution verification:** `ci-local` on PR/main; `workflow_dispatch` + `verify_tag` for `--mode release`; `docs/release/DISTRIBUTION_VERIFICATION.md` updated.
+3. **SLSA:** Attest only when `github.repository_visibility == 'public'`; else summary (CI + Release workflows).
 4. **Pages:** `docs-deploy` requires `vars.EZRA_ENABLE_PAGES_DEPLOY == 'true'`.
-5. **Dependency Review:** Documented as settings/GHAS-dependent in `REFACTOR.md` (warn-first; not a primary M37B code target).
+5. **Dependency Review:** Documented as settings/GHAS-dependent.
 
 Ensure all documentation is updated as necessary.
