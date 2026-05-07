@@ -69,21 +69,17 @@ Referenced M39 and release docs are **present** in a full checkout (see `M40_pla
 
 ## PR #44 merge readiness (CI)
 
-**Evidence — initial planning commit `1d9b698c3e74859e8d2e4cc5774b2ff75871668b`:**
+**PR:** https://github.com/m-cahill/ezra/pull/44 — verify current `headRefOid` at merge review with `gh pr view 44 --json headRefOid`.
 
-- Run: https://github.com/m-cahill/ezra/actions/runs/25523547470
+**Latest completed CI observed for this planning closeout (docs-only stack):** https://github.com/m-cahill/ezra/actions/runs/25524061604 — workflow **`conclusion: success`** (for commit `6f44f6f751e78b799f7a70778dd57fd1a8cb5594`). Further doc-only commits on the same PR follow the same gate pattern: workflow **`success`**, **Dependency Review** **`FAILURE`** (known infra).
 
-**Evidence — closeout commits on PR #44:**
+**Earlier PR heads (same PR, stacked commits):** `1d9b698…` → run `25523547470`; `6622e86…` → `25523801823`; `857ddc0…` → `25523871508`; `c3d05db…` → `25523947418` — each **`conclusion: success`** at workflow level.
 
-- `6622e86105928e0329622672cc963ef76c83194f` (closeout artifacts): run https://github.com/m-cahill/ezra/actions/runs/25523801823 — workflow **`conclusion: success`**
-- `857ddc04a2a135a41645abc10b96371c6deaf321` (audit/summary CI reference update): run https://github.com/m-cahill/ezra/actions/runs/25523871508 — workflow **`conclusion: success`**
-- `c3d05db5224d52e91363e4eb9a79373742c42d58` (audit aligned to tip CI): run https://github.com/m-cahill/ezra/actions/runs/25523947418 — workflow **`conclusion: success`**
-
-**Rollup (PR tip at report time `c3d05db…`):**
+**Rollup:**
 
 - **Merge state:** `MERGEABLE`; `mergeStateStatus`: **`UNSTABLE`** (PR UI rollup affected by one job).
 - **Failed / non-passing check:** **Dependency Review** — `FAILURE` (known M39 limitation: GHAS / dependency graph; job uses `continue-on-error: true` in workflow; **not introduced by M40 docs**).
-- **All M40-relevant correctness gates:** **SUCCESS** on run **`25523947418`** (Lint, Type Check, Test, Security/`pip-audit`, Distribution Verification, Documentation Build, determinism/hermetic jobs, etc.).
+- **All M40-relevant correctness gates:** **SUCCESS** on run **`25524061604`** (Lint, Type Check, Test, Security/`pip-audit`, Distribution Verification, Documentation Build, determinism/hermetic jobs, etc.).
 - **Skipped (expected):** SLSA Provenance (push/fork context), Documentation Deploy (gated), release-artifact Distribution Verification (workflow_dispatch only).
 
 **Verdict:**
