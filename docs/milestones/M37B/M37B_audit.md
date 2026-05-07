@@ -64,8 +64,8 @@
 | Field | Value |
 | --- | --- |
 | PR | #39 |
-| Head SHA | `e9079b6558d65eb667ab82882a7c9237c27a1a02` |
-| CI run | `25468576713` |
+| Head SHA | `c64e2a338104af39e6fd8c18efa3eab5c7a8acc8` |
+| CI run | `25468778850` |
 | Workflow conclusion | `success` |
 | M37B-introduced failures | **None** |
 | Expected red | **Dependency Review** (GHAS / dependency graph) |
@@ -92,4 +92,4 @@
 
 ## 10. Verdict
 
-**Implementation complete — pending merge review.** No blocker from M37B-scoped code gates at tip `e9079b6`. Merge decision remains with maintainers (branch **`mergeStateStatus`** may read **UNSTABLE** due to Dependency Review).
+**Implementation complete — pending merge review.** No blocker from M37B-scoped code gates at tip `c64e2a3` (CI run `25468778850`). Merge decision remains with maintainers (branch **`mergeStateStatus`** may read **UNSTABLE** due to Dependency Review).

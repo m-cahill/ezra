@@ -35,7 +35,7 @@
 | `pytest` | Passes |
 | `ruff format --check .` / `ruff check .` | Pass |
 | `mypy src` | Pass |
-| PR #39 CI at tip `e9079b6` | Workflow success; M37B-relevant jobs pass; **Dependency Review** fails (infra) |
+| PR #39 CI at tip `c64e2a3` | Run `25468778850`: workflow success; M37B-relevant jobs pass; **Dependency Review** fails (infra) |
 
 ---
 

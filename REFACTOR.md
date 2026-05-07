@@ -105,7 +105,7 @@ Minimal dependency lockfile recovery, truthful Distribution Verification behavio
 - **Track 4:** `docs-deploy` gated on `vars.EZRA_ENABLE_PAGES_DEPLOY == 'true'`.
 
 **PR:** https://github.com/m-cahill/ezra/pull/39  
-**Tip CI (authoritative for merge review):** run `25468576713`, head `e9079b6558d65eb667ab82882a7c9237c27a1a02` — workflow **success**; only **Dependency Review** fails (settings/GHAS).
+**Tip CI (authoritative for merge review):** run `25468778850`, head `c64e2a338104af39e6fd8c18efa3eab5c7a8acc8` — workflow **success**; only **Dependency Review** fails (settings/GHAS).
 
 **Artifacts:** `docs/milestones/M37B/M37B_plan.md`, `M37B_run1.md`, `M37B_toolcalls.md`, `M37B_summary.md`, `M37B_audit.md`.
 
