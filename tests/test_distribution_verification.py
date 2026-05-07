@@ -124,16 +124,57 @@ def test_validate_provenance_invalid_json(tmp_path: Path) -> None:
 
 
 def test_script_exits_2_without_repo(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Script returns 2 when GITHUB_REPOSITORY is missing."""
+    """Script returns 2 when GITHUB_REPOSITORY is missing (release mode)."""
     monkeypatch.setenv("GITHUB_REPOSITORY", "")
     monkeypatch.setenv("GITHUB_TOKEN", "dummy")
-    monkeypatch.setattr(sys, "argv", ["verify_distribution.py", "--tag", "v1.0.0"])
+    monkeypatch.setattr(
+        sys, "argv", ["verify_distribution.py", "--mode", "release", "--tag", "v1.0.0"]
+    )
     assert verify_distribution.main() == 2
 
 
 def test_script_exits_2_without_token(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Script returns 2 when GITHUB_TOKEN is missing."""
+    """Script returns 2 when GITHUB_TOKEN is missing (release mode)."""
     monkeypatch.setenv("GITHUB_REPOSITORY", "owner/repo")
     monkeypatch.setenv("GITHUB_TOKEN", "")
-    monkeypatch.setattr(sys, "argv", ["verify_distribution.py", "--tag", "v1.0.0"])
+    monkeypatch.setattr(
+        sys, "argv", ["verify_distribution.py", "--mode", "release", "--tag", "v1.0.0"]
+    )
     assert verify_distribution.main() == 2
+
+
+def test_script_ci_local_does_not_require_github_credentials(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """ci-local mode does not read GITHUB_TOKEN or GITHUB_REPOSITORY."""
+    monkeypatch.setenv("GITHUB_REPOSITORY", "")
+    monkeypatch.setenv("GITHUB_TOKEN", "")
+
+    def fake_run_ci_local(_root: Path) -> dict[str, object]:
+        return {
+            "distribution_verified": True,
+            "artifact_hashes_match": True,
+            "sbom_valid": True,
+            "mode": "ci-local",
+        }
+
+    monkeypatch.setattr(verify_distribution, "run_ci_local", fake_run_ci_local)
+    monkeypatch.setattr(sys, "argv", ["verify_distribution.py", "--mode", "ci-local"])
+    assert verify_distribution.main() == 0
+
+
+def test_script_ci_local_exits_1_when_distribution_not_verified(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        verify_distribution,
+        "run_ci_local",
+        lambda _root: {
+            "distribution_verified": False,
+            "artifact_hashes_match": False,
+            "sbom_valid": True,
+            "mode": "ci-local",
+        },
+    )
+    monkeypatch.setattr(sys, "argv", ["verify_distribution.py", "--mode", "ci-local"])
+    assert verify_distribution.main() == 1

@@ -13,7 +13,7 @@ authors = [
     {name = "EZRA Contributors"}
 ]
 dependencies = [
-    "cryptography==46.0.5",
+    "cryptography>=46.0.7",
     "jsonschema>=4.0",
 ]
 classifiers = [
@@ -29,10 +29,13 @@ classifiers = [
 dev = [
     "ruff>=0.1.0",
     "mypy>=1.7.0",
-    "pytest>=7.4.0",
+    "pytest>=9.0.3",
     "pytest-cov>=4.1.0",
     "coverage[toml]>=7.3.0",
-    "pillow>=10.0.0",
+    "pillow>=12.2.0",
+    "lxml>=6.1.0",
+    "pygments>=2.20.0",
+    "requests>=2.33.0",
     "radon>=6.0.0",
     "bandit>=1.7.0",
     "pip-audit>=2.6.0",

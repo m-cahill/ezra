@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 """Verify EZRA distribution artifacts for a tag are reproducible and valid.
 
-Downloads release artifacts from the GitHub Actions run for the given tag,
-rebuilds locally, and validates hashes, SBOM, and provenance.
+Two modes:
+
+* **release** (default): Downloads release artifacts from GitHub Actions for the
+  given tag, rebuilds locally, and validates hashes, SBOM, and provenance.
+* **ci-local**: Runs one local ``python -m build``, writes ``SHA256SUMS.txt`` from
+  the produced wheel/sdist, verifies hashes against that file, generates a local
+  CycloneDX SBOM, and validates SBOM shape. Does not call the GitHub API (no token).
 
 Usage:
     python scripts/verify_distribution.py --tag v1.0.1-m33
     python scripts/verify_distribution.py --tag latest
+    python scripts/verify_distribution.py --mode ci-local
 
 Exit codes:
     0: Distribution verified
@@ -20,6 +26,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -33,6 +40,98 @@ REQUIRED_ARTIFACTS = ("ezra-distribution", "ezra-sbom", "ezra-provenance")
 SHA256SUMS_FILENAME = "SHA256SUMS.txt"
 SBOM_FILENAME = "sbom.json"
 PROVENANCE_FILENAME = "provenance.json"
+
+
+def _clean_dist_dir(dist_dir: Path) -> None:
+    """Remove all files and subdirs under dist/."""
+    if not dist_dir.is_dir():
+        return
+    for p in dist_dir.iterdir():
+        if p.is_file():
+            p.unlink()
+        elif p.is_dir():
+            shutil.rmtree(p)
+
+
+def _hash_dist_artifacts(dist_dir: Path) -> dict[str, str]:
+    """SHA256 hex (lower) for each file in dist except SHA256SUMS.txt."""
+    out: dict[str, str] = {}
+    if not dist_dir.is_dir():
+        return out
+    for f in sorted(dist_dir.iterdir()):
+        if f.is_file() and f.name != SHA256SUMS_FILENAME:
+            out[f.name] = hashlib.sha256(f.read_bytes()).hexdigest().lower()
+    return out
+
+
+def _write_sha256sums(dist_dir: Path, file_hashes: dict[str, str]) -> None:
+    """Write dist/SHA256SUMS.txt in the same format as the release workflow."""
+    lines = [f"{h}  {name}\n" for name, h in sorted(file_hashes.items())]
+    (dist_dir / SHA256SUMS_FILENAME).write_text("".join(lines), encoding="utf-8")
+
+
+def _run_build(repo_root: Path) -> None:
+    """Run python -m build; raises on failure."""
+    env = os.environ.copy()
+    # Deterministic sdist/wheel metadata for reproducibility checks (CI + ci-local).
+    env.setdefault("SOURCE_DATE_EPOCH", "1704067200")
+    subprocess.run(
+        [sys.executable, "-m", "build"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+        env=env,
+    )
+
+
+def _run_cyclonedx_sbom(repo_root: Path, dest: Path) -> None:
+    """Generate CycloneDX JSON via cyclonedx-py (matches CI SBOM job)."""
+    exe = shutil.which("cyclonedx-py")
+    cmd = (
+        [exe, "environment", "-o", str(dest)]
+        if exe
+        else [sys.executable, "-m", "cyclonedx_py", "environment", "-o", str(dest)]
+    )
+    subprocess.run(
+        cmd,
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+    )
+
+
+def run_ci_local(repo_root: Path) -> dict[str, object]:
+    """PR/main-safe verification: one reproducible build, hash consistency, SBOM check."""
+    dist_dir = repo_root / "dist"
+    _clean_dist_dir(dist_dir)
+    dist_dir.mkdir(parents=True, exist_ok=True)
+
+    _run_build(repo_root)
+    hashes = _hash_dist_artifacts(dist_dir)
+    has_whl = any(n.endswith(".whl") for n in hashes)
+    has_sdist = any(n.endswith(".tar.gz") for n in hashes)
+    if not has_whl or not has_sdist:
+        raise RuntimeError("ci-local: expected wheel and sdist in dist/ after build")
+    _write_sha256sums(dist_dir, hashes)
+    artifact_ok = _verify_artifact_hashes(dist_dir)
+
+    sbom_path = dist_dir / SBOM_FILENAME
+    _run_cyclonedx_sbom(repo_root, sbom_path)
+    sbom_ok = _validate_sbom(sbom_path)
+
+    ci_note = (
+        "PR/main mode: local build + SHA256SUMS self-check + SBOM; no GitHub artifact download"
+    )
+    prov_note = "ci-local does not validate release provenance.json (use --mode release)"
+    return {
+        "artifact_hashes_match": artifact_ok,
+        "ci_local_note": ci_note,
+        "mode": "ci-local",
+        "provenance_checked": False,
+        "provenance_note": prov_note,
+        "sbom_valid": sbom_ok,
+        "distribution_verified": bool(artifact_ok and sbom_ok),
+    }
 
 
 def _gh_api(
@@ -295,21 +394,37 @@ def main() -> int:
     """Run distribution verification and print report."""
     parser = argparse.ArgumentParser(description="Verify EZRA distribution for a tag.")
     parser.add_argument(
+        "--mode",
+        choices=("release", "ci-local"),
+        default="release",
+        help="release: download GitHub release artifacts; ci-local: local build + SBOM (PR/main)",
+    )
+    parser.add_argument(
         "--tag",
         default="latest",
-        help="Tag to verify (e.g. v1.0.1-m33) or 'latest'",
+        help="Tag to verify (e.g. v1.0.1-m33) or 'latest' (release mode only)",
     )
     parser.add_argument(
         "--repo",
         default=os.environ.get("GITHUB_REPOSITORY", ""),
-        help="GitHub repo owner/name (default: GITHUB_REPOSITORY)",
+        help="GitHub repo owner/name (default: GITHUB_REPOSITORY; release mode only)",
     )
     parser.add_argument(
         "--token",
         default=os.environ.get("GITHUB_TOKEN", ""),
-        help="GitHub token (default: GITHUB_TOKEN)",
+        help="GitHub token (default: GITHUB_TOKEN; release mode only)",
     )
     args = parser.parse_args()
+    repo_root = Path(__file__).resolve().parent.parent
+
+    if args.mode == "ci-local":
+        try:
+            report = run_ci_local(repo_root)
+        except (OSError, subprocess.CalledProcessError, RuntimeError) as e:
+            print(f"error: ci-local verification failed: {e}", file=sys.stderr)
+            return 2
+        print(json.dumps(report, sort_keys=True, indent=2))
+        return 0 if report.get("distribution_verified") else 1
 
     if not args.repo or "/" not in args.repo:
         print("error: --repo or GITHUB_REPOSITORY required (owner/repo)", file=sys.stderr)
@@ -331,14 +446,14 @@ def main() -> int:
         print(f"error: no completed release run found for tag {tag}", file=sys.stderr)
         return 2
 
-    repo_root = Path(__file__).resolve().parent.parent
     report: dict[str, object] = {
-        "tag": tag,
         "artifact_hashes_match": False,
+        "distribution_verified": False,
+        "mode": "release",
+        "provenance_valid": False,
         "rebuild_hash_match": False,
         "sbom_valid": False,
-        "provenance_valid": False,
-        "distribution_verified": False,
+        "tag": tag,
     }
 
     with tempfile.TemporaryDirectory() as work_dir:

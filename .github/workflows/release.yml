@@ -53,10 +53,19 @@ jobs:
           name: ezra-sbom
           path: dist/sbom.json
 
-      - name: Generate provenance
+      - name: Generate provenance attestation
+        if: github.repository_visibility == 'public'
         uses: actions/attest-build-provenance@ef244123eb79f2f7a7e75d99086184180e6d0018
         with:
           subject-path: dist/*
+
+      - name: SLSA attestation unavailable (private repository)
+        if: github.repository_visibility != 'public'
+        run: |
+          echo "## SLSA Provenance (Release)" >> $GITHUB_STEP_SUMMARY
+          echo "Artifact attestation is skipped: GitHub does not persist attestations for this private repository class." >> $GITHUB_STEP_SUMMARY
+          echo "Release still uploads \`ezra-distribution\`, SBOM, and \`provenance.json\` metadata; do not claim SLSA until attestation succeeds on a supported repo." >> $GITHUB_STEP_SUMMARY
+          echo "::notice::Release SLSA attestation skipped for private repository."
 
       - name: Write provenance metadata
         env:

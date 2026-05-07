@@ -83,10 +83,25 @@ Ensure all documentation is updated as necessary.
 
 ## M37B — Required Gate Recovery Implementation
 
-**Status:** Planned — branch `fix/m37b-required-gate-recovery` ready for implementation work per `M37B_plan.md` (not started in merge-record commit).
+**Status:** In progress — Pending CI
 
-**Objective:** Implement Track 1–4 in `docs/milestones/M37B/M37B_plan.md` (`pip-audit` / lockfile, Distribution Verification truthfulness, SLSA honesty, Pages/deploy alignment). Dependency Review remains documented as settings-dependent unless a code-only fix is identified.
+**Purpose:**  
+Resolve or honestly defer the red default-branch gates identified by M37A before M37 secret-boundary cleanup.
 
-**Artifacts (stub):** `docs/milestones/M37B/M37B_plan.md`, `docs/milestones/M37B/M37B_toolcalls.md`.
+**Scope:**  
+Minimal dependency lockfile recovery, truthful Distribution Verification behavior, SLSA/private-repo honesty, and Pages deploy truthfulness.
 
-**Relationship to M37:** Execute **M37B before M37** for a green or honestly-deferred default branch; M37 remains deferred for public-release sequencing until gate recovery is done or explicitly accepted as red.
+**Dependency Review:** PR-only and depends on GitHub Advanced Security / dependency graph availability. Not treated as a primary M37B code fix; workflow keeps **warn-first** behavior unless settings are changed and the check is proven stable on this repo.
+
+Ensure all documentation is updated as necessary.
+
+**Implementation notes (this milestone):**
+
+- **Track 1:** `pyproject.toml` / `requirements.txt` bumped to clear `pip-audit` without ignores.
+- **Track 2:** PR/main uses `verify_distribution.py --mode ci-local`; full artifact verification uses `workflow_dispatch` input `verify_tag` with `--mode release` and `actions: read`.
+- **Track 3:** `actions/attest-build-provenance` runs only when `github.repository_visibility == 'public'`; private repos get a non-failing step summary (CI + Release workflows).
+- **Track 4:** `docs-deploy` gated on `vars.EZRA_ENABLE_PAGES_DEPLOY == 'true'`.
+
+**Artifacts:** `docs/milestones/M37B/M37B_plan.md` (if present from planning), `docs/milestones/M37B/M37B_run1.md`, `docs/milestones/M37B/M37B_toolcalls.md`; closeout `M37B_summary.md`, `M37B_audit.md` after CI review.
+
+**Relationship to M37:** M37 (secret-boundary cleanup) **not** started in M37B; remains deferred until gate recovery is done or explicitly accepted.

@@ -91,7 +91,7 @@ def validate_zone_data_against_schema(data: dict[str, Any]) -> None:
     """
     import importlib.resources  # noqa: PLC0415
 
-    import jsonschema  # type: ignore[import-untyped]
+    import jsonschema
 
     # Load schema from package
     schema_text = (
