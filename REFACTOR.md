@@ -267,7 +267,7 @@ ensure all documentation is updated as necessary
 
 ## M40 — Public Release Operation / Visibility Decision
 
-**Status:** Planning merged — execution requires explicit maintainer approval
+**Status:** Planning merged — **visibility-only execution completed**; tag / GitHub Release / PyPI / Pages **deferred** pending separate approval
 
 **Purpose:**
 
@@ -279,7 +279,7 @@ Planning only. No visibility, tag, release, PyPI publish, Pages enablement, runt
 
 **Preferred path:** make public **after** explicit maintainer approval, with fallback **keep private** (ready-when-triggered). **Visibility-first;** tag/release only if separately authorized; do not assume tag name; do not reuse historical milestone tags as the public announcement artifact without maintainer decision.
 
-**Artifacts:** `docs/milestones/M40/M40_plan.md`, `docs/milestones/M40/M40_toolcalls.md`, `M40_summary.md`, `M40_audit.md`, **`M40_plan_merge.md`**.
+**Artifacts:** `docs/milestones/M40/M40_plan.md`, `docs/milestones/M40/M40_toolcalls.md`, `M40_summary.md`, `M40_audit.md`, **`M40_plan_merge.md`**, **`M40_run1.md`**, **`M40_visibility_record.md`**.
 
 **PR:** https://github.com/m-cahill/ezra/pull/44
 
@@ -298,5 +298,14 @@ M40 planning was merged via **PR #44**. It documents the public-release operatio
 | **Merge SHA (`main`)** | `ddb678ed2b82d6cc5864c49f1e78b7ded08764ef` |
 | **Post-merge CI (`main`)** | https://github.com/m-cahill/ezra/actions/runs/25526915472 — **`conclusion: success`** |
 | **Record** | `docs/milestones/M40/M40_plan_merge.md` |
+
+### M40 Visibility-Only Execution
+
+**Repository:** **`m-cahill/ezra`** is **public** at **https://github.com/m-cahill/ezra** (visibility-only step; authorized execution).
+
+- **Evidence:** `docs/milestones/M40/M40_run1.md`, **`docs/milestones/M40/M40_visibility_record.md`**
+- **Not performed:** new tag, GitHub Release, PyPI publish, Pages enablement, branch protection / settings changes, workflow or code edits.
+
+**M39 decision remains:** **`GO WITH DOCUMENTED LIMITATIONS`** (Dependency Review / GHAS, SLSA verification on future runs, Pages gating).
 
 ensure all documentation is updated as necessary
