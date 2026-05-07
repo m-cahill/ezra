@@ -51,7 +51,7 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 1. **M37B — Required Gate Recovery Implementation** — **closed** — merged via PR #39; see `docs/milestones/M37B/M37B_merge.md`.
 2. **M37 — Public Release Boundary Cleanup** — **closed** — merged via PR #40; see `docs/milestones/M37/M37_merge.md`.
 3. **M38 — Audit-Polish / Public-Readiness Improvements** — **closed** — merged via PR #41; see `docs/milestones/M38/M38_merge.md`.
-4. **M39 — Final Public-Release Audit / Release Readiness Decision** — **planned** — see `docs/ezra.md`.
+4. **M39 — Final Public-Release Audit / Release Readiness Decision** — **planning documented** — see `docs/milestones/M39/M39_plan.md` and `docs/ezra.md`.
 
 **Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **M37** secret-boundary cleanup is **complete**. **Do not** conflate **M38** polish with secret-boundary or supply-chain recovery unless a milestone explicitly expands scope.
 
@@ -157,7 +157,7 @@ M37 was merged via PR #40. The approved company-secret boundary is now absent fr
 
 M37 removed only the three tracked `docs/enhancements/*.md` files and added a guardrail test preventing reintroduction. No runtime, EPB schema, dependency, or workflow behavior changed.
 
-M38 — Audit-Polish / Public-Readiness Improvements is **closed** (merged via PR #41). **M39** is authorized for planning.
+M38 — Audit-Polish / Public-Readiness Improvements is **closed** (merged via PR #41). **M39** planning documented — see `docs/milestones/M39/M39_plan.md`.
 
 ensure all documentation is updated as necessary
 
@@ -184,7 +184,7 @@ ensure all documentation is updated as necessary
 
 M38 was merged via **PR #41**. It completed behavior-preserving public-readiness polish: contributor guidance, reusable public-release checklist, README clarity, and package-metadata-backed `ezra_version` in EPB manifests while preserving `epb_version` and all EPB schema/canonicalization/hashing invariants.
 
-**M39 — Final Public-Release Audit / Release Readiness Decision** is authorized for planning.
+**M39 — Final Public-Release Audit / Release Readiness Decision** planning documented (`docs/milestones/M39/M39_plan.md`).
 
 ensure all documentation is updated as necessary
 
@@ -195,3 +195,17 @@ ensure all documentation is updated as necessary
 | **Final PR head SHA** | `66d01d98452e7d2fc37b8015a89c89d16f391ef5` |
 | **Post-merge CI (`main`)** | https://github.com/m-cahill/ezra/actions/runs/25479475613 — **`conclusion: success`** |
 | **PR-only red** | Dependency Review (infra); not introduced by M38 |
+
+---
+
+## M39 — Final Public-Release Audit / Release Readiness Decision
+
+**Status:** Planning
+
+**Purpose:**
+Run a fresh current-state public-release audit after M36–M38 reconciliation, gate recovery, boundary cleanup, and public-readiness polish.
+
+**Scope:**
+Planning only in this branch. The audit will decide GO / GO WITH DOCUMENTED LIMITATIONS / NO-GO based on current evidence, not historical audit scores.
+
+ensure all documentation is updated as necessary
