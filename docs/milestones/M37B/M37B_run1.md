@@ -25,9 +25,9 @@ Use the established M36/M37A summary/audit structure for `M37B_summary.md` and `
 
 | Field | Value |
 | --- | --- |
-| Validated commit (`headSha` / `git rev-parse`) | `237451b9fbd68143cda7d3a26426ec76db190353` |
-| CI run ID | `25468913909` |
-| CI run URL | https://github.com/m-cahill/ezra/actions/runs/25468913909 |
+| Validated commit (`headSha` / `git rev-parse`) | `ce111d158ea0bb5f32b82a35e6b534b6b2eb8371` |
+| CI run ID | `25469000753` |
+| CI run URL | https://github.com/m-cahill/ezra/actions/runs/25469000753 |
 | Conclusion | `success` (`event`: `pull_request`, `workflowName`: `CI`) |
 | Remaining red checks | **Dependency Review** only (`actions/dependency-review-action`: dependency graph / GHAS not enabled for repo) |
 | M37B-introduced failures? | **No** |
@@ -39,7 +39,7 @@ Use the established M36/M37A summary/audit structure for `M37B_summary.md` and `
 
 ### `gh pr view 39` (at validated commit; re-query before merge)
 
-- `headRefOid` was `237451b9fbd68143cda7d3a26426ec76db190353` when run `25468913909` completed.
+- `headRefOid` was `ce111d158ea0bb5f32b82a35e6b534b6b2eb8371` when run `25469000753` completed.
 - `mergeable`: `MERGEABLE`
 - `mergeStateStatus`: `UNSTABLE` (rollup includes failing Dependency Review)
 
@@ -49,7 +49,8 @@ Use the established M36/M37A summary/audit structure for `M37B_summary.md` and `
 - `25468576713` @ `e9079b6` — tip **before** closeout evidence commit.
 - `25468778850` @ `c64e2a3` — CI after `docs(m37b): close implementation evidence`.
 - `25468841430` @ `accd5c7` — docs alignment commit only.
-- **`25468913909` @ `237451b` — validated CI for merge review** (last implementation + closeout batch before any optional follow-up doc-only commits; see merge hygiene above).
+- `25468913909` @ `237451b` — validated CI after implementation + first closeout batch.
+- **`25469000753` @ `ce111d1` — validated CI for merge review** (merge-hygiene wording + pinned-evidence docs; see merge hygiene above).
 
 ---
 
