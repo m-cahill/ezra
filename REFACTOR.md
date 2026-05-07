@@ -237,6 +237,7 @@ M39 planning was merged via PR #42. The plan defines the final current-state pub
 
 | Field | Value |
 | --- | --- |
+| **Audit completion PR** | https://github.com/m-cahill/ezra/pull/43 |
 | **Audited HEAD** | `2f782010cecb72856bbf39b5f90b6c526d183d34` |
 | **Completion branch** | `audit/m39-final-public-release-audit` |
 | **Evidence pack** | `M39_run1.md`, `M39_public_release_audit.md`, `M39_summary.md`, `M39_audit.md` |
