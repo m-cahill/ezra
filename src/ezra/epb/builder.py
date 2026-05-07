@@ -6,6 +6,7 @@ and structured state. No disk I/O is performed here.
 
 from __future__ import annotations
 
+import importlib.metadata
 import platform
 import sys
 from datetime import UTC, datetime
@@ -14,6 +15,24 @@ from typing import Any
 
 # EPB v1.0.0 version string (immutable per spec)
 EPB_VERSION = "1.0.0"
+
+
+def _ezra_version_raw() -> str:
+    """Return installed EZRA version (PEP 440 / pyproject), pre-manifest formatting."""
+    try:
+        return importlib.metadata.version("ezra")
+    except importlib.metadata.PackageNotFoundError:
+        import ezra
+
+        return ezra.__version__
+
+
+def _ezra_version_for_manifest() -> str:
+    """Return ezra_version for the EPB manifest (schema: v-prefixed tag shape)."""
+    raw = _ezra_version_raw().strip()
+    if raw.startswith("v") or raw.startswith("V"):
+        return raw if raw.startswith("v") else f"v{raw[1:]}"
+    return f"v{raw}"
 
 
 def build_epb_bundle(
@@ -51,7 +70,7 @@ def build_epb_bundle(
     # Build manifest.json structure
     manifest: dict[str, Any] = {
         "epb_version": EPB_VERSION,
-        "ezra_version": "v0.0.8-m07",  # TODO: Get from package metadata
+        "ezra_version": _ezra_version_for_manifest(),
         "timestamp": timestamp_str,
         "plugin_versions": {
             plugin_name: {
