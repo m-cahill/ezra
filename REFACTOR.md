@@ -267,7 +267,7 @@ ensure all documentation is updated as necessary
 
 ## M40 — Public Release Operation / Visibility Decision
 
-**Status:** Planning
+**Status:** Planning complete — pending merge review
 
 **Purpose:**
 
@@ -279,6 +279,12 @@ Planning only. No visibility, tag, release, PyPI publish, Pages enablement, runt
 
 **Preferred path:** make public **after** explicit maintainer approval, with fallback **keep private** (ready-when-triggered). **Visibility-first;** tag/release only if separately authorized; do not assume tag name; do not reuse historical milestone tags as the public announcement artifact without maintainer decision.
 
-**Artifacts:** `docs/milestones/M40/M40_plan.md`, `docs/milestones/M40/M40_toolcalls.md`.
+**Artifacts:** `docs/milestones/M40/M40_plan.md`, `docs/milestones/M40/M40_toolcalls.md`, `M40_summary.md`, `M40_audit.md`.
+
+**PR:** https://github.com/m-cahill/ezra/pull/44
+
+M40 documents the public-release operation path after M39’s **`GO WITH DOCUMENTED LIMITATIONS`** decision. It preserves a **human approval gate** before any repository visibility, tag, GitHub Release, PyPI, Pages, or settings operation.
+
+**No operational release action was performed** in M40 planning.
 
 ensure all documentation is updated as necessary
