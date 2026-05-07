@@ -13,7 +13,7 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, cast
 
-import jsonschema  # type: ignore[import-untyped]
+import jsonschema
 from jsonschema import ValidationError
 
 from ezra.errors import EPBValidationError
