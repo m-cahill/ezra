@@ -129,7 +129,11 @@ ensure all documentation is updated as necessary
 
 ## M37 — Public Release Boundary Cleanup
 
-**Status:** In progress / Pending CI
+**Status:** Implementation complete — pending merge review (PR #40)
+
+M37 removed only the approved public-release company-secret tracked files under `docs/enhancements/`, confirmed `.cursorrules` and `docs/prompts/` are not tracked, normalized `.gitignore` coverage for all three approved paths, and added a guardrail test preventing reintroduction.
+
+ensure all documentation is updated as necessary
 
 **Purpose:**  
 Remove the approved company-secret paths from the committed public repo surface and add a guardrail preventing reintroduction.
@@ -143,6 +147,4 @@ Remove the approved company-secret paths from the committed public repo surface 
 **Scope:**  
 M37 removes only tracked files under `docs/enhancements/`, confirms `.cursorrules` and `docs/prompts/` are not tracked, updates `.gitignore`, and adds a public-boundary guardrail test.
 
-ensure all documentation is updated as necessary
-
-**Artifacts:** `docs/milestones/M37/M37_plan.md`, `M37_run1.md`, `M37_toolcalls.md` (summary/audit at closeout).
+**Artifacts:** `docs/milestones/M37/M37_plan.md`, `M37_run1.md`, `M37_toolcalls.md`, **`M37_summary.md`**, **`M37_audit.md`** (merge record after PR lands: optional `M37_merge.md`).

@@ -49,7 +49,21 @@ M37: `.cursorrules`, `docs/enhancements/`, `docs/prompts/` (normalized from `/do
 
 ---
 
-## Task 7 — Verification (after cleanup)
+## Task 6 — Verification before closeout commit (2026-05-07)
+
+| Command | Result |
+| --- | --- |
+| `git ls-files .cursorrules docs/enhancements docs/prompts` | *(no output — empty)* |
+| `pytest -q` | 270 passed, 28 skipped |
+| `ruff format --check .` | 89 files already formatted |
+| `ruff check .` | All checks passed |
+| `mypy src` | Success: no issues found in 40 source files |
+| `pip-audit -r requirements.txt` | No known vulnerabilities found |
+| `python scripts/verify_distribution.py --mode ci-local` | Exit 0; `distribution_verified: true` |
+
+---
+
+## Task 7 — Verification (after initial cleanup)
 
 | Command | Result |
 | --- | --- |
@@ -63,17 +77,23 @@ M37: `.cursorrules`, `docs/enhancements/`, `docs/prompts/` (normalized from `/do
 
 ---
 
-## Task 9 — PR evidence
+## Task 9 — PR evidence (tip refresh)
 
 | Field | Value |
 | --- | --- |
 | PR | **#40** |
 | URL | https://github.com/m-cahill/ezra/pull/40 |
-| `headRefOid` | `0b2fed8c3303ee84c4c5e9a68b28daf702325a69` |
-| CI run | `25471712032` — https://github.com/m-cahill/ezra/actions/runs/25471712032 — **`conclusion: success`** |
-| `mergeStateStatus` | `UNSTABLE` (Dependency Review fails — GHAS/dependency graph; expected infra) |
-| M37B-relevant gates | Pass; **Test** job includes `test_public_release_boundary` |
+| `headRefOid` (closeout) | `375cb73caa266b9913498c6229674174526fb689` |
+| CI run (tip) | `25471797382` — https://github.com/m-cahill/ezra/actions/runs/25471797382 — **`conclusion: success`**, `headSha` matches tip |
+| Implementation commit | `0b2fed8c3303ee84c4c5e9a68b28daf702325a69` |
+| Earlier CI (implementation) | `25471712032` — success |
+| `mergeStateStatus` | `UNSTABLE` (Dependency Review fails — GHAS/deps graph; expected infra) |
+| M37 / M37B-relevant gates | Pass; **Test** includes `test_public_release_boundary` |
 
 **Remaining red:** **Dependency Review** only.
+
+### Prompt template paths (absent)
+
+Per closeout instructions, **`docs/prompts/summaryprompt.md`** and **`docs/prompts/unifiedmilestoneauditpromptV2.md`** are not in-repo. Recorded in **`M37_summary.md`** and **`M37_audit.md`**; do not add `docs/prompts/` to Git.
 
 ensure all documentation is updated as necessary
