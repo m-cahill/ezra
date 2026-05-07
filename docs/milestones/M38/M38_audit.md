@@ -35,7 +35,7 @@
 
 Local: **`docs/milestones/M38/M38_run1.md`** — `ruff`, `mypy`, `pytest` (273 passed, 28 skipped), `pip-audit`, `verify_distribution.py --mode ci-local`.
 
-PR CI: **pending** — record URL and conclusion on PR head after push.
+PR CI: **https://github.com/m-cahill/ezra/actions/runs/25474623525** — required jobs **green**; **Dependency Review** **failed** (documented infra on PRs, same class as M37B); skips: SLSA (private), Docs Deploy (flag), release-only distribution job.
 
 ---
 

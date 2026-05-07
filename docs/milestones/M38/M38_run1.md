@@ -80,4 +80,8 @@ At documentation time, M38 work was committed on **`docs/m38-audit-polish`**; us
 
 ## PR CI
 
-**Status:** *Pending* — fill run URL after `gh pr create` / first workflow conclusion on PR head.
+**PR:** https://github.com/m-cahill/ezra/pull/41  
+
+**Workflow run:** https://github.com/m-cahill/ezra/actions/runs/25474623525  
+
+**Result (2026-05-07):** All jobs **pass** or **skip** per M37B design except **Dependency Review** — **fail** (known PR/infrastructure limitation; not introduced by M38). Mergeability depends on branch protection treating Dependency Review as required or not.
