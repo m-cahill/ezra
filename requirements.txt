@@ -198,6 +198,7 @@ referencing==0.37.0
     #   cyclonedx-python-lib
     #   jsonschema
     #   jsonschema-specifications
+    #   types-jsonschema
 requests==2.33.1
     # via
     #   cachecontrol
@@ -260,6 +261,8 @@ tomli==2.4.0
     # via pip-audit
 tomli-w==1.2.0
     # via pip-audit
+types-jsonschema==4.26.0.20260408
+    # via ezra (pyproject.toml)
 typing-extensions==4.15.0
     # via
     #   cyclonedx-python-lib

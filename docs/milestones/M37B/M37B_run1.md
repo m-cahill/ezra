@@ -67,7 +67,7 @@ All checks passed!
 
 ## `mypy src`
 
-Local run after removing obsolete `type: ignore[import-untyped]` on `jsonschema` imports (stubs now satisfy mypy 1.19.x):
+Local run with `types-jsonschema` from the dev lockfile:
 
 ```
 Success: no issues found in 40 source files
@@ -76,14 +76,14 @@ Success: no issues found in 40 source files
 ## GitHub CLI (post-PR)
 
 ```text
-COMMAND NOT RUN:
-Reason: PR not yet created from this session / auth not assumed.
-Alternative evidence: Paste `gh pr checks <N>` and `gh run view <ID> ...` after opening the PR.
+PR #39: https://github.com/m-cahill/ezra/pull/39
+Initial CI run 25468412095: Type Check failed until `types-jsonschema` added to dev deps; Dependency Review failed (GHAS/settings).
+After follow-up push: update this block with `gh pr checks 39` output.
 ```
 
 ## Summary of implementation (Tracks 1–4)
 
-1. **pip-audit:** Direct/transitive floors in `pyproject.toml`; `requirements.txt` regenerated via `pip-compile --extra=dev --output-file=requirements.txt pyproject.toml`.
+1. **pip-audit:** Direct/transitive floors in `pyproject.toml`; dev **`types-jsonschema`** added so Linux CI and local `mypy` agree on `jsonschema` typing; `requirements.txt` regenerated via `pip-compile --extra=dev --output-file=requirements.txt pyproject.toml`.
 2. **Distribution verification:** `ci-local` on PR/main; `workflow_dispatch` + `verify_tag` for `--mode release`; docs updated in `docs/release/DISTRIBUTION_VERIFICATION.md`.
 3. **SLSA:** `actions/attest-build-provenance` only if `github.repository_visibility == 'public'`; otherwise job summary + notice (CI + Release workflows).
 4. **Pages:** `docs-deploy` requires `vars.EZRA_ENABLE_PAGES_DEPLOY == 'true'`.
