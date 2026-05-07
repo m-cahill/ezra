@@ -65,13 +65,15 @@ M37: `.cursorrules`, `docs/enhancements/`, `docs/prompts/` (normalized from `/do
 
 ## Task 9 — PR evidence
 
-*(Update after `gh pr create`.)*
+| Field | Value |
+| --- | --- |
+| PR | **#40** |
+| URL | https://github.com/m-cahill/ezra/pull/40 |
+| `headRefOid` | `0b2fed8c3303ee84c4c5e9a68b28daf702325a69` |
+| CI run | `25471712032` — https://github.com/m-cahill/ezra/actions/runs/25471712032 — **`conclusion: success`** |
+| `mergeStateStatus` | `UNSTABLE` (Dependency Review fails — GHAS/dependency graph; expected infra) |
+| M37B-relevant gates | Pass; **Test** job includes `test_public_release_boundary` |
 
-```text
-PR number:
-PR URL:
-headRefOid:
-CI: 
-```
+**Remaining red:** **Dependency Review** only.
 
 ensure all documentation is updated as necessary
