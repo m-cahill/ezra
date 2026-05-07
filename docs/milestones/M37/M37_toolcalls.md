@@ -1,8 +1,8 @@
-# M37_toolcalls
+# M37 — Tool call / command log
 
-**Status:** Stub seeded by M36.
-
-Tool calls and command evidence will be recorded during M37. Initialize each entry **before** execution per `.cursorrules`.
-
-| Timestamp | Tool | Purpose | Files/Target | Status |
-| --- | --- | --- | --- | --- |
+| Step | Command / action |
+| --- | --- |
+| Inventory | `git status`, `git rev-parse HEAD`, `git ls-files .cursorrules docs/enhancements docs/prompts` |
+| Removals | `git rm docs/enhancements/*.md` (three files) |
+| Verify | `pytest`, `ruff`, `mypy`, `pip-audit`, `verify_distribution.py --mode ci-local` |
+| PR | `gh pr create` (after commit) |
