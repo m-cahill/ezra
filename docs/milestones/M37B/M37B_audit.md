@@ -64,8 +64,8 @@
 | Field | Value |
 | --- | --- |
 | PR | #39 |
-| Validated `headSha` | `ce111d158ea0bb5f32b82a35e6b534b6b2eb8371` |
-| CI run | `25469000753` |
+| Validated `headSha` | `aabfd92987093d0e1d3f81ffbab5adc3f7507a99` |
+| CI run | `25469067577` |
 | Workflow conclusion | `success` |
 | M37B-introduced failures | **None** |
 | Expected red | **Dependency Review** (GHAS / dependency graph) |
@@ -92,4 +92,4 @@
 
 ## 10. Verdict
 
-**Implementation complete — pending merge review.** No blocker from M37B-scoped code gates at validated commit `ce111d1` (CI run `25469000753`). If PR head advances, see `M37B_run1.md` merge hygiene. Merge decision remains with maintainers (branch **`mergeStateStatus`** may read **UNSTABLE** due to Dependency Review).
+**Implementation complete — pending merge review.** No blocker from M37B-scoped code gates at validated commit `aabfd92` (CI run `25469067577`). If PR head advances, see `M37B_run1.md` merge hygiene. Merge decision remains with maintainers (branch **`mergeStateStatus`** may read **UNSTABLE** due to Dependency Review).
