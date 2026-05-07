@@ -50,7 +50,8 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 
 1. **M37B — Required Gate Recovery Implementation** — **closed** — merged via PR #39; see `docs/milestones/M37B/M37B_merge.md`.
 2. **M37 — Public Release Boundary Cleanup** — **closed** — merged via PR #40; see `docs/milestones/M37/M37_merge.md`.
-3. **M38 — Audit-Polish / Public-Readiness Improvements** — **implementation on branch `docs/m38-audit-polish` — pending PR/CI** — `docs/milestones/M38/M38_plan.md`, `M38_run1.md`.
+3. **M38 — Audit-Polish / Public-Readiness Improvements** — **closed** — merged via PR #41; see `docs/milestones/M38/M38_merge.md`.
+4. **M39 — Final Public-Release Audit / Release Readiness Decision** — **planned** — see `docs/ezra.md`.
 
 **Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **M37** secret-boundary cleanup is **complete**. **Do not** conflate **M38** polish with secret-boundary or supply-chain recovery unless a milestone explicitly expands scope.
 
@@ -156,7 +157,7 @@ M37 was merged via PR #40. The approved company-secret boundary is now absent fr
 
 M37 removed only the three tracked `docs/enhancements/*.md` files and added a guardrail test preventing reintroduction. No runtime, EPB schema, dependency, or workflow behavior changed.
 
-M38 — Audit-Polish / Public-Readiness Improvements is authorized for planning.
+M38 — Audit-Polish / Public-Readiness Improvements is **closed** (merged via PR #41). **M39** is authorized for planning.
 
 ensure all documentation is updated as necessary
 
@@ -169,16 +170,28 @@ ensure all documentation is updated as necessary
 
 ## M38 — Audit-Polish / Public-Readiness Improvements
 
-**Status:** Implementation complete on branch **`docs/m38-audit-polish`** — **pending PR merge / CI**
+**Status:** Closed — merged to `main` via PR #41
 
 **Purpose:** Behavior-preserving public-readiness polish after M37: `CONTRIBUTING.md`, reusable **`docs/release/PUBLIC_RELEASE_CHECKLIST.md`**, README clarity, and manifest **`ezra_version`** resolved from **`importlib.metadata.version("ezra")`** with **`ezra.__version__`** fallback and **`v`‑prefix formatting** to satisfy existing EPB manifest JSON Schema (no schema file edits).
 
 **Scope (summary):** See `docs/milestones/M38/M38_plan.md`. No EPBEmitter extraction, no EPB `epb_version` / hashing / canonicalization changes, no workflow redesign, no dependency bumps, no further secret-boundary removals.
 
-**Artifacts:** `M38_plan.md`, **`M38_run1.md`**, `M38_toolcalls.md`, `M38_summary.md`, `M38_audit.md` (post-PR: **`M38_merge.md`**).
+**Artifacts:** `M38_plan.md`, `M38_run1.md`, `M38_toolcalls.md`, `M38_summary.md`, `M38_audit.md`, **`M38_merge.md`**.
 
-**Closeout prompts:** `docs/prompts/summaryprompt.md` and `docs/prompts/unifiedmilestoneauditpromptV2.md` are **absent** (M37 public boundary). Summary/audit follow **M36–M37** structure; missing paths recorded in `M38_summary.md`.
+**Closeout prompts:** `docs/prompts/summaryprompt.md` and `docs/prompts/unifiedmilestoneauditpromptV2.md` are **absent** (M37 public boundary). Summary/audit follow **M36–M38** structure; missing paths recorded in `M38_summary.md`.
 
-**Next:** Open PR to `main`, confirm CI green, merge per permission; then **`M38_merge.md`** and next milestone seed.
+### M38 Merge to `main`
 
-**ensure all documentation is updated as necessary.**
+M38 was merged via **PR #41**. It completed behavior-preserving public-readiness polish: contributor guidance, reusable public-release checklist, README clarity, and package-metadata-backed `ezra_version` in EPB manifests while preserving `epb_version` and all EPB schema/canonicalization/hashing invariants.
+
+**M39 — Final Public-Release Audit / Release Readiness Decision** is authorized for planning.
+
+ensure all documentation is updated as necessary
+
+| Field | Value |
+| --- | --- |
+| **PR** | https://github.com/m-cahill/ezra/pull/41 |
+| **Squash merge SHA (`main`)** | `ab0d07eea5070b57e9112b5b2aecd7e572a8b44a` |
+| **Final PR head SHA** | `66d01d98452e7d2fc37b8015a89c89d16f391ef5` |
+| **Post-merge CI (`main`)** | https://github.com/m-cahill/ezra/actions/runs/25479475613 — **`conclusion: success`** |
+| **PR-only red** | Dependency Review (infra); not introduced by M38 |
