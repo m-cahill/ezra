@@ -49,9 +49,10 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 **Next authorized milestone (sequencing)**
 
 1. **M37B — Required Gate Recovery Implementation** — **closed** — merged via PR #39; see `docs/milestones/M37B/M37B_merge.md`.
-2. **M37 — Public Release Boundary Cleanup** — remove user-approved company-secret paths from Git tracking (where still applicable), add ignore rules, and guardrails against reintroduction.
+2. **M37 — Public Release Boundary Cleanup** — **closed** — merged via PR #40; see `docs/milestones/M37/M37_merge.md`.
+3. **M38 — Audit-Polish / Public-Readiness Improvements** — **planned** — see governance ledger when planning branch lands.
 
-**Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **Do not** conflate **M37** secret cleanup with supply-chain CI recovery.
+**Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **M37** secret-boundary cleanup is **complete**. **Do not** conflate **M38** polish with secret-boundary or supply-chain recovery unless a milestone explicitly expands scope.
 
 ---
 
@@ -129,7 +130,7 @@ ensure all documentation is updated as necessary
 
 ## M37 — Public Release Boundary Cleanup
 
-**Status:** Implementation complete — pending merge review (PR #40)
+**Status:** Closed — merged to `main` via PR #40
 
 M37 removed only the approved public-release company-secret tracked files under `docs/enhancements/`, confirmed `.cursorrules` and `docs/prompts/` are not tracked, normalized `.gitignore` coverage for all three approved paths, and added a guardrail test preventing reintroduction.
 
@@ -147,4 +148,19 @@ Remove the approved company-secret paths from the committed public repo surface 
 **Scope:**  
 M37 removes only tracked files under `docs/enhancements/`, confirms `.cursorrules` and `docs/prompts/` are not tracked, updates `.gitignore`, and adds a public-boundary guardrail test.
 
-**Artifacts:** `docs/milestones/M37/M37_plan.md`, `M37_run1.md`, `M37_toolcalls.md`, **`M37_summary.md`**, **`M37_audit.md`** (merge record after PR lands: optional `M37_merge.md`).
+**Artifacts:** `docs/milestones/M37/M37_plan.md`, `M37_run1.md`, `M37_toolcalls.md`, `M37_summary.md`, `M37_audit.md`, **`M37_merge.md`**.
+
+### M37 Merge to `main`
+
+M37 was merged via PR #40. The approved company-secret boundary is now absent from Git tracking: `.cursorrules`, `docs/enhancements/`, and `docs/prompts/` return no tracked files via `git ls-files`.
+
+M37 removed only the three tracked `docs/enhancements/*.md` files and added a guardrail test preventing reintroduction. No runtime, EPB schema, dependency, or workflow behavior changed.
+
+M38 — Audit-Polish / Public-Readiness Improvements is authorized for planning.
+
+ensure all documentation is updated as necessary
+
+| Field | Value |
+| --- | --- |
+| **Merge SHA (`main`)** | `9adfe7a0f789037fe3880a57f1e65cfbd5061f7b` |
+| **Post-merge CI (`main`)** | https://github.com/m-cahill/ezra/actions/runs/25473078293 — `conclusion: success` |
