@@ -51,7 +51,7 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 1. **M37B — Required Gate Recovery Implementation** — **closed** — merged via PR #39; see `docs/milestones/M37B/M37B_merge.md`.
 2. **M37 — Public Release Boundary Cleanup** — **closed** — merged via PR #40; see `docs/milestones/M37/M37_merge.md`.
 3. **M38 — Audit-Polish / Public-Readiness Improvements** — **closed** — merged via PR #41; see `docs/milestones/M38/M38_merge.md`.
-4. **M39 — Final Public-Release Audit / Release Readiness Decision** — **plan merged / audit execution pending** — see `docs/milestones/M39/M39_plan_merge.md`, `docs/milestones/M39/M39_plan.md`, and `docs/ezra.md`.
+4. **M39 — Final Public-Release Audit / Release Readiness Decision** — **executed / pending PR review** — **`GO WITH DOCUMENTED LIMITATIONS`** — see `docs/milestones/M39/M39_public_release_audit.md`.
 
 **Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **M37** secret-boundary cleanup is **complete**. **Do not** conflate **M38** polish with secret-boundary or supply-chain recovery unless a milestone explicitly expands scope.
 
@@ -157,7 +157,7 @@ M37 was merged via PR #40. The approved company-secret boundary is now absent fr
 
 M37 removed only the three tracked `docs/enhancements/*.md` files and added a guardrail test preventing reintroduction. No runtime, EPB schema, dependency, or workflow behavior changed.
 
-M38 — Audit-Polish / Public-Readiness Improvements is **closed** (merged via PR #41). **M39** plan merged — audit execution pending — see `docs/milestones/M39/M39_plan_merge.md` and `docs/milestones/M39/M39_plan.md`.
+M38 — Audit-Polish / Public-Readiness Improvements is **closed** (merged via PR #41). **M39** audit executed — **`GO WITH DOCUMENTED LIMITATIONS`** — pending audit-completion PR merge; see `docs/milestones/M39/M39_public_release_audit.md`.
 
 ensure all documentation is updated as necessary
 
@@ -198,19 +198,30 @@ ensure all documentation is updated as necessary
 
 ## M39 — Final Public-Release Audit / Release Readiness Decision
 
-**Status:** Plan merged / Audit execution pending
+**Status:** Executed / Pending review
 
 **Purpose:**
 Run a fresh current-state public-release audit after M36–M38 reconciliation, gate recovery, boundary cleanup, and public-readiness polish.
 
+**Decision:**
+**GO WITH DOCUMENTED LIMITATIONS**
+
+This verdict is based on **current evidence** in `M39_run1.md` and **`M39_public_release_audit.md`**. No historical M33/M35 weighted audit score is asserted or “recovered.”
+
+**Documented limitations (infrastructure / GitHub platform):**
+
+1. **Dependency Review** — Requires GitHub Advanced Security / dependency graph suitable for the repo; CI uses **`continue-on-error: true`** on this job with an explanatory summary. Pull requests may show **failure** on Dependency Review while **`push`** to **`main`** typically **skips** or soft-handles it; **`pip-audit`** remains the strict lockfile audit elsewhere.
+2. **SLSA / GitHub artifact attestation** — Workflows document attestation **skipped** or non-persistent for **private** repository classes until visibility/tier supports attestations; README instructs not to claim SLSA attestation success prematurely.
+3. **GitHub Pages deploy** — Deploy remains **gated** (repository settings / vars); **Documentation Build** validates docs independent of Pages.
+
 **Scope:**
-Planning artifacts (`M39_plan.md`, `M39_toolcalls.md`) are merged to `main`. Audit execution follows `docs/milestones/M39/M39_plan.md` on branch `audit/m39-final-public-release-audit`. The audit will decide GO / GO WITH DOCUMENTED LIMITATIONS / NO-GO based on current evidence, not historical audit scores.
+Planning merged via PR #42 (`docs/milestones/M39/M39_plan_merge.md`). Audit execution completed on **`audit/m39-final-public-release-audit`** at **`2f782010cecb72856bbf39b5f90b6c526d183d34`** (matches **`main`** tip at audit time). Evidence: **`M39_run1.md`**, **`M39_public_release_audit.md`**, **`M39_summary.md`**, **`M39_audit.md`**.
+
+ensure all documentation is updated as necessary
 
 ### M39 Plan Merge to `main`
 
-M39 planning was merged via PR #42. The plan defines the final current-state public-release audit and GO / GO WITH DOCUMENTED LIMITATIONS / NO-GO decision criteria. Audit execution has not started.
-
-ensure all documentation is updated as necessary
+M39 planning was merged via PR #42. The plan defines the final current-state public-release audit and GO / GO WITH DOCUMENTED LIMITATIONS / NO-GO decision criteria.
 
 | Field | Value |
 | --- | --- |
@@ -221,3 +232,13 @@ ensure all documentation is updated as necessary
 | **PR-only red** | Dependency Review on PR #42 (infra); post-merge `main` — Dependency Review **skipped** |
 
 **Record:** `docs/milestones/M39/M39_plan_merge.md`
+
+### M39 Audit execution
+
+| Field | Value |
+| --- | --- |
+| **Audit completion PR** | https://github.com/m-cahill/ezra/pull/43 |
+| **Audited HEAD** | `2f782010cecb72856bbf39b5f90b6c526d183d34` |
+| **Completion branch** | `audit/m39-final-public-release-audit` |
+| **Evidence pack** | `M39_run1.md`, `M39_public_release_audit.md`, `M39_summary.md`, `M39_audit.md` |
+| **Latest `main` CI referenced** | https://github.com/m-cahill/ezra/actions/runs/25481762088 — **`conclusion: success`** (also https://github.com/m-cahill/ezra/actions/runs/25481653532 — **`success`**) |
