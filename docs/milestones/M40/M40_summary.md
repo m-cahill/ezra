@@ -41,9 +41,9 @@ Structure follows the **M36–M39** milestone summary pattern used elsewhere in 
 
 ---
 
-## PR #44 CI note (planning closeout commit)
+## PR #44 CI note
 
-For the commit that added this summary, re-check PR checks after push. **Dependency Review** may report **failure** on PRs due to GitHub Advanced Security / dependency graph limits (**M39 documented limitation**); strict lockfile audit remains **`pip-audit`** in the Security Check job. All other correctness/supply-chain gates observed **SUCCESS** on workflow `25523547470` at head `1d9b698…`.
+**Dependency Review** may report **failure** on PRs due to GitHub Advanced Security / dependency graph limits (**M39 documented limitation**); strict lockfile audit remains **`pip-audit`** in the Security Check job. At closeout, workflow run **`25523801823`** on head **`6622e86…`** concluded **`success`**; only **Dependency Review** failed among checks, matching the known infra posture.
 
 ---
 

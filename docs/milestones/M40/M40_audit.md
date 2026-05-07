@@ -69,12 +69,19 @@ Referenced M39 and release docs are **present** in a full checkout (see `M40_pla
 
 ## PR #44 merge readiness (CI)
 
-**Evidence (workflow at planning head `1d9b698c3e74859e8d2e4cc5774b2ff75871668b`):**
+**Evidence — initial planning commit `1d9b698c3e74859e8d2e4cc5774b2ff75871668b`:**
 
-- **CI workflow run:** https://github.com/m-cahill/ezra/actions/runs/25523547470  
-- **Merge state:** `MERGEABLE`; `mergeStateStatus`: **`UNSTABLE`** (overall rollup affected by one job).
+- Run: https://github.com/m-cahill/ezra/actions/runs/25523547470
+
+**Evidence — closeout commit `6622e86105928e0329622672cc963ef76c83194f`:**
+
+- Run: https://github.com/m-cahill/ezra/actions/runs/25523801823 — workflow **`conclusion: success`**
+
+**Rollup (latest closeout push):**
+
+- **Merge state:** `MERGEABLE`; `mergeStateStatus`: **`UNSTABLE`** (PR UI rollup affected by one job).
 - **Failed / non-passing check:** **Dependency Review** — `FAILURE` (known M39 limitation: GHAS / dependency graph; job uses `continue-on-error: true` in workflow; **not introduced by M40 docs**).
-- **All M40-relevant correctness gates:** **SUCCESS** (Lint, Type Check, Test, Security/`pip-audit`, Distribution Verification, Documentation Build, determinism/hermetic jobs, etc.).
+- **All M40-relevant correctness gates:** **SUCCESS** on run `25523801823` (Lint, Type Check, Test, Security/`pip-audit`, Distribution Verification, Documentation Build, determinism/hermetic jobs, etc.).
 - **Skipped (expected):** SLSA Provenance (push/fork context), Documentation Deploy (gated), release-artifact Distribution Verification (workflow_dispatch only).
 
 **Verdict:**
