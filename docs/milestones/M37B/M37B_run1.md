@@ -21,23 +21,25 @@ Use the established M36/M37A summary/audit structure for `M37B_summary.md` and `
 
 ## PR #39 Tip CI Refresh
 
+**Merge hygiene:** Before merge, run `gh pr view 39 --json headRefOid` and confirm the PR head either matches the **validated commit** below **or** has a newer successful CI run with the same expected pattern (M37B gates green; **Dependency Review** red/skipped per settings).
+
 | Field | Value |
 | --- | --- |
-| PR head SHA | `accd5c7bdb2335393f1b842bab0925e673862783` |
-| CI run ID | `25468841430` |
-| CI run URL | https://github.com/m-cahill/ezra/actions/runs/25468841430 |
-| Conclusion | `success` (`headSha` matches tip, `event`: `pull_request`, `workflowName`: `CI`) |
+| Validated commit (`headSha` / `git rev-parse`) | `237451b9fbd68143cda7d3a26426ec76db190353` |
+| CI run ID | `25468913909` |
+| CI run URL | https://github.com/m-cahill/ezra/actions/runs/25468913909 |
+| Conclusion | `success` (`event`: `pull_request`, `workflowName`: `CI`) |
 | Remaining red checks | **Dependency Review** only (`actions/dependency-review-action`: dependency graph / GHAS not enabled for repo) |
-| M37B-introduced failures? | **No** — docs-only commit after `24c7cb4` did not break lint/type/test/security/distribution/docs build |
+| M37B-introduced failures? | **No** |
 
 ### Failed / skipped jobs (expected)
 
 - **Failed:** Dependency Review — `##[error]Dependency review is not supported on this repository...` (settings).
 - **Skipped (by design):** Distribution Verification (release artifacts), Documentation Deploy, SLSA Provenance — event/visibility/variable gating per M37B design.
 
-### `gh pr view 39` (snapshot)
+### `gh pr view 39` (at validated commit; re-query before merge)
 
-- `headRefOid`: `accd5c7bdb2335393f1b842bab0925e673862783`
+- `headRefOid` was `237451b9fbd68143cda7d3a26426ec76db190353` when run `25468913909` completed.
 - `mergeable`: `MERGEABLE`
 - `mergeStateStatus`: `UNSTABLE` (rollup includes failing Dependency Review)
 
@@ -46,7 +48,8 @@ Use the established M36/M37A summary/audit structure for `M37B_summary.md` and `
 - `25468502386` @ `24c7cb4` — implementation validation before docs-only commits on the branch.
 - `25468576713` @ `e9079b6` — tip **before** closeout evidence commit.
 - `25468778850` @ `c64e2a3` — CI after `docs(m37b): close implementation evidence`.
-- **`25468841430` @ `accd5c7` — authoritative CI for merge review** (after `docs(m37b): record tip CI run 25468778850`).
+- `25468841430` @ `accd5c7` — docs alignment commit only.
+- **`25468913909` @ `237451b` — validated CI for merge review** (last implementation + closeout batch before any optional follow-up doc-only commits; see merge hygiene above).
 
 ---
 
