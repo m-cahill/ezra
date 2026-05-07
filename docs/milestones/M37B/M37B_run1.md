@@ -76,9 +76,18 @@ Success: no issues found in 40 source files
 ## GitHub CLI (post-PR)
 
 ```text
-PR #39: https://github.com/m-cahill/ezra/pull/39
-Initial CI run 25468412095: Type Check failed until `types-jsonschema` added to dev deps; Dependency Review failed (GHAS/settings).
-After follow-up push: update this block with `gh pr checks 39` output.
+gh pr checks 39 (after head 24c7cb4):
+  Dependency Review — fail (GitHub: dependency graph / GHAS not enabled for repo)
+  All other reported checks — pass; jobs skipped: Distribution Verification (release artifacts), Documentation Deploy, SLSA Provenance (event/condition as designed)
+
+gh run view 25468502386 --json conclusion,headSha,event,workflowName,url:
+  conclusion: success
+  headSha: 24c7cb49e3e004b3db87c2f92e8dd30b83a6a6e0
+  event: pull_request
+  workflowName: CI
+  url: https://github.com/m-cahill/ezra/actions/runs/25468502386
+
+Prior run 25468412095 (head 5e5c2a5): Type Check failed — missing types-jsonschema on Linux; resolved in 24c7cb4.
 ```
 
 ## Summary of implementation (Tracks 1–4)
