@@ -72,8 +72,8 @@ docs/_static/
 requirements-dev.txt
 
 .cursorrules
-
-/docs/prompts/
+docs/enhancements/
+docs/prompts/
 
 # Milestone proof packs (local governance only)
 docs/milestones/

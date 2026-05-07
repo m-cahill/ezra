@@ -124,3 +124,27 @@ ensure all documentation is updated as necessary
 | **Post-merge CI (`main`)** | https://github.com/m-cahill/ezra/actions/runs/25470570460 — `conclusion: success` |
 
 **Relationship to M37:** M37 (secret-boundary cleanup) **not** started in M37B; **authorized next** after this merge.
+
+---
+
+## M37 — Public Release Boundary Cleanup
+
+**Status:** Implementation complete — pending merge review (PR #40)
+
+M37 removed only the approved public-release company-secret tracked files under `docs/enhancements/`, confirmed `.cursorrules` and `docs/prompts/` are not tracked, normalized `.gitignore` coverage for all three approved paths, and added a guardrail test preventing reintroduction.
+
+ensure all documentation is updated as necessary
+
+**Purpose:**  
+Remove the approved company-secret paths from the committed public repo surface and add a guardrail preventing reintroduction.
+
+**Approved boundary:**
+
+- `.cursorrules`
+- `docs/enhancements/`
+- `docs/prompts/`
+
+**Scope:**  
+M37 removes only tracked files under `docs/enhancements/`, confirms `.cursorrules` and `docs/prompts/` are not tracked, updates `.gitignore`, and adds a public-boundary guardrail test.
+
+**Artifacts:** `docs/milestones/M37/M37_plan.md`, `M37_run1.md`, `M37_toolcalls.md`, **`M37_summary.md`**, **`M37_audit.md`** (merge record after PR lands: optional `M37_merge.md`).
