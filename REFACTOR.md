@@ -50,7 +50,7 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 
 1. **M37B — Required Gate Recovery Implementation** — **closed** — merged via PR #39; see `docs/milestones/M37B/M37B_merge.md`.
 2. **M37 — Public Release Boundary Cleanup** — **closed** — merged via PR #40; see `docs/milestones/M37/M37_merge.md`.
-3. **M38 — Audit-Polish / Public-Readiness Improvements** — **planned** — see governance ledger when planning branch lands.
+3. **M38 — Audit-Polish / Public-Readiness Improvements** — **implementation on branch `docs/m38-audit-polish` — pending PR/CI** — `docs/milestones/M38/M38_plan.md`, `M38_run1.md`.
 
 **Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **M37** secret-boundary cleanup is **complete**. **Do not** conflate **M38** polish with secret-boundary or supply-chain recovery unless a milestone explicitly expands scope.
 
@@ -164,3 +164,21 @@ ensure all documentation is updated as necessary
 | --- | --- |
 | **Merge SHA (`main`)** | `9adfe7a0f789037fe3880a57f1e65cfbd5061f7b` |
 | **Post-merge CI (`main`)** | https://github.com/m-cahill/ezra/actions/runs/25473078293 — `conclusion: success` |
+
+---
+
+## M38 — Audit-Polish / Public-Readiness Improvements
+
+**Status:** Implementation complete on branch **`docs/m38-audit-polish`** — **pending PR merge / CI**
+
+**Purpose:** Behavior-preserving public-readiness polish after M37: `CONTRIBUTING.md`, reusable **`docs/release/PUBLIC_RELEASE_CHECKLIST.md`**, README clarity, and manifest **`ezra_version`** resolved from **`importlib.metadata.version("ezra")`** with **`ezra.__version__`** fallback and **`v`‑prefix formatting** to satisfy existing EPB manifest JSON Schema (no schema file edits).
+
+**Scope (summary):** See `docs/milestones/M38/M38_plan.md`. No EPBEmitter extraction, no EPB `epb_version` / hashing / canonicalization changes, no workflow redesign, no dependency bumps, no further secret-boundary removals.
+
+**Artifacts:** `M38_plan.md`, **`M38_run1.md`**, `M38_toolcalls.md`, `M38_summary.md`, `M38_audit.md` (post-PR: **`M38_merge.md`**).
+
+**Closeout prompts:** `docs/prompts/summaryprompt.md` and `docs/prompts/unifiedmilestoneauditpromptV2.md` are **absent** (M37 public boundary). Summary/audit follow **M36–M37** structure; missing paths recorded in `M38_summary.md`.
+
+**Next:** Open PR to `main`, confirm CI green, merge per permission; then **`M38_merge.md`** and next milestone seed.
+
+**ensure all documentation is updated as necessary.**
