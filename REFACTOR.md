@@ -48,10 +48,10 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 
 **Next authorized milestone (sequencing)**
 
-1. **M37B — Required Gate Recovery Implementation** — see `docs/milestones/M37B/M37B_plan.md`.
-2. **M37 — Public Release Boundary Cleanup** — after M37B or explicit acceptance of remaining reds; remove user-approved company-secret paths from Git tracking (where still applicable), add ignore rules, and guardrails against reintroduction.
+1. **M37B — Required Gate Recovery Implementation** — **closed** — merged via PR #39; see `docs/milestones/M37B/M37B_merge.md`.
+2. **M37 — Public Release Boundary Cleanup** — remove user-approved company-secret paths from Git tracking (where still applicable), add ignore rules, and guardrails against reintroduction.
 
-**Gate recovery:** **M37A** (planning) is **closed** — see M37A section below. **M37B** carries implementation per `docs/milestones/M37B/M37B_plan.md`. **Do not** conflate **M37** secret cleanup with supply-chain CI recovery.
+**Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **Do not** conflate **M37** secret cleanup with supply-chain CI recovery.
 
 ---
 
@@ -83,9 +83,9 @@ Ensure all documentation is updated as necessary.
 
 ## M37B — Required Gate Recovery Implementation
 
-**Status:** Implementation complete — Pending merge review (PR #39)
+**Status:** Closed — merged to `main` via PR #39
 
-M37B resolved the actionable default-branch gate recovery issues identified in M37A: `pip-audit` now passes without advisory ignores; Distribution Verification has PR/main `ci-local` behavior and release-artifact verification for release contexts; SLSA and Pages deploy are conditionally honest for the current private user-owned repository; Dependency Review remains a documented infrastructure limitation.
+M37B resolved the actionable default-branch gate recovery issues identified in M37A: `pip-audit` now passes without advisory ignores; Distribution Verification has PR/main `ci-local` behavior and release-artifact verification for release contexts; SLSA and Pages deploy are conditionally honest for the current private user-owned repository; Dependency Review remains a documented infrastructure limitation on pull requests until repository settings support it.
 
 ensure all documentation is updated as necessary
 
@@ -105,8 +105,22 @@ Minimal dependency lockfile recovery, truthful Distribution Verification behavio
 - **Track 4:** `docs-deploy` gated on `vars.EZRA_ENABLE_PAGES_DEPLOY == 'true'`.
 
 **PR:** https://github.com/m-cahill/ezra/pull/39  
-**Validated CI (merge review):** run `25469067577` @ `aabfd92987093d0e1d3f81ffbab5adc3f7507a99` — workflow **success**; only **Dependency Review** fails (settings/GHAS). If PR head advances, re-run `gh pr view 39` and confirm a green CI run with the same pattern before merge.
 
-**Artifacts:** `docs/milestones/M37B/M37B_plan.md`, `M37B_run1.md`, `M37B_toolcalls.md`, `M37B_summary.md`, `M37B_audit.md`.
+**Pre-merge validation (evidence):** run `25469067577` @ `aabfd92987093d0e1d3f81ffbab5adc3f7507a99`; tip run `25469154622` @ `456596c22d78854bc8897a741b9c99f569c4ee45`. See `docs/milestones/M37B/M37B_run1.md`.
 
-**Relationship to M37:** M37 (secret-boundary cleanup) **not** started in M37B; after PR #39 merges, M37 may proceed per sequencing.
+**Artifacts:** `docs/milestones/M37B/M37B_plan.md`, `M37B_run1.md`, `M37B_toolcalls.md`, `M37B_summary.md`, `M37B_audit.md`, **`M37B_merge.md`**.
+
+### M37B Merge to `main`
+
+M37B was merged via PR #39. The actionable gate-recovery items identified in M37A were resolved or made truthful: `pip-audit` passes without advisory ignores; Distribution Verification is split into PR/main `ci-local` and release-mode artifact verification; SLSA and Pages deploy are conditional/honest for the current private repo configuration; Dependency Review remains a documented infrastructure limitation until repository settings support it.
+
+M37 — Public Release Boundary Cleanup is now authorized as the next milestone.
+
+ensure all documentation is updated as necessary
+
+| Field | Value |
+| --- | --- |
+| **Merge SHA (`main`)** | `a51b6c0c731a1d3bc3f34ddc1e71ea240c1062f6` |
+| **Post-merge CI (`main`)** | https://github.com/m-cahill/ezra/actions/runs/25470570460 — `conclusion: success` |
+
+**Relationship to M37:** M37 (secret-boundary cleanup) **not** started in M37B; **authorized next** after this merge.
