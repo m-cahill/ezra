@@ -53,7 +53,7 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 3. **M38 — Audit-Polish / Public-Readiness Improvements** — **closed** — merged via PR #41; see `docs/milestones/M38/M38_merge.md`.
 4. **M39 — Final Public-Release Audit / Release Readiness Decision** — **closed** — merged via PR #43; record **`docs/milestones/M39/M39_merge.md`**.
 5. **M40 — Public Release Operation / Visibility Decision** — **visibility-only execution complete** on **`main`**; record **`docs/milestones/M40/M40_visibility_merge.md`**.
-6. **M41 — Public Repo Post-Visibility Smoke** — **planning** (verify public PR CI / Dependency Review without tag or release); see **`docs/ezra.md`** and **`docs/milestones/M41/M41_plan.md`**.
+6. **M41 — Public Repo Post-Visibility Smoke** — **planning merged** (PR #46); **smoke execution** pending on `docs/m41-post-visibility-smoke` — see **`docs/milestones/M41/M41_plan_merge.md`**.
 
 **Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **M37** secret-boundary cleanup is **complete**. **Do not** conflate **M38** polish with secret-boundary or supply-chain recovery unless a milestone explicitly expands scope.
 
@@ -330,7 +330,7 @@ ensure all documentation is updated as necessary
 
 ## M41 — Public Repo Post-Visibility Smoke
 
-**Status:** Planning only — **smoke PR not yet opened** (execution uses branch **`docs/m41-post-visibility-smoke`** when authorized)
+**Status:** Planning merged to **`main`** — **smoke execution pending** (branch **`docs/m41-post-visibility-smoke`**)
 
 **Purpose:**
 
@@ -342,10 +342,18 @@ Planning deliverables only in this cycle: **`M41_plan.md`**, **`M41_toolcalls.md
 
 **Execution preview (when authorized):** One meaningful **docs-only** merge to `main` via PR; **merge if checks pass** to capture full lifecycle and post-merge CI evidence; prefer milestone/governance note, `M41_run1.md`, or small README/checklist clarification—**not** whitespace-only.
 
-**Artifacts (planning):** `docs/milestones/M41/M41_plan.md`, `docs/milestones/M41/M41_toolcalls.md`
+**Artifacts (planning):** `docs/milestones/M41/M41_plan.md`, `docs/milestones/M41/M41_toolcalls.md`, **`M41_plan_merge.md`**
 
 **Future artifacts (execution):** `M41_run1.md`, `M41_summary.md`, `M41_audit.md`, `M41_merge.md`
 
 **Closeout prompts:** Use `docs/prompts/summaryprompt.md` and `docs/prompts/unifiedmilestoneauditpromptV2.md` **if present**; if absent, record missing paths and follow **M36–M40** structure.
+
+### M41 Plan Merge to `main`
+
+M41 planning was merged via PR #46. It defines a docs-only public PR smoke to observe public-repo PR behavior, Dependency Review behavior, and post-merge `main` CI after M40 visibility execution.
+
+No smoke execution occurred in the planning milestone. No tag, GitHub Release, PyPI publish, Pages enablement, repo settings, workflow, dependency, runtime, EPB spec, secret-boundary, or `docs/prompts/` changes occurred.
+
+**Record:** `docs/milestones/M41/M41_plan_merge.md`
 
 ensure all documentation is updated as necessary
