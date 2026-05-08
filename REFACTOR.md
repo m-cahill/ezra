@@ -51,7 +51,9 @@ M36 remains behavior-preserving and **ready for merge in substance** if branch p
 1. **M37B — Required Gate Recovery Implementation** — **closed** — merged via PR #39; see `docs/milestones/M37B/M37B_merge.md`.
 2. **M37 — Public Release Boundary Cleanup** — **closed** — merged via PR #40; see `docs/milestones/M37/M37_merge.md`.
 3. **M38 — Audit-Polish / Public-Readiness Improvements** — **closed** — merged via PR #41; see `docs/milestones/M38/M38_merge.md`.
-4. **M39 — Final Public-Release Audit / Release Readiness Decision** — **closed** — merged via PR #43; record **`docs/milestones/M39/M39_merge.md`**. Optional **M40** (operations/visibility) — see **`docs/ezra.md`**.
+4. **M39 — Final Public-Release Audit / Release Readiness Decision** — **closed** — merged via PR #43; record **`docs/milestones/M39/M39_merge.md`**.
+5. **M40 — Public Release Operation / Visibility Decision** — **visibility-only execution complete** on **`main`**; record **`docs/milestones/M40/M40_visibility_merge.md`**.
+6. **M41 — Public Repo Post-Visibility Smoke** — **planning** (verify public PR CI / Dependency Review without tag or release); see **`docs/ezra.md`** and **`docs/milestones/M41/M41_plan.md`**.
 
 **Gate recovery:** **M37A** planning and **M37B** implementation are **complete** on `main`. **M37** secret-boundary cleanup is **complete**. **Do not** conflate **M38** polish with secret-boundary or supply-chain recovery unless a milestone explicitly expands scope.
 
@@ -321,5 +323,29 @@ Documented limitations remain:
 - Pages deploy remains gated until explicitly enabled.
 
 **Record:** `docs/milestones/M40/M40_visibility_merge.md`
+
+ensure all documentation is updated as necessary
+
+---
+
+## M41 — Public Repo Post-Visibility Smoke
+
+**Status:** Planning only — **smoke PR not yet opened** (execution uses branch **`docs/m41-post-visibility-smoke`** when authorized)
+
+**Purpose:**
+
+Plan a **docs-only** public pull request after M40 public visibility to observe **public PR CI**, **Dependency Review** behavior (without assuming GHAS/dependency-graph availability), and **post-merge `main`** health—while keeping **M39 `GO WITH DOCUMENTED LIMITATIONS`** honest.
+
+**Scope:**
+
+Planning deliverables only in this cycle: **`M41_plan.md`**, **`M41_toolcalls.md`**, **`REFACTOR.md`**, **`docs/ezra.md`**. **No** tag, GitHub Release, PyPI, Pages, repo settings, branch protection, workflow, dependency, runtime, EPB spec, secret-boundary, or `docs/prompts/` changes.
+
+**Execution preview (when authorized):** One meaningful **docs-only** merge to `main` via PR; **merge if checks pass** to capture full lifecycle and post-merge CI evidence; prefer milestone/governance note, `M41_run1.md`, or small README/checklist clarification—**not** whitespace-only.
+
+**Artifacts (planning):** `docs/milestones/M41/M41_plan.md`, `docs/milestones/M41/M41_toolcalls.md`
+
+**Future artifacts (execution):** `M41_run1.md`, `M41_summary.md`, `M41_audit.md`, `M41_merge.md`
+
+**Closeout prompts:** Use `docs/prompts/summaryprompt.md` and `docs/prompts/unifiedmilestoneauditpromptV2.md` **if present**; if absent, record missing paths and follow **M36–M40** structure.
 
 ensure all documentation is updated as necessary
