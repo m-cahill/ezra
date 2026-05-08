@@ -279,7 +279,7 @@ Planning only. No visibility, tag, release, PyPI publish, Pages enablement, runt
 
 **Preferred path:** make public **after** explicit maintainer approval, with fallback **keep private** (ready-when-triggered). **Visibility-first;** tag/release only if separately authorized; do not assume tag name; do not reuse historical milestone tags as the public announcement artifact without maintainer decision.
 
-**Artifacts:** `docs/milestones/M40/M40_plan.md`, `docs/milestones/M40/M40_toolcalls.md`, `M40_summary.md`, `M40_audit.md`, **`M40_plan_merge.md`**, **`M40_run1.md`**, **`M40_visibility_record.md`**.
+**Artifacts:** `docs/milestones/M40/M40_plan.md`, `docs/milestones/M40/M40_toolcalls.md`, `M40_summary.md`, `M40_audit.md`, **`M40_plan_merge.md`**, **`M40_run1.md`**, **`M40_visibility_record.md`**, **`M40_visibility_merge.md`**.
 
 **PR:** https://github.com/m-cahill/ezra/pull/44
 
@@ -307,5 +307,19 @@ M40 planning was merged via **PR #44**. It documents the public-release operatio
 - **Not performed:** new tag, GitHub Release, PyPI publish, Pages enablement, branch protection / settings changes, workflow or code edits.
 
 **M39 decision remains:** **`GO WITH DOCUMENTED LIMITATIONS`** (Dependency Review / GHAS, SLSA verification on future runs, Pages gating).
+
+### M40 Visibility Evidence Merge to `main`
+
+M40 visibility-only execution evidence was merged via PR #45. Repository `m-cahill/ezra` is now public at https://github.com/m-cahill/ezra.
+
+This was a visibility-only operation. No tag, GitHub Release, PyPI publish, Pages enablement, branch protection change, workflow edit, dependency edit, runtime edit, EPB spec edit, secret-boundary change, or `docs/prompts/` change occurred.
+
+Documented limitations remain:
+
+- Dependency Review requires GHAS / dependency graph.
+- SLSA artifact attestation must be verified on a future public workflow/release run before claiming success.
+- Pages deploy remains gated until explicitly enabled.
+
+**Record:** `docs/milestones/M40/M40_visibility_merge.md`
 
 ensure all documentation is updated as necessary
